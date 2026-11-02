@@ -1,614 +1,459 @@
 <!DOCTYPE html>
-<html lang="vi" class="dark">
+<html lang="vi" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BR-34 Store — Kho Tài Khoản AI & Tài Nguyên MMO Tự Động 24/7 (ShopByBrays)</title>
-  <meta name="description" content="Hệ thống trưng bày & cung cấp tài khoản ChatGPT Plus, Antigravity Ultra, Veo 3, YouTube Premium, Canva, Proxy và tài nguyên MMO tự động 24/7 từ Bot Telegram @VuaBanLo_bot.">
-
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#fff1f2',
-              100: '#ffe4e6',
-              200: '#fecdd3',
-              300: '#fda4af',
-              400: '#fb7185',
-              500: '#f43f5e',
-              600: '#e11d48',
-              700: '#be123c',
-              800: '#9f1239',
-              900: '#881337',
-              950: '#4c0519',
-            },
-            surface: {
-              dark: '#07090e',
-              darkcard: '#0f172a',
-              darkborder: '#1e293b'
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BR-34 Store — Kho Tài Khoản AI & Tài Nguyên MMO Tự Động 24/7 (ShopByBrays)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                            950: '#0f172a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
             }
-          },
-          fontFamily: {
-            sans: ['"Be Vietnam Pro"', '"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace']
-          },
-          boxShadow: {
-            'glow-rose': '0 0 25px -5px rgba(244, 63, 94, 0.4)',
-            'glow-cyan': '0 0 25px -5px rgba(6, 182, 212, 0.4)',
-            'card': '0 10px 30px -10px rgba(0, 0, 0, 0.5)'
-          }
         }
-      }
-    }
-  </script>
-
-  <!-- FontAwesome 6 -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-
-  <!-- Canboso Service & Embedded Catalog -->
-  <script src="canboso-service.js"></script>
-
-  <style>
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #07090e; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
-    ::-webkit-scrollbar-thumb:hover { background: #f43f5e; }
-    .glass-card {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .glass-card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(244, 63, 94, 0.35);
-      box-shadow: 0 15px 35px -10px rgba(244, 63, 94, 0.25);
-    }
-    .badge-glow {
-      box-shadow: 0 0 12px rgba(244, 63, 94, 0.3);
-    }
-    .pulse-dot {
-      animation: pulseAnimation 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-    @keyframes pulseAnimation {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-  </style>
-</head>
-
-<body class="bg-surface-dark text-slate-100 font-sans min-h-screen selection:bg-brand-500 selection:text-white">
-
-  <!-- TOP BACKGROUND GLOWS -->
-  <div class="fixed top-0 left-1/4 w-96 h-96 bg-brand-600/10 rounded-full blur-3xl pointer-events-none"></div>
-  <div class="fixed top-20 right-1/4 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl pointer-events-none"></div>
-
-  <!-- HEADER / NAVBAR -->
-  <header class="sticky top-0 z-40 bg-surface-dark/85 backdrop-blur-md border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      
-      <!-- Brand Logo -->
-      <a href="index.html" class="flex items-center gap-3 group">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 via-rose-600 to-amber-500 p-0.5 shadow-glow-rose">
-          <div class="w-full h-full bg-slate-950 rounded-[10px] grid place-items-center">
-            <i class="fa-solid fa-microchip text-brand-500 group-hover:scale-110 transition"></i>
-          </div>
-        </div>
-        <div>
-          <span class="text-lg font-black tracking-wider bg-gradient-to-r from-white via-slate-100 to-brand-400 bg-clip-text text-transparent">
-            BR-34 STORE
-          </span>
-          <span class="block text-[10px] font-bold text-slate-400 tracking-widest uppercase">Digital & AI Showcase</span>
-        </div>
-      </a>
-
-      <!-- Quick Nav Links -->
-      <nav class="hidden md:flex items-center gap-6 text-xs font-bold text-slate-300">
-        <button onclick="filterCategory('chatgpt')" class="hover:text-brand-400 transition flex items-center gap-1.5">
-          <i class="fa-solid fa-robot text-emerald-400"></i> ChatGPT
-        </button>
-        <button onclick="filterCategory('ai')" class="hover:text-brand-400 transition flex items-center gap-1.5">
-          <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> AI Studio
-        </button>
-        <button onclick="filterCategory('entertainment')" class="hover:text-brand-400 transition flex items-center gap-1.5">
-          <i class="fa-solid fa-film text-rose-400"></i> Giải Trí
-        </button>
-        <button onclick="filterCategory('resource')" class="hover:text-brand-400 transition flex items-center gap-1.5">
-          <i class="fa-solid fa-box-archive text-indigo-400"></i> MMO & Tài Nguyên
-        </button>
-      </nav>
-
-      <!-- Action Buttons -->
-      <div class="flex items-center gap-3">
-        <a href="https://t.me/VuaBanLo_bot" target="_blank" class="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 hover:from-brand-600 hover:to-rose-700 text-white font-extrabold text-xs shadow-glow-rose transition flex items-center gap-2">
-          <i class="fa-brands fa-telegram text-sm"></i>
-          <span>Vào Bot Đặt Hàng 24/7</span>
-        </a>
-        <a href="admin.html" class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 transition" title="Quản trị viên">
-          <i class="fa-solid fa-gear text-xs"></i>
-        </a>
-      </div>
-
-    </div>
-  </header>
-
-  <!-- HERO SECTION -->
-  <section class="relative pt-10 pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
-    <!-- Live Badge -->
-    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-brand-500/30 text-xs font-bold text-brand-400 mb-5 badge-glow">
-      <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
-      <span>ĐỒNG BỘ REALTIME TỪ KHO BOT @VuaBanLo_bot</span>
-    </div>
-
-    <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight max-w-4xl mx-auto">
-      Kho Tài Nguyên Số, Tài Khoản AI & Tool MMO <br>
-      <span class="bg-gradient-to-r from-brand-400 via-rose-500 to-amber-400 bg-clip-text text-transparent">
-        Giao Dịch Tự Động 24/7
-      </span>
-    </h1>
-
-    <p class="text-sm sm:text-base text-slate-400 mt-4 max-w-2xl mx-auto leading-relaxed">
-      Trưng bày danh mục sản phẩm thời gian thực: ChatGPT Plus, Antigravity Ultra, Veo 3 Credit, YouTube Premium, Canva, Proxy và Via MMO. Kiểm tra số lượng tồn kho và bảng giá niêm yết tức thời.
-    </p>
-
-    <!-- LIVE STATS BANNER -->
-    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto">
-      <div class="p-4 rounded-2xl glass-card text-center">
-        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tổng mặt hàng</p>
-        <p id="statTotal" class="text-2xl font-black text-white mt-1 font-mono">255+</p>
-        <span class="text-[10px] text-brand-400 font-bold">Đầy đủ chủng loại</span>
-      </div>
-      <div class="p-4 rounded-2xl glass-card text-center">
-        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Đang sẵn kho</p>
-        <p id="statInStock" class="text-2xl font-black text-emerald-400 mt-1 font-mono">153+</p>
-        <span class="text-[10px] text-emerald-400 font-bold flex items-center justify-center gap-1">
-          <i class="fa-solid fa-circle-check text-[9px]"></i> Sẵn sàng xuất
-        </span>
-      </div>
-      <div class="p-4 rounded-2xl glass-card text-center">
-        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tốc độ xuất nick</p>
-        <p class="text-2xl font-black text-cyan-400 mt-1 font-mono">1 - 3s</p>
-        <span class="text-[10px] text-cyan-400 font-bold">Bot Auto trả đơn</span>
-      </div>
-      <div class="p-4 rounded-2xl glass-card text-center">
-        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Bảo hành</p>
-        <p class="text-2xl font-black text-amber-400 mt-1 font-mono">1 Đổi 1</p>
-        <span class="text-[10px] text-amber-400 font-bold">Hỗ trợ trọn thời hạn</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- SEARCH & FILTER BAR -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sticky top-16 z-30 bg-surface-dark/95 backdrop-blur-md border-y border-white/5">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-      
-      <!-- Search Box -->
-      <div class="relative flex-1 max-w-lg">
-        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
-        <input type="text" id="searchInput" oninput="onSearchChange()" placeholder="Tìm kiếm tên sản phẩm, ChatGPT, Ultra, YouTube, ID..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-xs font-semibold text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 transition">
-        <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-3 text-slate-400 hover:text-white text-xs">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <!-- Category Filter Chips -->
-      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs font-bold">
-        <button onclick="filterCategory('all')" id="btn-all" class="px-3.5 py-2 rounded-xl bg-brand-500 text-white shadow-glow-rose shrink-0 transition">
-          Tất cả (<span id="count-all">153</span>)
-        </button>
-        <button onclick="filterCategory('chatgpt')" id="btn-chatgpt" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10 shrink-0 transition flex items-center gap-1.5">
-          <i class="fa-solid fa-robot text-emerald-400"></i> ChatGPT (<span id="count-chatgpt">43</span>)
-        </button>
-        <button onclick="filterCategory('ai')" id="btn-ai" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10 shrink-0 transition flex items-center gap-1.5">
-          <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> AI Studio (<span id="count-ai">14</span>)
-        </button>
-        <button onclick="filterCategory('entertainment')" id="btn-entertainment" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10 shrink-0 transition flex items-center gap-1.5">
-          <i class="fa-solid fa-film text-rose-400"></i> Giải Trí (<span id="count-entertainment">9</span>)
-        </button>
-        <button onclick="filterCategory('resource')" id="btn-resource" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10 shrink-0 transition flex items-center gap-1.5">
-          <i class="fa-solid fa-box-archive text-indigo-400"></i> MMO & Tài Nguyên (<span id="count-resource">52</span>)
-        </button>
-        <button onclick="filterCategory('in_stock')" id="btn-in_stock" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-400 border border-emerald-500/30 shrink-0 transition flex items-center gap-1.5">
-          <i class="fa-solid fa-circle-check"></i> Chỉ Còn Hàng
-        </button>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- PRODUCTS GRID SHOWCASE -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    </script>
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Count Info -->
-    <div class="flex items-center justify-between mb-6">
-      <div class="flex items-center gap-2">
-        <h2 id="sectionTitle" class="text-base sm:text-lg font-black text-white">Tất Cả Mặt Hàng Hiện Có</h2>
-        <span id="displayCountBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-brand-500/20 text-brand-400 border border-brand-500/30">
-          153 sản phẩm
-        </span>
-      </div>
-
-      <!-- Quick Sync Button -->
-      <button onclick="syncLiveCatalog()" id="syncBtn" class="text-xs font-bold text-slate-400 hover:text-brand-400 flex items-center gap-1.5 transition">
-        <i id="syncIcon" class="fa-solid fa-rotate-right"></i>
-        <span>Làm mới tồn kho</span>
-      </button>
-    </div>
-
-    <!-- The Product Grid -->
-    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      <!-- Cards rendered instantly via JS -->
-    </div>
-
-    <!-- Empty State -->
-    <div id="emptyNotice" class="hidden py-24 text-center">
-      <div class="w-16 h-16 mx-auto rounded-2xl bg-slate-900 border border-white/10 grid place-items-center mb-3">
-        <i class="fa-solid fa-box-open text-2xl text-slate-500"></i>
-      </div>
-      <h3 class="text-base font-bold text-white">Không tìm thấy sản phẩm phù hợp</h3>
-      <p class="text-xs text-slate-400 mt-1">Vui lòng thử tìm từ khóa khác hoặc chọn lại danh mục.</p>
-      <button onclick="resetFilters()" class="mt-4 px-4 py-2 rounded-xl bg-brand-500 text-white font-bold text-xs">
-        Xem tất cả sản phẩm
-      </button>
-    </div>
-
-  </main>
-
-  <!-- PRODUCT DETAIL / ORDER MODAL -->
-  <div id="detailModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-    <div class="glass-card max-w-lg w-full rounded-3xl p-6 sm:p-7 border border-white/15 space-y-5 shadow-2xl relative">
-      
-      <!-- Close button -->
-      <button onclick="closeDetailModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white grid place-items-center transition">
-        <i class="fa-solid fa-xmark text-sm"></i>
-      </button>
-
-      <!-- Header with Icon & Name -->
-      <div class="flex items-start gap-4 pr-8">
-        <div class="w-14 h-14 rounded-2xl bg-slate-800 p-2.5 border border-white/10 shrink-0 grid place-items-center">
-          <img id="modalIcon" src="" class="w-full h-full object-contain">
-        </div>
-        <div>
-          <div class="flex items-center gap-2 mb-1">
-            <span id="modalBadge" class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-brand-500 text-white">SALE</span>
-            <span id="modalType" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-white/10 uppercase">ACCOUNT</span>
-          </div>
-          <h3 id="modalName" class="font-black text-base text-white leading-snug">Tên sản phẩm</h3>
-        </div>
-      </div>
-
-      <!-- Price & Stock row -->
-      <div class="p-4 rounded-2xl bg-slate-900/90 border border-white/10 flex items-center justify-between">
-        <div>
-          <p class="text-[11px] font-bold text-slate-400 uppercase">Giá niêm yết</p>
-          <p id="modalPrice" class="text-2xl font-black text-brand-400 font-mono mt-0.5">0đ</p>
-        </div>
-        <div class="text-right">
-          <p class="text-[11px] font-bold text-slate-400 uppercase">Trạng thái kho</p>
-          <p id="modalStock" class="text-sm font-extrabold text-emerald-400 mt-0.5">Sẵn hàng</p>
-        </div>
-      </div>
-
-      <!-- Description / Details -->
-      <div>
-        <p class="text-[11px] font-bold text-slate-400 uppercase mb-1.5">Mô tả & Chính sách bảo hành</p>
-        <div id="modalDesc" class="text-xs text-slate-300 bg-slate-950/60 p-3.5 rounded-xl border border-white/5 max-h-48 overflow-y-auto leading-relaxed whitespace-pre-line">
-          Nội dung mô tả...
-        </div>
-      </div>
-
-      <!-- Product ID / Code -->
-      <div class="flex items-center justify-between text-xs bg-slate-900/60 px-3.5 py-2.5 rounded-xl border border-white/5">
-        <span class="text-slate-400">Mã sản phẩm: <code id="modalId" class="text-white font-mono font-bold">--</code></span>
-        <button onclick="copyModalId()" class="text-brand-400 hover:text-brand-300 font-bold flex items-center gap-1">
-          <i class="fa-regular fa-copy"></i> Copy mã
-        </button>
-      </div>
-
-      <!-- Action: Redirect to Bot Telegram -->
-      <div class="space-y-2 pt-2">
-        <a id="modalBotLink" href="https://t.me/VuaBanLo_bot" target="_blank" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-500 via-rose-600 to-amber-500 hover:from-brand-600 hover:to-rose-700 text-white font-black text-xs text-center uppercase tracking-wider shadow-glow-rose transition flex items-center justify-center gap-2">
-          <i class="fa-brands fa-telegram text-base"></i>
-          <span>Đặt Mua Tự Động Qua Bot Telegram 24/7</span>
-        </a>
-        <p class="text-center text-[10px] text-slate-400">
-          Hệ thống Bot Telegram tự động tạo đơn, kiểm tra thanh toán và giao tài khoản ngay sau 3 giây.
-        </p>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- TOAST NOTIFICATION -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 max-w-sm px-4 py-3 rounded-2xl shadow-2xl text-xs font-bold text-white bg-slate-900 border border-white/20 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 flex items-center gap-2.5">
-    <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
-    <span id="toastMsg">Thông báo</span>
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="mt-16 border-t border-white/10 bg-slate-950/80 py-10 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-      <div>
-        <p class="text-sm font-extrabold text-white">BR-34 Digital Store — ShopByBrays</p>
-        <p class="text-xs text-slate-400 mt-1">Hệ thống phân phối tài khoản bản quyền, tool MMO & tài nguyên số 1 Việt Nam.</p>
-      </div>
-      <div class="flex items-center gap-4 text-xs font-bold">
-        <a href="https://t.me/VuaBanLo_bot" target="_blank" class="text-brand-400 hover:underline flex items-center gap-1.5">
-          <i class="fa-brands fa-telegram"></i> Bot Telegram: @VuaBanLo_bot
-        </a>
-        <span class="text-slate-600">|</span>
-        <a href="admin.html" class="text-slate-400 hover:text-white transition">
-          Trang Quản Trị Giá
-        </a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- CORE LOGIC SCRIPT -->
-  <script>
-    let allProducts = [];
-    let currentCategory = 'all';
-    let searchQuery = '';
-    let selectedModalProduct = null;
-
-    const $ = id => document.getElementById(id);
-    const fmtVnd = n => Number(n || 0).toLocaleString("vi-VN") + "đ";
-
-    // 1. Initial Load: Synchronous 0ms from CANBOSO_SERVICE
-    function initStorefront() {
-      if (window.CANBOSO_SERVICE) {
-        allProducts = CANBOSO_SERVICE.getLocalProducts();
-      } else {
-        allProducts = [];
-      }
-
-      updateCategoryCounts();
-      renderGrid();
-
-      // Silent background sync
-      setTimeout(syncLiveCatalog, 1000);
-    }
-
-    function updateCategoryCounts() {
-      const counts = { all: 0, chatgpt: 0, ai: 0, entertainment: 0, resource: 0 };
-      allProducts.forEach(p => {
-        if (!p.isVisible) return;
-        counts.all++;
-        if (counts[p.category] !== undefined) {
-          counts[p.category]++;
+    <style>
+        /* Floating animation for Hero image */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
         }
-      });
+        .animate-float {
+            animation: float 5s ease-in-out infinite;
+        }
 
-      if ($("count-all")) $("count-all").textContent = counts.all;
-      if ($("count-chatgpt")) $("count-chatgpt").textContent = counts.chatgpt;
-      if ($("count-ai")) $("count-ai").textContent = counts.ai;
-      if ($("count-entertainment")) $("count-entertainment").textContent = counts.entertainment;
-      if ($("count-resource")) $("count-resource").textContent = counts.resource;
+        /* === LIQUID GLASS & SMOOTH MOTION SYSTEM === */
+        :root {
+            --spring-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+            --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
 
-      if ($("statTotal")) $("statTotal").textContent = allProducts.length + "+";
-      if ($("statInStock")) {
-        const inStock = allProducts.filter(p => p.inStock && p.isVisible).length;
-        $("statInStock").textContent = inStock + "+";
-      }
-    }
+        /* GPU Compositor Layer Promotion (Zero-Lag Optimization) */
+        .gpu-layer {
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            will-change: transform;
+        }
 
-    function renderGrid() {
-      const grid = $("productGrid");
-      const empty = $("emptyNotice");
-      const displayBadge = $("displayCountBadge");
+        /* 3D Perspective Stage for TikTok-style Scroll Unfold */
+        .perspective-stage {
+            perspective: 1200px;
+            transform-style: preserve-3d;
+        }
 
-      let list = allProducts.filter(p => p.isVisible);
+        /* Reversible Bi-Directional Scroll Reveal (Up & Down) */
+        .scroll-fx-card {
+            opacity: 0;
+            transform: translate3d(0, 44px, 0) scale(0.94) rotateX(10deg);
+            transition:
+                opacity 0.65s var(--spring-smooth),
+                transform 0.75s var(--spring-smooth),
+                box-shadow 0.4s ease;
+            will-change: transform, opacity;
+            transform-origin: center bottom;
+        }
+        .scroll-fx-card.in-view {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1) rotateX(0deg);
+        }
+        .scroll-fx-card.above-view {
+            opacity: 0.25;
+            transform: translate3d(0, -32px, 0) scale(0.95) rotateX(-8deg);
+        }
 
-      if (currentCategory === 'in_stock') {
-        list = list.filter(p => p.inStock);
-      } else if (currentCategory !== 'all') {
-        list = list.filter(p => p.category === currentCategory);
-      }
+        /* Liquid Glass Refractive Surface */
+        .liquid-glass {
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.68) 0%,
+                rgba(255, 255, 255, 0.42) 50%,
+                rgba(255, 255, 255, 0.58) 100%
+            );
+            backdrop-filter: blur(24px) saturate(190%);
+            -webkit-backdrop-filter: blur(24px) saturate(190%);
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            box-shadow:
+                0 20px 45px -12px rgba(15, 23, 42, 0.18),
+                0 4px 16px -2px rgba(99, 102, 241, 0.12),
+                inset 0 1.5px 1.5px rgba(255, 255, 255, 0.9),
+                inset 0 -1px 2px rgba(255, 255, 255, 0.4);
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
 
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        list = list.filter(p => 
-          p.name.toLowerCase().includes(q) || 
-          p.desc.toLowerCase().includes(q) || 
-          p.id.toLowerCase().includes(q)
-        );
-      }
+        .dark .liquid-glass {
+            background: linear-gradient(
+                135deg,
+                rgba(15, 23, 42, 0.75) 0%,
+                rgba(30, 41, 59, 0.55) 50%,
+                rgba(15, 23, 42, 0.70) 100%
+            );
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow:
+                0 20px 45px -12px rgba(0, 0, 0, 0.5),
+                0 4px 16px -2px rgba(99, 102, 241, 0.25),
+                inset 0 1px 1px rgba(255, 255, 255, 0.18),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.5);
+        }
 
-      if (displayBadge) displayBadge.textContent = `${list.length} sản phẩm`;
+        /* Liquid Pill Active Indicator Spring Animation */
+        .liquid-active-pill {
+            transition: transform 0.45s var(--spring-bounce), width 0.35s var(--spring-smooth);
+            will-change: transform, width;
+        }
+        .liquid-stretching {
+            transform: scaleX(1.15) scaleY(0.9) !important;
+        }
 
-      if (!list.length) {
-        grid.innerHTML = "";
-        empty.classList.remove("hidden");
-        return;
-      }
+        /* Scroll Reveal Animations */
+        .reveal-section {
+            opacity: 0;
+            transform: translate3d(0, 36px, 0) scale(0.98);
+            transition:
+                opacity 0.75s var(--spring-smooth),
+                transform 0.75s var(--spring-smooth);
+            will-change: opacity, transform;
+        }
+        .reveal-section.is-visible {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
+        }
 
-      empty.classList.add("hidden");
+        /* Product Card Smooth Hover */
+        .product-card-smooth {
+            transition:
+                transform 0.5s var(--spring-smooth),
+                box-shadow 0.45s var(--spring-smooth),
+                border-color 0.3s ease,
+                opacity 0.55s var(--spring-smooth);
+            will-change: transform, opacity;
+        }
+        .product-card-smooth:hover {
+            transform: translate3d(0, -8px, 0) scale(1.015) !important;
+        }
+    </style>
+    <script src="canboso-service.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased transition-colors duration-300 selection:bg-brand-500 selection:text-white overflow-x-hidden">
 
-      grid.innerHTML = list.map(p => `
-        <div class="glass-card rounded-3xl p-5 flex flex-col justify-between group">
-          <div>
-            <!-- Top Badges -->
-            <div class="flex items-center justify-between mb-3.5">
-              <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider ${
-                p.badge === 'SALE' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' :
-                p.badge === 'HOT' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
-                'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-              }">
-                ${p.badge}
-              </span>
-              
-              <!-- Stock Indicator -->
-              <span class="text-[11px] font-extrabold flex items-center gap-1.5 ${p.inStock ? 'text-emerald-400' : 'text-slate-500'}">
-                <span class="w-2 h-2 rounded-full ${p.inStock ? 'bg-emerald-400 pulse-dot' : 'bg-slate-600'}"></span>
-                <span>${p.stockText}</span>
-              </span>
-            </div>
+    <!-- Top Laser Scroll Progress Bar (GPU ScaleX) -->
+    <div class="fixed top-0 left-0 right-0 h-1 z-50 pointer-events-none bg-transparent">
+        <div id="scroll-progress-bar" class="h-full w-full bg-gradient-to-r from-brand-500 via-purple-500 to-pink-500 origin-left scale-x-0 gpu-layer shadow-[0_0_12px_rgba(99,102,241,0.8)]"></div>
+    </div>
 
-            <!-- Product Header: Icon & Name -->
-            <div class="flex items-start gap-3 mb-3">
-              <div class="w-12 h-12 rounded-2xl bg-slate-900 p-2 border border-white/10 shrink-0 grid place-items-center group-hover:border-brand-500/50 transition">
-                <img src="${p.icon}" class="w-full h-full object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3524/3524636.png'">
-              </div>
-              <div class="min-w-0 flex-1">
-                <h3 class="font-black text-sm text-white line-clamp-1 group-hover:text-brand-400 transition" title="${p.name}">
-                  ${p.name}
-                </h3>
-                <div class="flex items-center gap-2 mt-1">
-                  <span class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-white/5">
-                    ${p.productType}
-                  </span>
-                  <span class="text-[10px] text-slate-400 truncate">
-                    ${p.categoryLabel}
-                  </span>
+    <!-- Top Announcement Bar -->
+    <div class="bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 text-white text-xs sm:text-sm py-2.5 px-4 text-center font-medium">
+        ✨ Ưu đãi ra mắt phiên bản mới: Nhập mã <span class="font-bold underline cursor-pointer" onclick="copyDemoCode()">DEMO20</span> để được giảm ngay 20% cho mọi đơn hàng thử nghiệm!
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+                    <i class="fa-solid fa-cube text-lg"></i>
                 </div>
-              </div>
+                <div>
+                    <span class="text-lg font-black tracking-tight bg-gradient-to-r from-brand-600 to-purple-600 bg-clip-text text-transparent">BR-34</span>
+                    <span class="text-xs block font-semibold text-slate-400 -mt-1 tracking-widest uppercase">Studio Demo</span>
+                </div>
             </div>
 
-            <!-- Description -->
-            <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-4">
-              ${p.desc || 'Tài khoản chính hãng, hỗ trợ giao dịch tự động và bảo hành uy tín.'}
-            </p>
-          </div>
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-300">
+                <a href="#hero" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Khám phá</a>
+                <a href="#spotlight" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Tiêu điểm</a>
+                <a href="#catalog" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Sản phẩm</a>
+                <a href="#bento-showcase" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Hiệu ứng 3D</a>
+            </nav>
 
-          <!-- Bottom: Price & Action Buttons -->
-          <div class="pt-3 border-t border-white/5 flex items-center justify-between gap-3">
-            <div>
-              <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Giá bán:</p>
-              <p class="text-lg font-black text-brand-400 font-mono leading-tight">
-                ${p.sellPriceFormatted}
-              </p>
-            </div>
+            <!-- Actions -->
+            <div class="flex items-center gap-3">
+                <!-- Theme Toggle -->
+                <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="Chuyển giao diện sáng/tối">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+                </button>
 
-            <div class="flex items-center gap-1.5">
-              <button onclick="openDetailModal('${p.id}')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-white/10 transition" title="Xem chi tiết">
-                Chi tiết
-              </button>
-              <a href="https://t.me/VuaBanLo_bot" target="_blank" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 hover:from-brand-600 hover:to-rose-700 text-white font-extrabold text-xs shadow-glow-rose transition flex items-center gap-1">
-                <i class="fa-brands fa-telegram text-xs"></i>
-                <span>Mua</span>
-              </a>
+                <!-- Compare Trigger -->
+                <button onclick="openCompareModal()" class="relative w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="So sánh sản phẩm">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <span id="compare-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-purple-600 text-white rounded-full text-xs font-bold flex items-center justify-center shadow hidden">0</span>
+                </button>
+
+                <!-- Cart Trigger -->
+                <button onclick="toggleCartDrawer()" class="relative px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-brand-500/25 transition-all">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="hidden sm:inline">Giỏ hàng</span>
+                    <span id="cart-badge" class="w-5 h-5 bg-white text-brand-600 rounded-full text-xs font-bold flex items-center justify-center shadow">0</span>
+                </button>
             </div>
-          </div>
         </div>
-      `).join('');
-    }
+    </header>
 
-    function filterCategory(cat) {
-      currentCategory = cat;
-      ['all', 'chatgpt', 'ai', 'entertainment', 'resource', 'in_stock'].forEach(c => {
-        const btn = $(`btn-${c}`);
-        if (btn) {
-          btn.className = c === cat
-            ? 'px-3.5 py-2 rounded-xl bg-brand-500 text-white shadow-glow-rose shrink-0 transition'
-            : 'px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10 shrink-0 transition';
-        }
-      });
+    <!-- Hero Section -->
+    <section id="hero" class="relative pt-12 pb-20 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Left Column -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20">
+                        <i class="fa-solid fa-sparkles"></i> Trải nghiệm Web Trưng Bày Đẳng Cấp 2026
+                    </div>
+                    <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-[1.1]">
+                        Kiệt Tác Công Nghệ & <span class="bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Thiết Kế Tương Lai</span>
+                    </h1>
+                    <p class="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto lg:mx-0">
+                        Khám phá bộ sưu tập thiết bị cao cấp với hệ thống chuyển động tương tác thời gian thực, hiệu ứng kính lỏng (Liquid Glass) và định dạng 3D đỉnh cao.
+                    </p>
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#catalog" class="px-8 py-4 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-xl shadow-brand-500/30 transition-all hover:-translate-y-0.5">
+                            Khám phá ngay
+                        </a>
+                        <button onclick="openQuickView(1)" class="px-8 py-4 rounded-2xl bg-slate-200/80 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 font-bold text-sm transition-colors">
+                            Xem sản phẩm tiêu điểm
+                        </button>
+                    </div>
 
-      const titles = {
-        all: 'Tất Cả Mặt Hàng Hiện Có',
-        chatgpt: 'Tài Khoản ChatGPT & OpenAI',
-        ai: 'Tài Khoản AI Studio & Pro (Antigravity, Veo 3)',
-        entertainment: 'Ứng Dụng & Giải Trí (YouTube, Canva, Netflix)',
-        resource: 'Tài Nguyên MMO & Tool (Mail, Proxy, Via)',
-        in_stock: 'Các Mặt Hàng Đang Có Sẵn Trong Kho'
-      };
-      if ($("sectionTitle")) $("sectionTitle").textContent = titles[cat] || 'Danh Sách Mặt Hàng';
+                    <!-- Mini Stats -->
+                    <div class="pt-6 grid grid-cols-3 gap-4 max-w-md mx-auto lg:mx-0 border-t border-slate-200/80 dark:border-slate-800/80">
+                        <div>
+                            <div class="text-2xl font-extrabold text-slate-900 dark:text-white">12+</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400">Tuyệt tác thiết kế</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-extrabold text-slate-900 dark:text-white">4.9/5</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400">Đánh giá hài lòng</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-extrabold text-slate-900 dark:text-white">2 Năm</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400">Bảo hành toàn cầu</div>
+                        </div>
+                    </div>
+                </div>
 
-      renderGrid();
-    }
+                <!-- Right Column -->
+                <div class="lg:col-span-5 relative perspective-stage">
+                    <div data-parallax="-0.18" class="gpu-layer hidden sm:flex absolute -top-6 -left-6 z-20 items-center gap-2.5 px-4 py-2.5 rounded-2xl liquid-glass text-xs font-bold shadow-xl">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>Chống ồn AI -48dB</span>
+                    </div>
 
-    function onSearchChange() {
-      searchQuery = ($("searchInput")?.value || "").trim();
-      const clearBtn = $("clearSearchBtn");
-      if (clearBtn) clearBtn.classList.toggle("hidden", !searchQuery);
-      renderGrid();
-    }
+                    <div data-parallax="0.16" class="gpu-layer hidden sm:flex absolute -bottom-5 -right-4 z-20 items-center gap-2.5 px-4 py-2.5 rounded-2xl liquid-glass text-xs font-bold shadow-xl">
+                        <i class="fa-solid fa-bolt text-amber-500"></i>
+                        <span>Pin 60 Giờ Hi-Res</span>
+                    </div>
 
-    function clearSearch() {
-      if ($("searchInput")) $("searchInput").value = "";
-      searchQuery = "";
-      if ($("clearSearchBtn")) $("clearSearchBtn").classList.add("hidden");
-      renderGrid();
-    }
+                    <div id="hero-3d-card" class="gpu-layer relative mx-auto max-w-md bg-gradient-to-b from-white to-slate-100 dark:from-slate-800/90 dark:to-slate-900/90 rounded-3xl p-6 shadow-2xl border border-slate-200/80 dark:border-slate-700/60">
+                        <div class="absolute top-4 left-4 z-10 flex gap-2">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-white shadow">Flagship 2026</span>
+                        </div>
+                        <div class="relative rounded-2xl overflow-hidden bg-slate-200 dark:bg-slate-800 aspect-square mb-5">
+                            <img 
+                                src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80" 
+                                onerror="this.src='https://placehold.co/600x600/1e293b/ffffff?text=Lumiere+Studio+Pro'"
+                                alt="Tai nghe BR-34 Studio Pro" 
+                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                            >
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">Âm thanh Hi-Res</p>
+                                <h2 class="text-xl font-bold text-slate-900 dark:text-white">BR-34 Studio Pro Max</h2>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs line-through text-slate-400 block">9.990.000₫</span>
+                                <span class="text-lg font-extrabold text-brand-600 dark:text-brand-400">8.490.000₫</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-5">Chống ồn chủ động AI thích ứng, màng loa Beryllium 45mm, thời lượng pin lên đến 60 giờ.</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="openQuickView(1)" class="py-3 px-4 rounded-xl font-semibold text-xs sm:text-sm bg-slate-200/80 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+                                <i class="fa-regular fa-eye mr-1.5"></i> Xem chi tiết
+                            </button>
+                            <button onclick="addToCart(1, 1)" class="py-3 px-4 rounded-xl font-semibold text-xs sm:text-sm bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-500/20 transition-all">
+                                <i class="fa-solid fa-plus mr-1.5"></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    function resetFilters() {
-      clearSearch();
-      filterCategory('all');
-    }
+    <!-- Velocity-Reactive Kinetic Typography Marquee -->
+    <div class="relative py-4 bg-slate-900 dark:bg-slate-900 border-b border-slate-800 overflow-hidden select-none">
+        <div id="kinetic-marquee" class="gpu-layer flex items-center gap-10 whitespace-nowrap text-xs sm:text-sm font-extrabold uppercase tracking-[0.22em] text-slate-300">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-wand-magic-sparkles text-brand-400"></i> CHUYỂN ĐỘNG MƯỢT MÀ</span>
+            <span class="text-slate-600">•</span>
+            <span class="flex items-center gap-3"><i class="fa-solid fa-cube text-purple-400"></i> TƯƠNG TÁC KHÔNG GIAN 3D</span>
+            <span class="text-slate-600">•</span>
+            <span class="flex items-center gap-3"><i class="fa-solid fa-shield-halved text-emerald-400"></i> CHẾ TÁC TITANIUM CẤP ĐỘ 5</span>
+            <span class="text-slate-600">•</span>
+            <span class="flex items-center gap-3"><i class="fa-solid fa-bolt text-amber-400"></i> ÂM THANH LOSSLESS HI-RES</span>
+            <span class="text-slate-600">•</span>
+            <span class="flex items-center gap-3"><i class="fa-solid fa-wand-magic-sparkles text-brand-400"></i> CHUYỂN ĐỘNG MƯỢT MÀ</span>
+            <span class="text-slate-600">•</span>
+            <span class="flex items-center gap-3"><i class="fa-solid fa-cube text-purple-400"></i> TƯƠNG TÁC KHÔNG GIAN 3D</span>
+            <span class="text-slate-600">•</span>
+            <span class="flex items-center gap-3"><i class="fa-solid fa-shield-halved text-emerald-400"></i> CHẾ TÁC TITANIUM CẤP ĐỘ 5</span>
+            <span class="text-slate-600">•</span>
+            <span class="flex items-center gap-3"><i class="fa-solid fa-bolt text-amber-400"></i> ÂM THANH LOSSLESS HI-RES</span>
+        </div>
+    </div>
 
-    async function syncLiveCatalog() {
-      const icon = $("syncIcon");
-      if (icon) icon.classList.add("fa-spin");
-      try {
-        if (window.CANBOSO_SERVICE) {
-          const fresh = await CANBOSO_SERVICE.fetchProducts(null, true);
-          if (fresh && fresh.length > 0) {
-            allProducts = fresh;
-            updateCategoryCounts();
-            renderGrid();
-            toast("Đã cập nhật trạng thái tồn kho & giá mới nhất!", true);
-          }
-        }
-      } catch (err) {
-        console.warn("Sync ngầm:", err);
-      } finally {
-        if (icon) icon.classList.remove("fa-spin");
-      }
-    }
+    <!-- TikTok-Style 3D Scroll-Unfold Bento Showcase Section -->
+    <section id="bento-showcase" class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 perspective-stage">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+            <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20">
+                Hiệu Ứng Cuộn Đa Chiều
+            </span>
+            <h2 class="text-3xl sm:text-5xl font-extrabold mt-3 tracking-tight">
+                Cuộn Lên & Xuống Để Cảm Nhận
+            </h2>
+            <p class="text-slate-600 dark:text-slate-400 mt-3 text-sm sm:text-base">
+                Các khối Bento dưới đây tự động mở góc nghiêng 3D, trượt đa tầng (Parallax) theo chiều vuốt lên hoặc xuống của bạn mà không gây giật lag.
+            </p>
+        </div>
 
-    function openDetailModal(id) {
-      selectedModalProduct = allProducts.find(p => p.id === id);
-      if (!selectedModalProduct) return;
+        <div id="scroll-unfold-stage" class="gpu-layer grid grid-cols-1 md:grid-cols-12 gap-6">
+            <!-- Bento 1: ChatGPT Plus -->
+            <div class="scroll-fx-card md:col-span-7 relative rounded-3xl overflow-hidden bg-gradient-to-br from-emerald-950/80 via-slate-900 to-slate-950 text-white p-8 sm:p-10 min-h-[340px] flex flex-col justify-between group border border-emerald-500/20 shadow-2xl">
+                <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none"></div>
+                <div class="relative z-10 flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
+                        <i class="fa-solid fa-robot text-emerald-400"></i> Top 1 Trợ Lý AI Toàn Cầu
+                    </span>
+                    <span class="text-xs font-mono text-emerald-400 font-bold">205.000₫ · BH 28D</span>
+                </div>
 
-      $("modalIcon").src = selectedModalProduct.icon;
-      $("modalName").textContent = selectedModalProduct.name;
-      $("modalBadge").textContent = selectedModalProduct.badge;
-      $("modalType").textContent = selectedModalProduct.productType;
-      $("modalPrice").textContent = selectedModalProduct.sellPriceFormatted;
-      $("modalStock").textContent = selectedModalProduct.stockText;
-      $("modalStock").className = `text-sm font-extrabold mt-0.5 ${selectedModalProduct.inStock ? 'text-emerald-400' : 'text-slate-500'}`;
-      $("modalDesc").textContent = selectedModalProduct.desc || 'Chính sách bảo hành theo tiêu chuẩn nhà phát hành. Vui lòng kiểm tra tài khoản ngay sau khi nhận.';
-      $("modalId").textContent = selectedModalProduct.id;
+                <div class="relative z-10 flex items-center gap-4 my-auto pt-6 pb-4">
+                    <div class="w-16 h-16 rounded-2xl bg-slate-900 p-3 border border-emerald-500/30 shadow-xl grid place-items-center shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" alt="OpenAI" class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                        <h3 class="text-2xl sm:text-3xl font-extrabold text-white">ChatGPT Plus GGPay 1 Tháng</h3>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed max-w-md">
+                            Mở khóa sức mạnh tối thượng của GPT-4o, DALL-E 3, Canvas và Advanced Voice Mode. Bảo hành uy tín 28 ngày 1 đổi 1.
+                        </p>
+                    </div>
+                </div>
 
-      $("detailModal").classList.remove("opacity-0", "pointer-events-none");
-    }
+                <div class="relative z-10 flex items-center justify-between pt-4 border-t border-emerald-500/20">
+                    <span class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Sẵn hàng trong kho: 49 cái
+                    </span>
+                    <a href="https://t.me/VuaBanLo_bot" target="_blank" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs shadow-lg transition flex items-center gap-1.5">
+                        <i class="fa-brands fa-telegram"></i> Đặt mua ngay
+                    </a>
+                </div>
+            </div>
 
-    function closeDetailModal() {
-      $("detailModal").classList.add("opacity-0", "pointer-events-none");
-    }
+            <!-- Bento 2: Antigravity Ultra -->
+            <div class="scroll-fx-card md:col-span-5 rounded-3xl bg-gradient-to-br from-indigo-950/80 via-slate-900 to-purple-950 text-white p-8 sm:p-10 flex flex-col justify-between shadow-2xl relative overflow-hidden border border-indigo-500/20">
+                <div class="relative z-10 flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                        Siêu Trí Tuệ DeepMind
+                    </span>
+                    <span class="text-xs font-mono text-indigo-400 font-bold">414.000₫</span>
+                </div>
 
-    function copyModalId() {
-      if (!selectedModalProduct) return;
-      navigator.clipboard.writeText(selectedModalProduct.id);
-      toast("Đã sao chép mã sản phẩm vào bộ nhớ tạm!", true);
-    }
+                <div class="relative z-10 my-auto py-4">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-900 p-2 border border-indigo-500/30 shadow-lg grid place-items-center mb-3">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" alt="Gemini" class="w-full h-full object-contain">
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-extrabold">Slot Antigravity x20 Ultra</h3>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
+                        Hạ tầng siêu tính toán AI, lưu trữ 30TB Photos & Drive, bảo hành trọn tháng full BHF.
+                    </p>
+                </div>
 
-    function toast(msg, isSuccess = true) {
-      const el = $("toast");
-      const msgEl = $("toastMsg");
-      if (!el || !msgEl) return;
-      msgEl.textContent = msg;
-      el.classList.remove("opacity-0", "translate-y-4", "pointer-events-none");
-      setTimeout(() => {
-        el.classList.add("opacity-0", "translate-y-4", "pointer-events-none");
-      }, 3000);
-    }
+                <div class="relative z-10 flex items-center justify-between pt-3 border-t border-indigo-500/20">
+                    <span class="text-xs text-indigo-300 font-bold">Slot Family Nhận Đơn</span>
+                    <a href="https://t.me/VuaBanLo_bot" target="_blank" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition">
+                        Đặt Slot
+                    </a>
+                </div>
+            </div>
 
-    // Initialize Storefront
-    document.addEventListener("DOMContentLoaded", initStorefront);
-    if (document.readyState === "complete" || document.readyState === "interactive") {
-      initStorefront();
-    }
-  </script>
-</body>
-</html>
+            <!-- Bento 3: Veo 3 Video AI -->
+            <div class="scroll-fx-card md:col-span-5 rounded-3xl bg-gradient-to-br from-amber-950/80 via-slate-900 to-slate-950 text-white p-8 sm:p-10 flex flex-col justify-between shadow-2xl relative overflow-hidden border border-amber-500/20">
+                <div class="relative z-10 flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        AI Video Cinematic
+                    </span>
+                    <span class="text-xs font-mono text-amber-400 font-bold">Từ 535.000₫</span>
+                </div>
+
+                <div class="relative z-10 my-auto py-4">
+                    <i class="fa-solid fa-clapperboard text-3xl text-amber-400 mb-2"></i>
+                    <h3 class="text-xl sm:text-2xl font-extrabold">Veo 3 x20 Ultra Credit</h3>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
+                        Sở hữu từ 5.000 đến 25.000 Credit Flow, render video 4K sắc nét chuẩn điện ảnh không độ trễ.
+                    </p>
+                </div>
+
+                <div class="relative z-10 flex items-center justify-between pt-3 border-t border-amber-500/20">
+                    <span class="text-xs text-amber-400 font-bold">Hạn mức Flow cao cấp</span>
+                    <a href="https://t.me/VuaBanLo_bot" target="_blank" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition">
+                        Khám phá
+                    </a>
+                </div>
+            </div>
+
+            <!-- Bento 4: YouTube & Canva -->
+            <div class="scroll-fx-card md:col-span-7 relative rounded-3xl overflow-hidden bg-gradient-to-br from-rose-950/80 via-slate-900 to-slate-950 text-white p-8 sm:p-10 min-h-[340px] flex flex-col justify-between group border border-rose-500/20 shadow-2xl">
+                <div class="relative z-10 flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 flex items-center gap-1.5">
+                        <i class="fa-solid fa-crown text-amber-400"></i> Bản Quyền Trọn Đời & 1 Năm
+                    </span>
+                    <span class="text-xs font-mono text-rose-400 font-bold">Từ 60.000₫</span>
+                </div>
+
+                <div class="relative z-10 flex items-center gap-4 my-auto pt-4 pb-2">
+                    <div class="w-14 h-14 rounded-2xl bg-slate-900 p-2.5 border border-rose-500/30 shadow-xl grid place-items-center shrink-0">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube" class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                        <h3 class="text-2xl sm:text-3xl font-extrabold text-white">YouTube Premium & Canva Pro</h3>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed max-w-md">
+                            Xem video không quảng cáo, nghe nhạc nền YouTube Music trọn năm + Nâng cấp Canva Pro Brand Kit chính chủ.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="relative z-10 flex items-center justify-between pt-4 border-t border-rose-500/20">
+                    <span class="text-xs font-bold text-rose-400">Nâng cấp chính chủ email</span>
+                    <a href="https://t.me/VuaBanLo_bot" target="_blank" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs shadow-lg transition flex items-center gap-1.5">
+                        <i class="fa-brands fa-telegram"></i> Đặt mua
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        >
