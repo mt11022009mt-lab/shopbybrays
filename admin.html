@@ -70,6 +70,7 @@
     @keyframes spin360 { 100% { transform: rotate(360deg); } }
     .animate-spin-fast { animation: spin360 0.8s linear infinite; }
   </style>
+  <script src="canboso-service.js"></script>
 </head>
 
 <body class="bg-surface-light dark:bg-surface-dark text-slate-800 dark:text-slate-100 font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white transition-colors duration-200">
@@ -184,6 +185,11 @@
             <button onclick="switchAdminTab('api')" id="tabNav-api" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
               <i class="fa-solid fa-network-wired w-4 text-center text-slate-400"></i>
               <span>4. Cấu hình API smm1s.vn</span>
+            </button>
+            <button onclick="switchAdminTab('products')" id="tabNav-products" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-tags w-4 text-center text-amber-500"></i>
+              <span>5. Sản phẩm & Cấu hình giá (Canboso Bot)</span>
+              <span class="ml-auto text-[10px] font-black px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-500">LIVE</span>
             </button>
           </nav>
         </div>
@@ -518,6 +524,154 @@
 
       </div>
 
+      
+        <!-- ========================================================
+             PANEL 5: QUẢN LÝ SẢN PHẨM & GIÁ CANBOSO BOT
+             ======================================================== -->
+        <section id="panel-products" class="hidden space-y-6">
+          <!-- Card 1: Kết Nối API & Trạng Thái Bot -->
+          <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-5">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <i class="fa-solid fa-robot text-amber-500 text-lg"></i>
+                  <span>Kết Nối API Bot Canboso (@VuaBanLo_bot)</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">LIVE REALTIME</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-1">Đồng bộ trực tiếp 255 sản phẩm, tồn kho và xuất tài khoản tự động từ hệ thống bot Telegram.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="loadCanbosoData(true)" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-glow-sm transition flex items-center gap-1.5">
+                  <i id="btnSyncProductsIcon" class="fa-solid fa-arrows-rotate"></i>
+                  <span>Đồng bộ từ Bot</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1">
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Số dư ví Bot:</p>
+                <div class="flex items-center justify-between">
+                  <span id="botBalanceText" class="text-xl font-black text-emerald-500 font-mono">-- ₫</span>
+                  <button type="button" onclick="checkCanbosoBalance()" class="text-xs font-bold text-brand-600 hover:underline">
+                    <i class="fa-solid fa-rotate-right mr-1"></i>Check
+                  </button>
+                </div>
+                <p id="botAccountName" class="text-[10px] text-slate-400">Tài khoản: tnr11thg2</p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1">
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Sản phẩm từ Bot:</p>
+                <div class="flex items-center justify-between">
+                  <span id="botTotalProductsText" class="text-xl font-black text-slate-800 dark:text-white font-mono">255</span>
+                  <span id="botInStockText" class="text-xs font-bold text-emerald-500">153 có hàng</span>
+                </div>
+                <p class="text-[10px] text-slate-400">Endpoint: /api/v2/telegram-buyer</p>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1.5">
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Buyer API Key:</p>
+                <div class="flex items-center gap-2">
+                  <input type="password" id="inputCanbosoApiKey" class="w-full px-3 py-1.5 rounded-lg text-xs font-mono bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                  <button type="button" onclick="saveCanbosoApiKey()" class="px-2.5 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 text-xs font-bold shrink-0">
+                    Lưu
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Quy Tắc Định Giá Chung (Global Pricing Margin) -->
+          <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
+            <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+              <i class="fa-solid fa-calculator text-brand-500"></i>
+              <span>Cấu Hình Quy Tắc Lợi Nhuận Toàn Sàn</span>
+            </h3>
+            <p class="text-xs text-slate-400">Quy tắc này sẽ tự động cộng tiền lời vào giá gốc của Bot cho tất cả sản phẩm (trừ các sản phẩm sếp tự nhập giá riêng bên dưới).</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Loại định giá:</label>
+                <select id="selectMarginType" onchange="onMarginTypeChange()" class="w-full px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white focus:outline-none focus:border-brand-500">
+                  <option value="fixed">Cộng thêm số tiền cố định (+ VNĐ)</option>
+                  <option value="percent">Cộng theo phần trăm (+ %)</option>
+                  <option value="none">Bán đúng giá gốc Bot (0đ lời)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Mức lợi nhuận mong muốn:</label>
+                <div class="relative">
+                  <input type="number" id="inputMarginValue" class="w-full px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white focus:outline-none focus:border-brand-500" placeholder="15000">
+                  <span id="marginUnitBadge" class="absolute right-3 top-2.5 text-xs font-extrabold text-slate-400">VNĐ</span>
+                </div>
+              </div>
+
+              <div class="pt-5">
+                <button type="button" onclick="applyGlobalMargin()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 hover:from-brand-600 hover:to-rose-700 text-white font-bold text-xs shadow-glow-sm transition">
+                  <i class="fa-solid fa-floppy-disk mr-1.5"></i> Lưu quy tắc giá chung
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Bảng Tùy Chỉnh Giá Chi Tiết Từng Sản Phẩm -->
+          <div class="p-6 rounded-3xl bg-white dark:bg-surface-darkcard border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <i class="fa-solid fa-sliders text-indigo-500"></i>
+                  <span>Bảng Chỉnh Giá Riêng & Quản Lý Ẩn/Hiện Từng Sản Phẩm</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">Sếp có thể gõ trực tiếp giá bán riêng cho bất kỳ sản phẩm nào. Để trống ô giá riêng nếu muốn web tự tính theo quy tắc chung.</p>
+              </div>
+              <button type="button" onclick="saveAllProductCustomPrices()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-glow-sm transition flex items-center gap-1.5">
+                <i class="fa-solid fa-check-double"></i>
+                <span>Lưu Tất Cả Giá Đã Sửa</span>
+              </button>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <div class="relative flex-1 min-w-[200px]">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                <input type="text" id="canbosoSearchInput" oninput="filterCanbosoProducts()" placeholder="Tìm kiếm tên sản phẩm, mã ID, ChatGPT, Ultra..." class="w-full pl-9 pr-4 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white focus:outline-none focus:border-brand-500">
+              </div>
+
+              <div class="flex items-center gap-1.5 overflow-x-auto text-xs font-bold">
+                <button type="button" onclick="setCanbosoFilterCat('all')" id="catBtn-all" class="px-3 py-1.5 rounded-lg bg-brand-500 text-white transition">Tất cả</button>
+                <button type="button" onclick="setCanbosoFilterCat('chatgpt')" id="catBtn-chatgpt" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition">ChatGPT</button>
+                <button type="button" onclick="setCanbosoFilterCat('ai')" id="catBtn-ai" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition">AI Pro / Anti</button>
+                <button type="button" onclick="setCanbosoFilterCat('entertainment')" id="catBtn-entertainment" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition">Giải Trí</button>
+                <button type="button" onclick="setCanbosoFilterCat('in_stock')" id="catBtn-in_stock" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 transition">Chỉ Có Hàng</button>
+              </div>
+            </div>
+
+            <!-- Table -->
+            <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 max-h-[600px] overflow-y-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 dark:bg-slate-800/90 text-slate-500 dark:text-slate-400 uppercase font-black tracking-wider sticky top-0 z-10">
+                  <tr>
+                    <th class="p-3">Sản phẩm</th>
+                    <th class="p-3 text-center">Tồn kho</th>
+                    <th class="p-3 text-right">Giá gốc Bot</th>
+                    <th class="p-3 text-right">Giá bán trên Web</th>
+                    <th class="p-3 text-center">Hiển thị</th>
+                    <th class="p-3 text-center">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="canbosoTableBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-200">
+                  <tr>
+                    <td colspan="6" class="p-8 text-center text-slate-400">
+                      <i class="fa-solid fa-spinner fa-spin text-lg mr-2"></i> Đang nạp dữ liệu từ Canboso API...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
       <footer class="mt-auto px-6 py-6 border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-surface-darkcard text-center text-xs text-slate-500 dark:text-slate-400">
         <p class="font-semibold text-slate-700 dark:text-slate-300">BR-34 Admin Portal · Quyền hạn Quản trị viên cấp cao</p>
       </footer>
@@ -719,7 +873,7 @@
        2. TABS QUẢN TRỊ
        ======================================================== */
     function switchAdminTab(t) {
-      ['overview', 'users', 'orders', 'api'].forEach(name => {
+      ['overview', 'users', 'orders', 'api', 'products'].forEach(name => {
         const navBtn = $(`tabNav-${name}`);
         const panel = $(`panel-${name}`);
         if (navBtn) {
@@ -732,6 +886,7 @@
         }
       });
       if (t === 'api') loadServicesStats();
+      if (t === 'products') initCanbosoAdmin();
     }
 
     /* ========================================================
