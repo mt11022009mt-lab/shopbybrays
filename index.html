@@ -50,6 +50,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 9999px; }
@@ -147,7 +148,7 @@
             <div class="flex items-center gap-2">
               <a href="https://zalo.me/0976976627" target="_blank" class="px-3.5 py-2 rounded-full text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 shadow-md shadow-blue-500/20 hover:scale-105 active:scale-95 transition flex items-center gap-1.5">
                 <i class="fa-solid fa-comment-dots text-xs"></i>
-                <span>Zalo Mua Ngay</span>
+                <span class="hidden sm:inline">Zalo Mua Ngay</span><span class="sm:hidden">Zalo</span>
               </a>
               <a href="admin.html" class="px-3 py-2 rounded-full text-xs font-bold text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-brand-500/40 transition flex items-center gap-1.5" title="Khu vực Quản Trị Viên (Yêu cầu đăng nhập)">
                 <i class="fa-solid fa-shield-halved text-brand-400"></i>
@@ -573,7 +574,7 @@
        MODAL CHI TIẾT SẢN PHẨM & ĐẶT HÀNG (ZALO)
        ======================================================== -->
   <div id="orderModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
-    <div class="glass-card max-w-lg w-full rounded-3xl p-6 sm:p-7 border border-white/15 shadow-2xl relative overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div class="glass-card max-w-lg w-full rounded-3xl p-5 sm:p-7 border border-white/20 shadow-2xl relative max-h-[92vh] overflow-y-auto overscroll-contain animate-in fade-in zoom-in-95 duration-200">
       
       <!-- Modal Close Button -->
       <button onclick="closeOrderModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white grid place-items-center transition">
@@ -648,29 +649,30 @@
   <div id="liquid-glass-dock-wrapper" class="fixed bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 transform translate-y-28 opacity-0 scale-90 pointer-events-none">
     <div class="flex items-center gap-2 sm:gap-3">
       
-      <!-- Main Capsule Nav -->
-      <nav id="liquid-glass-dock-nav" class="relative flex items-center gap-1 sm:gap-1.5 p-1.5 rounded-full bg-neutral-950/85 backdrop-blur-2xl border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(244,63,94,0.3)]">
+      <!-- Main Capsule Nav (Tối ưu co giãn vừa khít mọi kích cỡ màn hình điện thoại) -->
+      <nav id="liquid-glass-dock-nav" class="relative flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-neutral-950/90 backdrop-blur-2xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(244,63,94,0.35)] max-w-full">
         
-        <!-- Button 1: Khám phá / Trang chủ -->
-        <a href="#hero-section" class="px-3.5 sm:px-4 py-2 rounded-full font-bold text-xs flex items-center gap-2 transition-all text-slate-300 hover:text-white hover:bg-white/10">
+        <!-- Button 1: Khám phá -->
+        <a href="#hero-section" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-xs flex items-center gap-1.5 sm:gap-2 transition-all text-slate-300 hover:text-white hover:bg-white/10">
           <i class="fa-solid fa-compass text-sm text-brand-400"></i>
           <span class="hidden sm:inline">Khám Phá</span>
         </a>
 
-        <!-- Button 2: Kho Sản Phẩm -->
-        <a href="#catalog-section" class="px-3.5 sm:px-4 py-2 rounded-full font-bold text-xs flex items-center gap-2 transition-all text-white bg-gradient-to-r from-brand-500 to-rose-600 shadow-glow-sm">
+        <!-- Button 2: Kho Hàng -->
+        <a href="#catalog-section" class="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-xs flex items-center gap-1.5 sm:gap-2 transition-all text-white bg-gradient-to-r from-brand-500 to-rose-600 shadow-glow-sm">
           <i class="fa-solid fa-boxes-stacked text-sm"></i>
           <span>Kho Hàng</span>
         </a>
 
-        <!-- Button 3: Zalo Admin Mua Ngay -->
-        <a href="https://zalo.me/0976976627" target="_blank" class="px-3.5 sm:px-4 py-2 rounded-full font-bold text-xs flex items-center gap-2 transition-all bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/40 text-cyan-300 hover:text-white shadow-md shadow-blue-500/20">
+        <!-- Button 3: Zalo Admin -->
+        <a href="https://zalo.me/0976976627" target="_blank" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-xs flex items-center gap-1.5 sm:gap-2 transition-all bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/40 text-cyan-300 hover:text-white shadow-md shadow-blue-500/20">
           <i class="fa-solid fa-comment-dots text-sm text-cyan-400"></i>
-          <span>Zalo: 0976976627</span>
+          <span class="hidden sm:inline">Zalo: 0976976627</span>
+          <span class="sm:hidden">Zalo</span>
         </a>
 
-        <!-- Button 4: Admin Portal -->
-        <a href="admin.html" class="px-3 py-2 rounded-full font-bold text-xs flex items-center gap-1.5 transition-all text-slate-400 hover:text-white hover:bg-white/10" title="Khu vực Quản Trị Viên">
+        <!-- Button 4: Admin -->
+        <a href="admin.html" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full font-bold text-xs flex items-center gap-1.5 transition-all text-slate-400 hover:text-white hover:bg-white/10" title="Khu vực Quản Trị Viên">
           <i class="fa-solid fa-shield-halved text-brand-400"></i>
           <span class="hidden md:inline">Admin</span>
         </a>
@@ -678,7 +680,7 @@
       </nav>
 
       <!-- Scroll to Top Pill -->
-      <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-neutral-950/85 backdrop-blur-2xl border border-white/15 shadow-xl flex items-center justify-center text-slate-300 hover:text-white hover:scale-110 active:scale-95 transition-all" title="Lên đầu trang">
+      <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="w-9 h-9 sm:w-11 sm:h-11 shrink-0 rounded-full bg-neutral-950/90 backdrop-blur-2xl border border-white/20 shadow-xl flex items-center justify-center text-slate-300 hover:text-white hover:scale-110 active:scale-95 transition-all" title="Lên đầu trang">
         <i class="fa-solid fa-arrow-up text-xs sm:text-sm"></i>
       </button>
 
