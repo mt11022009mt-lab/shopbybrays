@@ -1067,7 +1067,11 @@
 
     initTheme();
     applyMaintenanceMode();
+    if (window.CANBOSO_SERVICE) {
+      PRODUCTS = CANBOSO_SERVICE.getLocalProducts();
+    }
     renderProducts();
+    loadRealtimeProducts();
 
     supabaseClient.auth.getSession().then(({ data: { session } }) => {
       syncUserData(session ? session.user : null);

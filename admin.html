@@ -572,7 +572,7 @@
               <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1.5">
                 <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Buyer API Key:</p>
                 <div class="flex items-center gap-2">
-                  <input type="password" id="inputCanbosoApiKey" class="w-full px-3 py-1.5 rounded-lg text-xs font-mono bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
+                  <input type="text" id="inputCanbosoApiKey" autocomplete="off" spellcheck="false" class="w-full px-3 py-1.5 rounded-lg text-xs font-mono bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white focus:outline-none focus:border-amber-500">
                   <button type="button" onclick="saveCanbosoApiKey()" class="px-2.5 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 text-xs font-bold shrink-0">
                     Lưu
                   </button>
@@ -1693,6 +1693,276 @@
 
     initTheme();
     checkAdminAuth();
+  
+    /* ========================================================
+       7. CANBOSO BOT & PRODUCT PRICING ADMIN
+       ======================================================== */
+    let canbosoProductsRaw = [];
+    let canbosoCurrentCat = 'all';
+    let canbosoSearchText = '';
+
+    async function initCanbosoAdmin() {
+      if (!window.CANBOSO_SERVICE) {
+        console.error("CANBOSO_SERVICE is not loaded");
+        return;
+      }
+      const settings = CANBOSO_SERVICE.getSettings();
+      const keyInput = $("inputCanbosoApiKey");
+      if (keyInput) keyInput.value = settings.apiKey || CANBOSO_SERVICE.DEFAULT_KEY;
+
+      const selMargin = $("selectMarginType");
+      const inpMargin = $("inputMarginValue");
+      if (selMargin) selMargin.value = settings.marginType || 'fixed';
+      if (inpMargin) inpMargin.value = settings.marginValue !== undefined ? settings.marginValue : 15000;
+      onMarginTypeChange();
+
+      // Hiển thị ngay 153+ sản phẩm có sẵn (0ms chờ)
+      canbosoProductsRaw = CANBOSO_SERVICE.getLocalProducts();
+      renderCanbosoTable();
+
+      const totalEl = $("botTotalProductsText");
+      const stockEl = $("botInStockText");
+      if (totalEl) totalEl.textContent = canbosoProductsRaw.length;
+      if (stockEl) {
+        const inStockCount = canbosoProductsRaw.filter(p => p.inStock).length;
+        stockEl.textContent = `${inStockCount} có hàng`;
+      }
+
+      // Check số dư và sync ngầm
+      checkCanbosoBalance();
+      loadCanbosoData(false);
+    }
+
+    function onMarginTypeChange() {
+      const type = $("selectMarginType")?.value || 'fixed';
+      const badge = $("marginUnitBadge");
+      const inp = $("inputMarginValue");
+      if (type === 'percent') {
+        if (badge) badge.textContent = '%';
+        if (inp && (!inp.value || inp.value > 100)) inp.value = 15;
+      } else if (type === 'fixed') {
+        if (badge) badge.textContent = 'VNĐ';
+        if (inp && inp.value < 1000) inp.value = 15000;
+      } else {
+        if (badge) badge.textContent = '0đ';
+        if (inp) inp.value = 0;
+      }
+    }
+
+    async function checkCanbosoBalance() {
+      const key = $("inputCanbosoApiKey")?.value.trim() || CANBOSO_SERVICE.DEFAULT_KEY;
+      const balEl = $("botBalanceText");
+      const nameEl = $("botAccountName");
+      if (balEl) balEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-xs"></i>`;
+      try {
+        const res = await CANBOSO_SERVICE.fetchBalance(key);
+        if (balEl) balEl.textContent = res.balanceText || (res.balanceVnd ? res.balanceVnd.toLocaleString('vi-VN') + 'đ' : res.balance + ' ₫');
+        if (nameEl) nameEl.textContent = `Tài khoản: ${res.requester?.name || 'tnr11thg2'} (ID: ${res.requester?.chatId || ''})`;
+      } catch (err) {
+        if (balEl) balEl.textContent = 'Lỗi check ví';
+        console.error('Lỗi check ví bot:', err);
+      }
+    }
+
+    function saveCanbosoApiKey() {
+      const key = $("inputCanbosoApiKey")?.value.trim();
+      if (!key) return alert("Vui lòng nhập API Key!");
+      const settings = CANBOSO_SERVICE.getSettings();
+      settings.apiKey = key;
+      CANBOSO_SERVICE.saveSettings(settings);
+      toast("Đã lưu API Key Canboso thành công!", true);
+      checkCanbosoBalance();
+      loadCanbosoData(true);
+    }
+
+    function applyGlobalMargin() {
+      const settings = CANBOSO_SERVICE.getSettings();
+      settings.marginType = $("selectMarginType").value;
+      settings.marginValue = Number($("inputMarginValue").value || 0);
+      CANBOSO_SERVICE.saveSettings(settings);
+      toast("Đã áp dụng quy tắc định giá mới toàn sàn!", true);
+      renderCanbosoTable();
+    }
+
+    async function loadCanbosoData(force = false) {
+      const icon = $("btnSyncProductsIcon");
+      if (icon) icon.classList.add("animate-spin-fast");
+      const tbody = $("canbosoTableBody");
+
+      try {
+        const key = $("inputCanbosoApiKey")?.value.trim();
+        canbosoProductsRaw = await CANBOSO_SERVICE.fetchProducts(key, force);
+
+        const totalEl = $("botTotalProductsText");
+        const stockEl = $("botInStockText");
+        if (totalEl) totalEl.textContent = canbosoProductsRaw.length;
+        if (stockEl) {
+          const inStockCount = canbosoProductsRaw.filter(p => p.inStock).length;
+          stockEl.textContent = `${inStockCount} có hàng`;
+        }
+
+        renderCanbosoTable();
+        if (force) toast("Đồng bộ danh sách sản phẩm thành công!", true);
+      } catch (err) {
+        console.error("Lỗi đồng bộ Canboso:", err);
+        // Fallback to local
+        canbosoProductsRaw = CANBOSO_SERVICE.getLocalProducts();
+        renderCanbosoTable();
+        if (force) toast("Dùng dữ liệu danh mục sẵn có: " + err.message, false);
+      } finally {
+        if (icon) icon.classList.remove("animate-spin-fast");
+      }
+    }
+
+    function setCanbosoFilterCat(cat) {
+      canbosoCurrentCat = cat;
+      ['all', 'chatgpt', 'ai', 'entertainment', 'in_stock'].forEach(c => {
+        const btn = $(`catBtn-${c}`);
+        if (btn) {
+          btn.className = c === cat 
+            ? 'px-3 py-1.5 rounded-lg bg-brand-500 text-white font-bold transition'
+            : 'px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold hover:bg-slate-200 transition';
+        }
+      });
+      renderCanbosoTable();
+    }
+
+    function filterCanbosoProducts() {
+      canbosoSearchText = ($("canbosoSearchInput")?.value || "").toLowerCase().trim();
+      renderCanbosoTable();
+    }
+
+    function renderCanbosoTable() {
+      const tbody = $("canbosoTableBody");
+      if (!tbody) return;
+
+      const settings = CANBOSO_SERVICE.getSettings();
+      const customPrices = CANBOSO_SERVICE.getCustomPrices();
+
+      let list = canbosoProductsRaw && canbosoProductsRaw.length > 0 ? canbosoProductsRaw : CANBOSO_SERVICE.getLocalProducts();
+      if (canbosoCurrentCat === 'in_stock') {
+        list = list.filter(p => p.inStock);
+      } else if (canbosoCurrentCat !== 'all') {
+        list = list.filter(p => p.category === canbosoCurrentCat);
+      }
+
+      if (canbosoSearchText) {
+        list = list.filter(p => p.name.toLowerCase().includes(canbosoSearchText) || p.id.toLowerCase().includes(canbosoSearchText));
+      }
+
+      if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400">Không tìm thấy sản phẩm nào khớp với bộ lọc.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(p => {
+        const customVal = customPrices[p.id] !== undefined ? customPrices[p.id] : "";
+        const sellPrice = CANBOSO_SERVICE.calculateSellPrice(p.basePrice, p.id, settings, customPrices);
+        const isHidden = (settings.hiddenProducts || []).includes(p.id);
+
+        return `
+          <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
+            <td class="p-3">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 p-1 shrink-0 grid place-items-center">
+                  <img src="${p.icon}" class="w-full h-full object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3524/3524636.png'">
+                </div>
+                <div class="min-w-0 max-w-[320px]">
+                  <p class="font-extrabold text-slate-900 dark:text-white truncate" title="${p.name}">${p.name}</p>
+                  <div class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
+                    <span class="px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 uppercase font-bold text-[9px]">${p.productType}</span>
+                    <span class="font-mono truncate">ID: ${p.id.slice(-8)}</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="p-3 text-center whitespace-nowrap">
+              ${p.inStock 
+                ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">${p.stockText}</span>`
+                : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-500 border border-rose-500/20">Hết hàng</span>`
+              }
+            </td>
+            <td class="p-3 text-right font-mono font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap">
+              ${p.basePriceFormatted}
+            </td>
+            <td class="p-3 text-right whitespace-nowrap">
+              <div class="inline-flex items-center gap-1.5">
+                <input type="number" 
+                  id="customPrice-${p.id}" 
+                  value="${customVal}" 
+                  placeholder="${sellPrice.toLocaleString('vi-VN')}" 
+                  class="w-28 px-2.5 py-1 rounded-lg text-right font-mono font-bold text-xs bg-slate-50 dark:bg-slate-800 border ${customVal ? 'border-amber-500 text-amber-500' : 'border-slate-200 dark:border-slate-700 text-emerald-600 dark:text-emerald-400'} focus:outline-none focus:border-brand-500"
+                >
+                <span class="text-[10px] font-bold text-slate-400">đ</span>
+              </div>
+            </td>
+            <td class="p-3 text-center whitespace-nowrap">
+              <button type="button" onclick="toggleProductVisibility('${p.id}')" class="px-2.5 py-1 rounded-lg text-[10px] font-bold transition ${isHidden ? 'bg-rose-500/10 text-rose-500 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'}">
+                ${isHidden ? '<i class="fa-solid fa-eye-slash mr-1"></i> Đang ẩn' : '<i class="fa-solid fa-eye mr-1"></i> Hiển thị'}
+              </button>
+            </td>
+            <td class="p-3 text-center whitespace-nowrap">
+              <button type="button" onclick="saveSingleCustomPrice('${p.id}')" class="px-3 py-1 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-bold text-[11px] shadow-sm transition">
+                Lưu giá
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function saveSingleCustomPrice(productId) {
+      const inp = $(`customPrice-${productId}`);
+      if (!inp) return;
+      const customPrices = CANBOSO_SERVICE.getCustomPrices();
+      const val = inp.value.trim();
+
+      if (val === "" || isNaN(Number(val))) {
+        delete customPrices[productId];
+        toast("Đã trả về giá tự động theo quy tắc chung!", true);
+      } else {
+        customPrices[productId] = Number(val);
+        toast(`Đã lưu giá riêng: ${Number(val).toLocaleString('vi-VN')}đ!`, true);
+      }
+      CANBOSO_SERVICE.saveCustomPrices(customPrices);
+      renderCanbosoTable();
+    }
+
+    function saveAllProductCustomPrices() {
+      const customPrices = CANBOSO_SERVICE.getCustomPrices();
+      let updatedCount = 0;
+
+      canbosoProductsRaw.forEach(p => {
+        const inp = $(`customPrice-${p.id}`);
+        if (inp) {
+          const val = inp.value.trim();
+          if (val !== "" && !isNaN(Number(val))) {
+            customPrices[p.id] = Number(val);
+            updatedCount++;
+          }
+        }
+      });
+
+      CANBOSO_SERVICE.saveCustomPrices(customPrices);
+      toast(`Đã lưu thành công ${updatedCount} sản phẩm có giá tùy chỉnh!`, true);
+      renderCanbosoTable();
+    }
+
+    function toggleProductVisibility(productId) {
+      const settings = CANBOSO_SERVICE.getSettings();
+      let hidden = settings.hiddenProducts || [];
+      if (hidden.includes(productId)) {
+        hidden = hidden.filter(id => id !== productId);
+        toast("Đã bật hiển thị sản phẩm trên web!", true);
+      } else {
+        hidden.push(productId);
+        toast("Đã ẩn sản phẩm khỏi web!", true);
+      }
+      settings.hiddenProducts = hidden;
+      CANBOSO_SERVICE.saveSettings(settings);
+      renderCanbosoTable();
+    }
+
   </script>
 </body>
 </html>

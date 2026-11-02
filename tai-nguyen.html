@@ -1011,6 +1011,9 @@
     }
 
     initTheme();
+    if (window.CANBOSO_SERVICE) {
+      PRODUCTS = CANBOSO_SERVICE.getLocalProducts();
+    }
     renderProducts();
     loadRealtimeProducts();
 
