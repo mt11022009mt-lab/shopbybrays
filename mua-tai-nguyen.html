@@ -64,7 +64,6 @@
     .modern-card { transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
     .modern-card:hover { transform: translateY(-2px); }
   </style>
-  <script src="canboso-service.js"></script>
 </head>
 
 <body class="bg-surface-light dark:bg-surface-dark text-slate-800 dark:text-slate-100 font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white transition-colors duration-200">
@@ -468,7 +467,7 @@
     let searchKeyword = "";
 
     /* DANH MỤC SẢN PHẨM THỰC TẾ (+10.000đ SO VỚI WEB MẸ SMM1S.VN) */
-    let PRODUCTS = [
+    const PRODUCTS = [
       {
         id: "p_gemini_1y",
         name: "Google Gemini Advanced Pro 1 Năm",
@@ -504,30 +503,6 @@
         stock: 25,
         desc: "Nâng cấp trực tiếp trên tài khoản cá nhân, bảo hành trọn thời hạn 1 năm.",
         format: "invite_link"
-      },
-      {
-        id: "p_chatgpt_ggpay_28d",
-        name: "[SALE] ChatGPT Plus GGPay 1 Tháng (BH 28D)",
-        cat: "premium",
-        badge: "SALE",
-        icon: "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg",
-        smm1s_price: 205000,
-        price: 205000,
-        stock: 49,
-        desc: "ChatGPT Plus thanh toán qua Google Pay chính hãng, gói 1 tháng bảo hành 28 ngày.",
-        format: "email|password"
-      },
-      {
-        id: "p_chatgpt_ggpay_24h",
-        name: "ChatGPT Plus GGPay 1 Tháng (BH 24H)",
-        cat: "premium",
-        badge: "BH 24H",
-        icon: "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg",
-        smm1s_price: 150000,
-        price: 150000,
-        stock: 56,
-        desc: "ChatGPT Plus GGPay 1 tháng gói tiết kiệm, bảo hành login 24 giờ đầu.",
-        format: "email|password"
       },
       {
         id: "p_chatgpt_plus",
@@ -627,62 +602,13 @@
       }
     ];
 
-    
-    let realtimeProductsList = [];
-    let isRealtimeLoading = false;
-
-    async function loadRealtimeProducts() {
-      if (!window.CANBOSO_SERVICE) return;
-      isRealtimeLoading = true;
-      const grid = $("productGrid");
-      if (grid && (!PRODUCTS || PRODUCTS.length === 0)) {
-        grid.innerHTML = `
-          <div class="col-span-full py-16 text-center text-slate-400">
-            <i class="fa-solid fa-spinner fa-spin text-3xl text-brand-500 mb-3"></i>
-            <p class="font-bold text-sm">Đang tải sản phẩm thời gian thực từ Bot...</p>
-          </div>
-        `;
-      }
-
-      try {
-        const list = await CANBOSO_SERVICE.fetchProducts(null, false);
-        if (list && list.length > 0) {
-          realtimeProductsList = list.filter(p => p.isVisible).map(p => ({
-            id: p.id,
-            name: p.name,
-            cat: p.category,
-            badge: p.badge,
-            icon: p.icon,
-            price: p.sellPrice,
-            priceFormatted: p.sellPriceFormatted,
-            basePrice: p.basePrice,
-            stock: p.stock !== null ? p.stock : 99,
-            stockText: p.stockText,
-            inStock: p.inStock,
-            desc: p.desc,
-            productType: p.productType,
-            purchaseRequirements: p.purchaseRequirements
-          }));
-
-          PRODUCTS = realtimeProductsList;
-          renderProducts();
-        }
-      } catch (err) {
-        console.warn("Không tải được realtime Canboso API, sử dụng dữ liệu mặc định:", err);
-      } finally {
-        isRealtimeLoading = false;
-      }
-    }
-
     function renderProducts() {
       const grid = $("productGrid");
       const empty = $("emptyNotice");
 
       let list = PRODUCTS;
-      if (currentCategory === "in_stock") {
-        list = list.filter(p => p.inStock);
-      } else if (currentCategory !== "all") {
-        list = list.filter(p => p.cat === currentCategory || (currentCategory === 'premium' && (p.cat === 'chatgpt' || p.cat === 'ai')));
+      if (currentCategory !== "all") {
+        list = list.filter(p => p.cat === currentCategory);
       }
       if (searchKeyword) {
         const q = searchKeyword.toLowerCase();
@@ -1067,11 +993,7 @@
 
     initTheme();
     applyMaintenanceMode();
-    if (window.CANBOSO_SERVICE) {
-      PRODUCTS = CANBOSO_SERVICE.getLocalProducts();
-    }
     renderProducts();
-    loadRealtimeProducts();
 
     supabaseClient.auth.getSession().then(({ data: { session } }) => {
       syncUserData(session ? session.user : null);
