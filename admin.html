@@ -70,6 +70,7 @@
     @keyframes spin360 { 100% { transform: rotate(360deg); } }
     .animate-spin-fast { animation: spin360 0.8s linear infinite; }
   </style>
+  <script src="products-data.js"></script>
 </head>
 
 <body class="bg-surface-light dark:bg-surface-dark text-slate-800 dark:text-slate-100 font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white transition-colors duration-200">
@@ -171,6 +172,11 @@
             <button onclick="switchAdminTab('overview')" id="tabNav-overview" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-brand-50 to-rose-50 dark:from-brand-950/40 dark:to-rose-950/20 text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-brand-800/60 shadow-sm transition">
               <i class="fa-solid fa-chart-pie w-4 text-center"></i>
               <span>1. Tổng quan Dashboard</span>
+            </button>
+            <button onclick="switchAdminTab('products')" id="tabNav-products" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-tags w-4 text-center text-amber-500"></i>
+              <span>2. Quản lý Bảng Giá & Kho Hàng</span>
+              <span class="ml-auto px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-400">LIVE</span>
             </button>
             <button onclick="switchAdminTab('users')" id="tabNav-users" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
               <i class="fa-solid fa-users-gear w-4 text-center text-slate-400"></i>
@@ -494,6 +500,127 @@
               </div>
             </div>
 
+      <!-- ========================================================
+           TAB: QUẢN LÝ BẢNG GIÁ & SẢN PHẨM KHO HÀNG (LIVE)
+           ======================================================== -->
+      <div id="panel-products" class="hidden space-y-6">
+
+        <!-- Header Card -->
+        <div class="p-6 rounded-2xl bg-white dark:bg-surface-darkcard border border-slate-200 dark:border-white/10 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <h2 class="text-lg font-black text-slate-900 dark:text-white">Quản Lý Bảng Giá & Kho Hàng Tự Động</h2>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/30">Thời gian thực</span>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Đồng bộ tồn kho từ hệ thống Bot, cấu hình mức lợi nhuận toàn sàn hoặc đặt giá bán lẻ riêng từng món trên trang chủ.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="syncAdminLiveStock()" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs transition flex items-center gap-2">
+              <i id="syncStockIcon" class="fa-solid fa-arrows-rotate"></i>
+              <span>Đồng bộ tồn kho Bot</span>
+            </button>
+            <a href="index.html#catalog-section" target="_blank" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 hover:from-brand-600 hover:to-rose-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-2">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              <span>Xem Web Khách</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Global Profit Margin Settings -->
+        <div class="p-6 rounded-2xl bg-white dark:bg-surface-darkcard border border-slate-200 dark:border-white/10 shadow-sm space-y-4">
+          <div class="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-white/5">
+            <i class="fa-solid fa-calculator text-brand-500"></i>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Cấu Hình Quy Tắc Lợi Nhuận Toàn Sàn</h3>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Quy tắc này sẽ tự động cộng lãi vào giá gốc cho tất cả các sản phẩm trên web (trừ các món sếp tự nhập giá bán lẻ riêng bên dưới).
+          </p>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-end">
+            <div class="sm:col-span-4 space-y-1.5">
+              <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Loại định giá:</label>
+              <select id="adminMarginType" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-neutral-950 border border-slate-200 dark:border-white/10 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-brand-500">
+                <option value="fixed">Cộng thêm số tiền cố định (+ VNĐ)</option>
+                <option value="percent">Cộng thêm tỷ lệ phần trăm (+ %)</option>
+              </select>
+            </div>
+            <div class="sm:col-span-5 space-y-1.5">
+              <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Mức lợi nhuận mong muốn:</label>
+              <div class="relative">
+                <input id="adminMarginValue" type="number" value="15000" min="0" step="1000" placeholder="15000" class="w-full pl-4 pr-12 py-2.5 rounded-xl bg-slate-50 dark:bg-neutral-950 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-brand-500">
+                <span id="adminMarginUnit" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">VNĐ</span>
+              </div>
+            </div>
+            <div class="sm:col-span-3">
+              <button onclick="saveAdminGlobalMargin()" class="w-full py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Lưu Lợi Nhuận Chung</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Table & Per-item Price Override -->
+        <div class="p-6 rounded-2xl bg-white dark:bg-surface-darkcard border border-slate-200 dark:border-white/10 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-white/5">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-sliders text-brand-500"></i>
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white">Bảng Giá Riêng Từng Sản Phẩm</h3>
+            </div>
+            <button onclick="saveAllAdminCustomPrices()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5 self-start sm:self-auto">
+              <i class="fa-solid fa-check-double"></i>
+              <span>Lưu Tất Cả Giá Đã Sửa</span>
+            </button>
+          </div>
+
+          <!-- Search and Filter in Admin -->
+          <div class="flex flex-col sm:flex-row items-center gap-3">
+            <div class="relative flex-1 w-full">
+              <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input id="adminProductSearch" oninput="renderAdminProductsTable()" type="text" placeholder="Tìm theo tên sản phẩm, mã ID, loại..." class="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-neutral-950 border border-slate-200 dark:border-white/10 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-500">
+            </div>
+            <select id="adminCategoryFilter" onchange="renderAdminProductsTable()" class="w-full sm:w-48 px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-neutral-950 border border-slate-200 dark:border-white/10 text-xs font-medium text-slate-800 dark:text-white focus:outline-none focus:border-brand-500">
+              <option value="all">Tất cả danh mục</option>
+              <option value="chatgpt">ChatGPT & OpenAI</option>
+              <option value="ai">AI Studio & Code</option>
+              <option value="entertainment">Giải Trí (Netflix, YTB)</option>
+              <option value="design">Đồ Họa (Canva, CapCut)</option>
+              <option value="license">Office & VPN</option>
+              <option value="resource">Tài Nguyên MMO</option>
+              <option value="instock">Chỉ sản phẩm còn hàng</option>
+            </select>
+          </div>
+
+          <!-- Table Container -->
+          <div class="overflow-x-auto rounded-xl border border-slate-100 dark:border-white/5">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-50 dark:bg-neutral-950/60 text-slate-500 dark:text-slate-400 font-bold border-b border-slate-200 dark:border-white/10">
+                <tr>
+                  <th class="px-4 py-3">Sản phẩm</th>
+                  <th class="px-3 py-3 text-center">Tồn kho</th>
+                  <th class="px-3 py-3 text-right">Giá gốc Bot</th>
+                  <th class="px-3 py-3 text-right">Giá bán Web</th>
+                  <th class="px-4 py-3">Giá bán riêng (VNĐ)</th>
+                  <th class="px-3 py-3 text-center">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="adminProductsTableBody" class="divide-y divide-slate-100 dark:divide-white/5 font-medium">
+                <!-- Rendered via JS -->
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
+            <span id="adminProductsCount">Đang tải...</span>
+            <span>Mẹo: Để trống ô "Giá bán riêng" nếu muốn áp dụng theo quy tắc lợi nhuận chung.</span>
+          </div>
+        </div>
+
+      </div>
+
+
             <div id="smm1sBalanceResult" class="hidden p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-xs text-emerald-800 dark:text-emerald-200 flex items-center justify-between">
               <div>
                 <p class="font-bold">Kết nối API smm1s.vn thành công!</p>
@@ -719,7 +846,7 @@
        2. TABS QUẢN TRỊ
        ======================================================== */
     function switchAdminTab(t) {
-      ['overview', 'users', 'orders', 'api'].forEach(name => {
+      ['overview', 'products', 'users', 'orders', 'api'].forEach(name => {
         const navBtn = $(`tabNav-${name}`);
         const panel = $(`panel-${name}`);
         if (navBtn) {
@@ -732,6 +859,7 @@
         }
       });
       if (t === 'api') loadServicesStats();
+      if (t === 'products') initAdminProducts();
     }
 
     /* ========================================================
@@ -1538,6 +1666,162 @@
 
     initTheme();
     checkAdminAuth();
-  </script>
+  
+    /* ========================================================
+       QUẢN LÝ BẢNG GIÁ & KHO HÀNG (LIVE)
+       ======================================================== */
+    let adminProductsCache = [];
+    let adminCurrentCustomPrices = {};
+
+    function initAdminProducts() {
+      if (typeof BR34_PRODUCT_SERVICE === 'undefined') return;
+      
+      const settings = BR34_PRODUCT_SERVICE.getSettings();
+      const marginTypeSelect = $("adminMarginType");
+      const marginValInput = $("adminMarginValue");
+      const unitSpan = $("adminMarginUnit");
+
+      if (marginTypeSelect) {
+        marginTypeSelect.value = settings.marginType || 'fixed';
+        marginTypeSelect.onchange = function() {
+          if (unitSpan) unitSpan.textContent = this.value === 'percent' ? '%' : 'VNĐ';
+        };
+      }
+      if (marginValInput) {
+        marginValInput.value = settings.marginValue || 15000;
+      }
+      if (unitSpan) {
+        unitSpan.textContent = settings.marginType === 'percent' ? '%' : 'VNĐ';
+      }
+
+      adminProductsCache = BR34_PRODUCT_SERVICE.getProducts();
+      adminCurrentCustomPrices = BR34_PRODUCT_SERVICE.getCustomPrices() || {};
+      renderAdminProductsTable();
+    }
+
+    function renderAdminProductsTable() {
+      const tbody = $("adminProductsTableBody");
+      const countEl = $("adminProductsCount");
+      const searchVal = ($("adminProductSearch")?.value || '').trim().toLowerCase();
+      const catVal = $("adminCategoryFilter")?.value || 'all';
+      if (!tbody) return;
+
+      const filtered = adminProductsCache.filter(p => {
+        if (catVal !== 'all') {
+          if (catVal === 'instock') {
+            if (!p.inStock) return false;
+          } else if (p.category !== catVal) {
+            return false;
+          }
+        }
+        if (searchVal) {
+          const str = (p.name + ' ' + p.brand + ' ' + p.id).toLowerCase();
+          if (!str.includes(searchVal)) return false;
+        }
+        return true;
+      });
+
+      if (countEl) {
+        countEl.textContent = `Hiển thị ${filtered.length} / ${adminProductsCache.length} sản phẩm`;
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-slate-400">Không có sản phẩm nào phù hợp</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(p => {
+        const basePrice = Number(p.basePrice) || 0;
+        const currentSellingPrice = BR34_PRODUCT_SERVICE.calculatePrice(p);
+        const hasCustom = adminCurrentCustomPrices && adminCurrentCustomPrices[p.id] !== undefined;
+        const customVal = hasCustom ? adminCurrentCustomPrices[p.id] : '';
+
+        const stockBadge = p.inStock
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">${p.stock}</span>`
+          : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-400">Hết</span>`;
+
+        return `
+          <tr class="hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition">
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-2.5">
+                <img src="${p.logo}" class="w-6 h-6 object-contain rounded-md" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3524/3524636.png'">
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white line-clamp-1 max-w-xs" title="${p.name}">${p.name}</div>
+                  <div class="text-[10px] text-slate-400 font-mono">ID: ${p.id.slice(-8)} • ${p.warranty}</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-3 py-3 text-center">${stockBadge}</td>
+            <td class="px-3 py-3 text-right font-mono font-medium text-slate-500">${basePrice.toLocaleString('vi-VN')}đ</td>
+            <td class="px-3 py-3 text-right font-mono font-bold ${hasCustom ? 'text-amber-500' : 'text-brand-500'}">
+              ${currentSellingPrice.toLocaleString('vi-VN')}đ
+            </td>
+            <td class="px-4 py-3">
+              <input id="inputPrice-${p.id}" type="number" step="1000" min="0" value="${customVal}" placeholder="Theo quy tắc chung" class="w-36 px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-neutral-950 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-brand-500 font-mono">
+            </td>
+            <td class="px-3 py-3 text-center">
+              <button onclick="saveSingleCustomPrice('${p.id}')" class="px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-950/40 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:text-brand-500 text-[11px] font-bold transition">
+                Lưu
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function saveAdminGlobalMargin() {
+      const type = $("adminMarginType")?.value || 'fixed';
+      const val = Number($("adminMarginValue")?.value) || 0;
+      const settings = { marginType: type, marginValue: val };
+      localStorage.setItem("br34_pricing_settings", JSON.stringify(settings));
+      showToast("Đã lưu quy tắc lợi nhuận toàn sàn thành công!", "success");
+      renderAdminProductsTable();
+    }
+
+    function saveSingleCustomPrice(productId) {
+      const inp = $(`inputPrice-${productId}`);
+      if (!inp) return;
+      const val = inp.value.trim();
+
+      if (val === '') {
+        delete adminCurrentCustomPrices[productId];
+      } else {
+        adminCurrentCustomPrices[productId] = Number(val);
+      }
+      localStorage.setItem("br34_custom_prices", JSON.stringify(adminCurrentCustomPrices));
+      showToast("Đã lưu giá cho sản phẩm!", "success");
+      renderAdminProductsTable();
+    }
+
+    function saveAllAdminCustomPrices() {
+      adminProductsCache.forEach(p => {
+        const inp = $(`inputPrice-${p.id}`);
+        if (inp) {
+          const val = inp.value.trim();
+          if (val === '') {
+            delete adminCurrentCustomPrices[p.id];
+          } else {
+            adminCurrentCustomPrices[p.id] = Number(val);
+          }
+        }
+      });
+      localStorage.setItem("br34_custom_prices", JSON.stringify(adminCurrentCustomPrices));
+      showToast("Đã cập nhật toàn bộ bảng giá thành công!", "success");
+      renderAdminProductsTable();
+    }
+
+    async function syncAdminLiveStock() {
+      const icon = $("syncStockIcon");
+      if (icon) icon.classList.add("animate-spin-fast");
+      if (typeof BR34_PRODUCT_SERVICE !== 'undefined') {
+        await BR34_PRODUCT_SERVICE.fetchLiveStock();
+        adminProductsCache = BR34_PRODUCT_SERVICE.getProducts();
+        renderAdminProductsTable();
+        showToast("Đã đồng bộ tồn kho thời gian thực!", "success");
+      }
+      if (icon) icon.classList.remove("animate-spin-fast");
+    }
+
+</script>
 </body>
 </html>

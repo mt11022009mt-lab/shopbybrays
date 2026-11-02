@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>BR-34 — SMM Panel Hàng Đầu Việt Nam | Dịch Vụ Mạng Xã Hội Tự Động 24/7</title>
+  <title>BR-34 — Kho Bản Quyền & Tài Nguyên Số Uy Tín Hàng Đầu Việt Nam | Hotline: 0976976627</title>
   <meta name="description" content="Hệ thống tăng tương tác thật Facebook, TikTok, Instagram, YouTube, Telegram tự động 24/7 uy tín, giá rẻ nhất thị trường. Hotline/Zalo: 0976976627.">
   <link rel="icon" type="image/png" href="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg">
 
@@ -91,6 +91,7 @@
     .av-color-dot.active { transform: scale(1.2); box-shadow: 0 0 0 2px #f43f5e, 0 0 0 4px #09090b; }
     .avatar-choice.active-pick { border-color: #f43f5e !important; box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.5); transform: scale(1.05); }
   </style>
+  <script src="products-data.js"></script>
 </head>
 
 <body class="bg-background text-foreground font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white transition-colors duration-200 overflow-x-hidden">
@@ -140,11 +141,15 @@
               <i class="fa-solid fa-globe text-xs"></i>
             </button>
 
-            <div id="landingGuestActions">
-              <button onclick="openAuthModal('login')" class="px-4 py-2 rounded-full text-xs font-extrabold text-white bg-gradient-to-b from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 shadow-glow-sm hover:scale-105 active:scale-95 transition flex items-center gap-1.5">
-                <i class="fa-solid fa-right-to-bracket text-xs"></i>
-                <span>Đăng nhập</span>
-              </button>
+            <div class="flex items-center gap-2">
+              <a href="https://zalo.me/0976976627" target="_blank" class="px-3.5 py-2 rounded-full text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 shadow-md shadow-blue-500/20 hover:scale-105 active:scale-95 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-comment-dots text-xs"></i>
+                <span>Zalo Mua Ngay</span>
+              </a>
+              <a href="admin.html" class="px-3 py-2 rounded-full text-xs font-bold text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-brand-500/40 transition flex items-center gap-1.5" title="Khu vực Quản Trị Viên (Yêu cầu đăng nhập)">
+                <i class="fa-solid fa-shield-halved text-brand-400"></i>
+                <span class="hidden sm:inline">Admin</span>
+              </a>
             </div>
 
             <div id="landingUserActions" class="hidden flex items-center gap-2">
@@ -209,13 +214,13 @@
       </p>
 
       <div class="mt-8 flex flex-wrap justify-center items-center gap-3.5">
-        <button onclick="handleCtaStart()" class="px-6 py-3 rounded-xl text-sm font-black text-white bg-gradient-to-b from-rose-500 via-rose-600 to-rose-700 hover:from-rose-600 hover:to-rose-800 shadow-glow hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2 cursor-pointer">
-          <i class="fa-solid fa-bolt text-amber-300"></i>
-          <span>Bắt đầu ngay</span>
-        </button>
-        <a href="#dashboard-preview" class="px-6 py-3 rounded-xl text-sm font-bold text-slate-200 bg-secondary/90 hover:bg-secondary border border-white/10 hover:border-brand-500/50 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2">
-          <span>Dịch Vụ</span>
-          <i class="fa-solid fa-arrow-right text-xs text-brand-400"></i>
+        <a href="#catalog-section" class="px-6 py-3 rounded-xl text-sm font-black text-white bg-gradient-to-r from-rose-500 via-rose-600 to-rose-700 hover:from-rose-600 hover:to-rose-800 shadow-glow hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2 cursor-pointer">
+          <i class="fa-solid fa-cart-shopping text-amber-300"></i>
+          <span>Xem Kho Sản Phẩm</span>
+        </a>
+        <a href="https://zalo.me/0976976627" target="_blank" class="px-6 py-3 rounded-xl text-sm font-bold text-slate-200 bg-secondary/90 hover:bg-secondary border border-white/10 hover:border-brand-500/50 shadow-sm hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-2">
+          <i class="fa-solid fa-comment-dots text-cyan-400"></i>
+          <span>Liên Hệ Zalo 24/7</span>
         </a>
       </div>
 
@@ -269,65 +274,74 @@
           <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-5">
             <div class="p-3.5 sm:p-4 rounded-2xl bg-secondary/80 border border-white/5 flex items-center justify-between">
               <div>
-                <p class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Số Dư Hiện Tại</p>
-                <h4 id="previewCardBal" class="text-base sm:text-xl font-black text-brand-400 mt-0.5">0đ</h4>
+                <p class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Kho Sản Phẩm</p>
+                <h4 class="text-base sm:text-xl font-black text-brand-400 mt-0.5">150+ Loại</h4>
               </div>
-              <div class="w-9 h-9 rounded-xl bg-brand-500/20 text-brand-400 grid place-items-center text-sm shrink-0"><i class="fa-solid fa-wallet"></i></div>
+              <div class="w-9 h-9 rounded-xl bg-brand-500/20 text-brand-400 grid place-items-center text-sm shrink-0"><i class="fa-solid fa-boxes-stacked"></i></div>
             </div>
             <div class="p-3.5 sm:p-4 rounded-2xl bg-secondary/80 border border-white/5 flex items-center justify-between">
               <div>
-                <p class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Tổng Đã Nạp</p>
-                <h4 id="previewCardDep" class="text-base sm:text-xl font-black text-emerald-400 mt-0.5">0đ</h4>
+                <p class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Đang Có Sẵn</p>
+                <h4 class="text-base sm:text-xl font-black text-emerald-400 mt-0.5">140+ Món</h4>
               </div>
-              <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 grid place-items-center text-sm shrink-0"><i class="fa-solid fa-circle-arrow-up"></i></div>
+              <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 grid place-items-center text-sm shrink-0"><i class="fa-solid fa-circle-check"></i></div>
             </div>
             <div class="p-3.5 sm:p-4 rounded-2xl bg-secondary/80 border border-white/5 flex items-center justify-between">
               <div>
-                <p class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Đã Sử Dụng</p>
-                <h4 id="previewCardSpent" class="text-base sm:text-xl font-black text-amber-400 mt-0.5">0đ</h4>
+                <p class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Khách Hàng</p>
+                <h4 class="text-base sm:text-xl font-black text-amber-400 mt-0.5">5,600+</h4>
               </div>
-              <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 grid place-items-center text-sm shrink-0"><i class="fa-solid fa-receipt"></i></div>
+              <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 grid place-items-center text-sm shrink-0"><i class="fa-solid fa-users"></i></div>
             </div>
             <div class="p-3.5 sm:p-4 rounded-2xl bg-secondary/80 border border-white/5 flex items-center justify-between">
               <div>
-                <p class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Tổng Đơn Hàng</p>
-                <h4 id="previewCardOrders" class="text-base sm:text-xl font-black text-cyan-400 mt-0.5">0</h4>
+                <p class="text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400 font-bold">Hỗ Trợ Zalo</p>
+                <h4 class="text-base sm:text-xl font-black text-cyan-400 mt-0.5">24/7 Live</h4>
               </div>
-              <div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 grid place-items-center text-sm shrink-0"><i class="fa-solid fa-boxes-stacked"></i></div>
+              <div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 grid place-items-center text-sm shrink-0"><i class="fa-solid fa-headset"></i></div>
             </div>
           </div>
 
           <div class="mt-5 p-4 sm:p-5 rounded-2xl bg-neutral-900/80 border border-white/5 space-y-4">
             <div class="flex items-center gap-2 overflow-x-auto pb-1">
-              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shrink-0 shadow-glow-sm"><i class="fa-brands fa-facebook mr-1"></i> Facebook</span>
-              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0"><i class="fa-brands fa-tiktok mr-1"></i> TikTok</span>
-              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0"><i class="fa-brands fa-instagram mr-1"></i> Instagram</span>
-              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0"><i class="fa-brands fa-youtube mr-1"></i> YouTube</span>
-              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0"><i class="fa-brands fa-telegram mr-1"></i> Telegram</span>
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shrink-0 shadow-glow-sm"><i class="fa-solid fa-robot mr-1"></i> ChatGPT & AI</span>
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0"><i class="fa-solid fa-film mr-1"></i> Netflix 4K</span>
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> CapCut Pro</span>
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0"><i class="fa-solid fa-key mr-1"></i> Windows & Office</span>
+              <span class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/5 text-slate-300 hover:bg-white/10 shrink-0"><i class="fa-solid fa-envelope mr-1"></i> Mail & MMO</span>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-              <div class="p-3 rounded-xl bg-neutral-950 border border-brand-500/40">
+              <a href="#catalog-section" class="p-3 rounded-xl bg-neutral-950 border border-brand-500/40 hover:border-brand-500 transition block">
                 <div class="flex items-center justify-between">
-                  <span class="font-bold text-white">[SV1] Like Bài Viết [Tốc độ cao]</span>
-                  <span class="font-black text-brand-400">12đ</span>
+                  <span class="font-bold text-white flex items-center gap-1.5">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" class="w-3.5 h-3.5 object-contain">
+                    ChatGPT Plus (BH 28D)
+                  </span>
+                  <span class="font-black text-brand-400">220.000đ</span>
                 </div>
-                <p class="text-[11px] text-slate-400 mt-1">Bảo hành 30 ngày, tốc độ 1-5k/ngày</p>
-              </div>
-              <div class="p-3 rounded-xl bg-neutral-950 border border-white/10">
+                <p class="text-[11px] text-slate-400 mt-1">Gói cá nhân ổn định, full tính năng</p>
+              </a>
+              <a href="#catalog-section" class="p-3 rounded-xl bg-neutral-950 border border-white/10 hover:border-brand-500/40 transition block">
                 <div class="flex items-center justify-between">
-                  <span class="font-bold text-slate-300">[SV4] Follow Trang Cá Nhân [Sub Việt]</span>
-                  <span class="font-black text-brand-400">28đ</span>
+                  <span class="font-bold text-slate-300 flex items-center gap-1.5">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/CapCut_logo.svg" class="w-3.5 h-3.5 object-contain">
+                    CapCut Pro 2 Thiết Bị (BH 28D)
+                  </span>
+                  <span class="font-black text-brand-400">150.000đ</span>
                 </div>
-                <p class="text-[11px] text-slate-400 mt-1">Sub người dùng thật Việt Nam</p>
-              </div>
-              <div class="p-3 rounded-xl bg-neutral-950 border border-white/10">
+                <p class="text-[11px] text-slate-400 mt-1">Xuất video 4K 60fps không watermark</p>
+              </a>
+              <a href="#catalog-section" class="p-3 rounded-xl bg-neutral-950 border border-white/10 hover:border-brand-500/40 transition block">
                 <div class="flex items-center justify-between">
-                  <span class="font-bold text-slate-300">[SV6] View Reels / Video Siêu Tốc</span>
-                  <span class="font-black text-brand-400">5đ</span>
+                  <span class="font-bold text-slate-300 flex items-center gap-1.5">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_N_logo.svg" class="w-3.5 h-3.5 object-contain">
+                    Netflix Premium 4K UHD
+                  </span>
+                  <span class="font-black text-brand-400">95.000đ</span>
                 </div>
-                <p class="text-[11px] text-slate-400 mt-1">Tăng mắt live & view video cực nhanh</p>
-              </div>
+                <p class="text-[11px] text-slate-400 mt-1">Profile riêng tư, xem chuẩn Ultra HD</p>
+              </a>
             </div>
           </div>
 
@@ -374,7 +388,82 @@
       </div>
     </section>
 
-    <section class="py-20 px-4 max-w-6xl mx-auto relative select-none">
+    <!-- ========================================================
+         KHO SẢN PHẨM & TÀI NGUYÊN SỐ BR-34 (LIVE STOCK)
+         ======================================================== -->
+    <section id="catalog-section" class="py-16 sm:py-20 px-4 max-w-7xl mx-auto relative select-none">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto mb-10 space-y-3">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-400 text-xs font-bold uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+          Kho Tài Nguyên & Dịch Vụ Số BR-34
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+          Sản Phẩm & Bản Quyền <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-rose-500 to-amber-300">Chính Hãng</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          Tự động đồng bộ số lượng tồn kho theo thời gian thực. Bấm đặt mua kết nối trực tiếp Zalo Admin hỗ trợ giao ngay 24/7.
+        </p>
+      </div>
+
+      <!-- Controls: Category Filter Tabs & Search Bar -->
+      <div class="glass-card rounded-3xl p-4 sm:p-6 mb-8 border border-white/10 shadow-2xl">
+        
+        <!-- Category Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-3 scrollbar-none" id="catalogCategoryTabs">
+          <button onclick="setCatalogCategory('all')" id="catTab-all" class="px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all bg-gradient-to-r from-brand-500 to-rose-600 text-white shadow-glow-sm">
+            <i class="fa-solid fa-border-all mr-1.5"></i> Tất Cả
+          </button>
+          <button onclick="setCatalogCategory('chatgpt')" id="catTab-chatgpt" class="px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white">
+            <i class="fa-solid fa-robot mr-1.5 text-emerald-400"></i> ChatGPT & OpenAI
+          </button>
+          <button onclick="setCatalogCategory('ai')" id="catTab-ai" class="px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white">
+            <i class="fa-solid fa-brain mr-1.5 text-indigo-400"></i> AI Studio & Code (Claude, Veo, Gemini)
+          </button>
+          <button onclick="setCatalogCategory('entertainment')" id="catTab-entertainment" class="px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white">
+            <i class="fa-solid fa-film mr-1.5 text-rose-400"></i> Giải Trí (Netflix, Spotify, YTB)
+          </button>
+          <button onclick="setCatalogCategory('design')" id="catTab-design" class="px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white">
+            <i class="fa-solid fa-wand-magic-sparkles mr-1.5 text-amber-400"></i> Đồ Họa & Tool (Canva, CapCut)
+          </button>
+          <button onclick="setCatalogCategory('license')" id="catTab-license" class="px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white">
+            <i class="fa-solid fa-key mr-1.5 text-blue-400"></i> Office & VPN
+          </button>
+          <button onclick="setCatalogCategory('resource')" id="catTab-resource" class="px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white">
+            <i class="fa-solid fa-envelope mr-1.5 text-orange-400"></i> Mail & Tài Nguyên MMO
+          </button>
+        </div>
+
+        <!-- Filter Sub-bar: Search Input & In-stock toggle -->
+        <div class="mt-3 pt-3 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="relative w-full sm:max-w-md">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input id="catalogSearchInput" oninput="handleCatalogSearch(this.value)" type="text" placeholder="Tìm kiếm theo tên sản phẩm (vd: ChatGPT, CapCut, Netflix, Claude, Gmail...)" class="w-full pl-9 pr-8 py-2.5 rounded-xl bg-neutral-950/80 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 transition">
+            <button id="catalogClearSearchBtn" onclick="clearCatalogSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+            <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-300 hover:text-white">
+              <input type="checkbox" id="catalogInStockCheck" onchange="toggleInStockFilter(this.checked)" class="w-4 h-4 rounded text-brand-500 bg-neutral-950 border-white/20 focus:ring-brand-500">
+              <span class="text-emerald-400">🟢 Chỉ hiển thị còn hàng</span>
+            </label>
+            <span id="catalogCountText" class="text-xs font-medium text-slate-400 font-mono">Đang tải...</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Realtime Product Cards Grid -->
+      <div id="catalogGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+        <!-- Rendered via JavaScript -->
+      </div>
+
+    </section>
+
+    <section id="features-section" class="py-20 px-4 max-w-6xl mx-auto relative select-none">
       <div class="text-center mb-14">
         <span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase bg-brand-500/10 text-brand-400 border border-brand-500/30">Đặc Quyền BR-34</span>
         <h2 class="text-3xl sm:text-4xl font-black text-white mt-3 tracking-tight">Tính Năng Nổi Bật Hệ Thống</h2>
@@ -2699,6 +2788,275 @@
       if (input) input.value = "";
       handleDashSearch("");
     }
-  </script>
+  
+  // =========================================================
+  // LOGIC HIỂN THỊ KHO SẢN PHẨM & LIÊN HỆ ZALO BR-34
+  // =========================================================
+  let catalogCurrentCategory = 'all';
+  let catalogSearchQuery = '';
+  let catalogInStockOnly = false;
+  window.lastOrderMessage = '';
+
+  function setCatalogCategory(cat) {
+    catalogCurrentCategory = cat;
+    document.querySelectorAll('#catalogCategoryTabs button').forEach(btn => {
+      btn.className = "px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white";
+    });
+    const activeBtn = document.getElementById('catTab-' + cat);
+    if (activeBtn) {
+      activeBtn.className = "px-4 py-2 rounded-xl text-xs font-bold shrink-0 transition-all bg-gradient-to-r from-brand-500 to-rose-600 text-white shadow-glow-sm";
+    }
+    renderCatalogGrid();
+  }
+
+  function handleCatalogSearch(val) {
+    catalogSearchQuery = (val || '').trim().toLowerCase();
+    const clearBtn = document.getElementById('catalogClearSearchBtn');
+    if (clearBtn) {
+      clearBtn.classList.toggle('hidden', !catalogSearchQuery);
+    }
+    renderCatalogGrid();
+  }
+
+  function clearCatalogSearch() {
+    const inp = document.getElementById('catalogSearchInput');
+    if (inp) inp.value = '';
+    handleCatalogSearch('');
+  }
+
+  function toggleInStockFilter(checked) {
+    catalogInStockOnly = checked;
+    renderCatalogGrid();
+  }
+
+  function renderCatalogGrid() {
+    const grid = document.getElementById('catalogGrid');
+    const countEl = document.getElementById('catalogCountText');
+    if (!grid) return;
+
+    if (typeof BR34_PRODUCT_SERVICE === 'undefined') {
+      grid.innerHTML = '<div class="col-span-full py-10 text-center text-slate-400 text-xs">Đang nạp dữ liệu kho hàng...</div>';
+      return;
+    }
+
+    const allProducts = BR34_PRODUCT_SERVICE.getProducts();
+    const filtered = allProducts.filter(p => {
+      if (catalogCurrentCategory !== 'all' && p.category !== catalogCurrentCategory) {
+        return false;
+      }
+      if (catalogInStockOnly && !p.inStock) {
+        return false;
+      }
+      if (catalogSearchQuery) {
+        const str = ((p.name || '') + ' ' + (p.brand || '') + ' ' + (p.categoryLabel || '') + ' ' + (p.warranty || '')).toLowerCase();
+        if (!str.includes(catalogSearchQuery)) return false;
+      }
+      return true;
+    });
+
+    if (countEl) {
+      countEl.textContent = `Hiển thị ${filtered.length} / ${allProducts.length} sản phẩm`;
+    }
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div class="col-span-full py-16 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 text-slate-400 grid place-items-center text-2xl mx-auto mb-4">
+            <i class="fa-solid fa-box-open"></i>
+          </div>
+          <h3 class="text-base font-bold text-white">Không tìm thấy sản phẩm phù hợp</h3>
+          <p class="text-xs text-slate-400 mt-1">Vui lòng thử từ khóa khác hoặc liên hệ Zalo Admin để hỏi món bạn cần.</p>
+          <a href="https://zalo.me/0976976627" target="_blank" class="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-xl bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/40 text-cyan-300 font-bold text-xs transition">
+            <i class="fa-solid fa-comment-dots"></i> Nhắn Zalo hỏi Admin: 0976976627
+          </a>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = filtered.map(p => {
+      const finalPrice = BR34_PRODUCT_SERVICE.calculatePrice(p);
+      const priceText = BR34_PRODUCT_SERVICE.formatMoney(finalPrice);
+      const stockBadge = p.inStock
+        ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Còn ${p.stock} cái</span>`
+        : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-neutral-800 text-slate-400 border border-white/5">Tạm hết</span>`;
+
+      return `
+        <div class="glass-card rounded-2xl p-4 sm:p-5 flex flex-col justify-between border border-white/10 hover:border-brand-500/50 hover:shadow-glow-sm transition-all duration-300 relative group">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 p-2 grid place-items-center shrink-0 group-hover:scale-105 transition-transform">
+                <img src="${p.logo}" alt="${p.brand}" class="w-full h-full object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3524/3524636.png'">
+              </div>
+              ${stockBadge}
+            </div>
+
+            <div class="mb-1">
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">${p.categoryLabel}</span>
+            </div>
+
+            <h3 class="text-sm font-bold text-white group-hover:text-brand-300 transition line-clamp-2 leading-snug mb-2" title="${p.name}">
+              ${p.name}
+            </h3>
+
+            <div class="flex items-center gap-1.5 text-[11px] text-slate-400 mb-4">
+              <span class="px-2 py-0.5 rounded-md bg-white/5 border border-white/5 text-[10px] font-semibold text-slate-300">
+                <i class="fa-solid fa-shield-halved text-brand-400 mr-1"></i>${p.warranty}
+              </span>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-white/5">
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="text-[11px] text-slate-400">Giá bán:</span>
+              <span class="text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-rose-400 font-mono">
+                ${priceText}
+              </span>
+            </div>
+
+            <button onclick="handleOpenOrderModal('${p.id}')" class="w-full py-2.5 rounded-xl font-bold text-xs text-white bg-gradient-to-r from-brand-500 to-rose-600 hover:from-brand-600 hover:to-rose-700 shadow-glow-sm hover:scale-[1.02] active:scale-95 transition flex items-center justify-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-cart-shopping text-xs"></i>
+              <span>Mua Ngay (Qua Zalo)</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function handleOpenOrderModal(productId) {
+    if (typeof BR34_PRODUCT_SERVICE === 'undefined') return;
+    const products = BR34_PRODUCT_SERVICE.getProducts();
+    const p = products.find(x => x.id === productId);
+    if (!p) return;
+
+    const finalPrice = BR34_PRODUCT_SERVICE.calculatePrice(p);
+    const priceText = BR34_PRODUCT_SERVICE.formatMoney(finalPrice);
+
+    document.getElementById('modalOrderName').textContent = p.name;
+    document.getElementById('modalOrderPrice').textContent = priceText;
+    document.getElementById('modalOrderCategory').textContent = p.categoryLabel;
+    document.getElementById('modalOrderWarranty').textContent = p.warranty;
+    document.getElementById('modalOrderLogo').src = p.logo;
+    document.getElementById('modalOrderStock').innerHTML = p.inStock
+      ? `<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check mr-1"></i>Còn ${p.stock} cái sẵn sàng giao ngay</span>`
+      : `<span class="text-rose-400 font-bold"><i class="fa-solid fa-circle-xmark mr-1"></i>Tạm hết - Nhắn Zalo đặt trước</span>`;
+
+    const msg = `Chào ShopByBrays, mình muốn đặt mua sản phẩm:
+- Tên: ${p.name}
+- Mã: #${p.id.slice(-6)}
+- Giá: ${priceText}
+Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
+    window.lastOrderMessage = msg;
+
+    const zaloBtn = document.getElementById('modalOrderZaloBtn');
+    if (zaloBtn) {
+      zaloBtn.href = "https://zalo.me/0976976627";
+    }
+
+    const modal = document.getElementById('orderModal');
+    if (modal) modal.classList.remove('hidden');
+  }
+
+  function closeOrderModal() {
+    const modal = document.getElementById('orderModal');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  function copyOrderMessage() {
+    if (window.lastOrderMessage) {
+      navigator.clipboard.writeText(window.lastOrderMessage).then(() => {
+        showToast("Đã sao chép nội dung đặt hàng! Bạn chỉ việc gửi qua Zalo 0976976627 nhé.", "success");
+      }).catch(() => {
+        showToast("Hotline/Zalo hỗ trợ: 0976976627", "info");
+      });
+    }
+  }
+
+  // Khởi chạy khi tài liệu sẵn sàng
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof BR34_PRODUCT_SERVICE !== 'undefined') {
+      renderCatalogGrid();
+      BR34_PRODUCT_SERVICE.onUpdate(() => {
+        renderCatalogGrid();
+      });
+      // Gọi fetch live stock tự động
+      BR34_PRODUCT_SERVICE.fetchLiveStock();
+    }
+  });
+
+</script>
+  <!-- ========================================================
+       MODAL CHI TIẾT SẢN PHẨM & ĐẶT HÀNG (ZALO)
+       ======================================================== -->
+  <div id="orderModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+    <div class="glass-card max-w-lg w-full rounded-3xl p-6 sm:p-7 border border-white/15 shadow-2xl relative overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Close Button -->
+      <button onclick="closeOrderModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white grid place-items-center transition">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+
+      <!-- Modal Header -->
+      <div class="flex items-center gap-3.5 pb-4 border-b border-white/10">
+        <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 p-2 grid place-items-center shrink-0">
+          <img id="modalOrderLogo" src="" alt="logo" class="w-full h-full object-contain">
+        </div>
+        <div>
+          <span id="modalOrderCategory" class="text-[10px] font-extrabold uppercase tracking-wider text-brand-400">Danh Mục</span>
+          <h3 id="modalOrderName" class="text-base font-black text-white leading-snug">Tên sản phẩm</h3>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="py-5 space-y-4 text-xs">
+        
+        <div class="p-3.5 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between">
+          <span class="text-slate-400 font-medium">Giá niêm yết:</span>
+          <span id="modalOrderPrice" class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-rose-400 font-mono">0đ</span>
+        </div>
+
+        <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white/5 border border-white/5">
+          <span class="text-slate-400 font-medium">Tình trạng kho hàng:</span>
+          <div id="modalOrderStock"></div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between">
+          <span class="text-slate-400 font-medium">Chính sách bảo hành:</span>
+          <span id="modalOrderWarranty" class="font-bold text-white">Bảo hành uy tín</span>
+        </div>
+
+        <!-- Admin Contact Box -->
+        <div class="p-4 rounded-2xl bg-blue-950/30 border border-blue-900/40 space-y-2.5">
+          <div class="flex items-center gap-2 text-cyan-400 font-bold text-xs">
+            <i class="fa-solid fa-headset text-sm"></i>
+            <span>Hỗ trợ tư vấn & bàn giao đơn hàng 24/7</span>
+          </div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Bấm nút bên dưới để mở Zalo chốt đơn và nhận tài khoản trong 1-3 phút. Nếu không tự mở Zalo được, bạn có thể copy nội dung để gửi thủ công.
+          </p>
+          <div class="flex items-center gap-2 pt-1">
+            <span class="text-[11px] text-slate-400">Hotline / Zalo:</span>
+            <strong class="text-white font-mono font-bold text-xs">0976976627</strong>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Actions -->
+      <div class="pt-2 flex flex-col sm:flex-row items-center gap-2.5">
+        <a id="modalOrderZaloBtn" href="https://zalo.me/0976976627" target="_blank" class="w-full sm:flex-1 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-black text-xs shadow-lg shadow-cyan-500/20 hover:scale-[1.02] active:scale-95 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-comment-dots text-sm"></i>
+          <span>Nhắn Zalo Mua Ngay</span>
+        </a>
+        <button onclick="copyOrderMessage()" type="button" class="w-full sm:w-auto px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white font-bold text-xs transition flex items-center justify-center gap-2">
+          <i class="fa-regular fa-copy"></i>
+          <span>Copy cú pháp</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
 </body>
 </html>
