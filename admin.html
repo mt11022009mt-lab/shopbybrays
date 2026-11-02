@@ -173,23 +173,18 @@
               <i class="fa-solid fa-chart-pie w-4 text-center"></i>
               <span>1. Tổng quan Dashboard</span>
             </button>
-            <button onclick="switchAdminTab('users')" id="tabNav-users" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
-              <i class="fa-solid fa-users-gear w-4 text-center text-slate-400"></i>
-              <span>2. Quản lý ví & duyệt nạp</span>
-              <span id="pendingDepositBadge" class="ml-auto hidden px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white animate-pulse-ring">0</span>
+            <button onclick="switchAdminTab('products')" id="tabNav-products" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-tags w-4 text-center text-amber-500"></i>
+              <span>2. Quản lý Sản Phẩm & Bảng Giá (Bot)</span>
+              <span class="ml-auto text-[10px] font-black px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-500">LIVE</span>
             </button>
             <button onclick="switchAdminTab('orders')" id="tabNav-orders" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
               <i class="fa-solid fa-boxes-packing w-4 text-center text-slate-400"></i>
-              <span>3. Quản lý đơn hàng & hoàn tiền</span>
+              <span>3. Quản lý đơn hàng</span>
             </button>
-            <button onclick="switchAdminTab('api')" id="tabNav-api" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
-              <i class="fa-solid fa-network-wired w-4 text-center text-slate-400"></i>
-              <span>4. Cấu hình API smm1s.vn</span>
-            </button>
-            <button onclick="switchAdminTab('products')" id="tabNav-products" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
-              <i class="fa-solid fa-tags w-4 text-center text-amber-500"></i>
-              <span>5. Sản phẩm & Cấu hình giá (Canboso Bot)</span>
-              <span class="ml-auto text-[10px] font-black px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-500">LIVE</span>
+            <button onclick="switchAdminTab('users')" id="tabNav-users" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white transition">
+              <i class="fa-solid fa-users-gear w-4 text-center text-slate-400"></i>
+              <span>4. Thành viên & Số dư</span>
             </button>
           </nav>
         </div>
@@ -873,7 +868,7 @@
        2. TABS QUẢN TRỊ
        ======================================================== */
     function switchAdminTab(t) {
-      ['overview', 'users', 'orders', 'api', 'products'].forEach(name => {
+      ['overview', 'products', 'orders', 'users'].forEach(name => {
         const navBtn = $(`tabNav-${name}`);
         const panel = $(`panel-${name}`);
         if (navBtn) {
@@ -894,6 +889,7 @@
        ======================================================== */
     async function loadAllAdminData() {
       try {
+        if (window.initCanbosoAdmin) initCanbosoAdmin();
         await Promise.all([
           loadOverviewStats(),
           loadUsers(),
