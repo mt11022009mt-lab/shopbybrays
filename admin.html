@@ -254,9 +254,19 @@
        JAVASCRIPT LOGIC
        ======================================================== -->
   <script>
-    const SUPABASE_URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const SUPABASE_PROJECT_URL = "https://fvkwcmztfxmdvyjlqcve.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_hrgqLaXIBJCYV35IpEy6Xw_S3tu2l3D";
+    const supabaseClient = window.supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storageKey: "br34_admin_session"
+      },
+      global: {
+        fetch: (url, options = {}) => fetch(url, { ...options, cache: "no-store" })
+      }
+    });
 
     let currentAdmin = null;
     let adminProductsCache = [];
@@ -283,8 +293,20 @@
 
     // Check Auth on Load
     async function checkAuth() {
+      const statusEl = $("gateLoadingStatus");
+
       try {
-        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (statusEl) statusEl.textContent = "Đang kiểm tra phiên đăng nhập...";
+
+        // 1. Get session
+        let session = null;
+        try {
+          const res = await supabaseClient.auth.getSession();
+          session = res?.data?.session;
+        } catch (e) {
+          console.warn("getSession error:", e);
+        }
+
         if (!session || !session.user) {
           $("gateLoading").classList.add("hidden");
           $("gateLoginRequired").classList.remove("hidden");
@@ -294,7 +316,9 @@
         currentAdmin = session.user;
         $("adminEmailText").textContent = currentAdmin.email || "Admin";
 
-        // Check if admin in profiles
+        if (statusEl) statusEl.textContent = "Đang kiểm tra quyền Admin...";
+
+        // 2. Query profile
         const { data: prof, error } = await supabaseClient
           .from("profiles")
           .select("is_admin")
@@ -307,7 +331,7 @@
           return;
         }
 
-        // Authorized!
+        // 3. Authorized!
         $("authGate").classList.add("hidden");
         initAdminView();
       } catch (err) {
