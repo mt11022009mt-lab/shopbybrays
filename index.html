@@ -957,6 +957,11 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
           renderCatalogGrid();
         });
         BR34_PRODUCT_SERVICE.fetchLiveStock();
+
+        // Tự động quét ngầm mỗi 60 giây để cập nhật tồn kho & sản phẩm mới mà không cần F5
+        setInterval(() => {
+          BR34_PRODUCT_SERVICE.fetchLiveStock();
+        }, 60000);
       }
     });
   </script>

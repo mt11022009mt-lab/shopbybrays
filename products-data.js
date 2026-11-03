@@ -3316,8 +3316,70 @@ const BR34_PRODUCT_SERVICE = (function () {
   const STORAGE_KEY_SETTINGS = "br34_pricing_settings";
   const STORAGE_KEY_CUSTOM_PRICES = "br34_custom_prices";
 
+  // Bộ quy tắc nhận diện thương hiệu & danh mục tự động cho sản phẩm mới từ Bot
+  const BRAND_RULES = [
+    { keywords: ['chatgpt', 'openai', 'gpt-4', 'codex', 'gpt 4', 'chat gpt'], brand: 'OpenAI', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg', category: 'chatgpt', label: 'ChatGPT & OpenAI' },
+    { keywords: ['claude', 'anthropic'], brand: 'Anthropic Claude', logo: 'https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg', category: 'ai', label: 'Claude AI & Code' },
+    { keywords: ['gemini', 'pixel'], brand: 'Google Gemini', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg', category: 'ai', label: 'Google Gemini' },
+    { keywords: ['antigravity'], brand: 'Antigravity Studio', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg', category: 'ai', label: 'AI Studio & Ultra' },
+    { keywords: ['veo', 'veo3', 'veo 3'], brand: 'Google Veo 3', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg', category: 'ai', label: 'AI Video Generation' },
+    { keywords: ['grok', 'xai'], brand: 'xAI Grok', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg', category: 'ai', label: 'xAI & Grok API' },
+    { keywords: ['kling'], brand: 'Kling AI', logo: 'https://cdn-icons-png.flaticon.com/512/8297/8297437.png', category: 'ai', label: 'AI Video Creator' },
+    { keywords: ['suno'], brand: 'Suno Music AI', logo: 'https://cdn-icons-png.flaticon.com/512/4430/4430546.png', category: 'ai', label: 'AI Âm Nhạc & Beat' },
+    { keywords: ['elevenlabs', 'elevanlabs', 'elevenlab'], brand: 'ElevenLabs', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/ElevenLabs_logo.svg', category: 'ai', label: 'Voice AI & Lồng Tiếng' },
+    { keywords: ['minimax'], brand: 'MiniMax AI', logo: 'https://cdn-icons-png.flaticon.com/512/3083/3083652.png', category: 'ai', label: 'AI Voice & Speech' },
+    { keywords: ['muse'], brand: 'Muse AI', logo: 'https://cdn-icons-png.flaticon.com/512/8297/8297437.png', category: 'ai', label: 'AI Video & Studio' },
+    { keywords: ['dreamina'], brand: 'Dreamina AI', logo: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/CapCut_logo.svg', category: 'ai', label: 'AI Visual Creator' },
+    { keywords: ['higgsfield'], brand: 'Higgsfield AI', logo: 'https://cdn-icons-png.flaticon.com/512/2103/2103633.png', category: 'ai', label: 'AI Motion Effects' },
+    { keywords: ['openart', 'open art'], brand: 'OpenArt AI', logo: 'https://cdn-icons-png.flaticon.com/512/2995/2995101.png', category: 'ai', label: 'AI Art Generator' },
+    { keywords: ['krea'], brand: 'Krea AI', logo: 'https://cdn-icons-png.flaticon.com/512/2995/2995101.png', category: 'ai', label: 'AI Design & Art' },
+    { keywords: ['seedance'], brand: 'Seedance AI', logo: 'https://cdn-icons-png.flaticon.com/512/8297/8297437.png', category: 'ai', label: 'AI Video Studio' },
+    { keywords: ['domo ai', 'domo stand'], brand: 'Domo AI', logo: 'https://cdn-icons-png.flaticon.com/512/8297/8297437.png', category: 'ai', label: 'AI Animation Studio' },
+    { keywords: ['heygen'], brand: 'HeyGen AI', logo: 'https://cdn-icons-png.flaticon.com/512/8297/8297437.png', category: 'ai', label: 'AI Video Avatar' },
+    { keywords: ['lovable', 'manus', 'kiro', 'cursor', 'bolt', 'v0'], brand: 'AI Code Builder', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg', category: 'ai', label: 'AI Code & App Dev' },
+    { keywords: ['gamma'], brand: 'Gamma App', logo: 'https://cdn-icons-png.flaticon.com/512/1006/1006771.png', category: 'ai', label: 'AI Trình Chiếu' },
+    { keywords: ['canva'], brand: 'Canva Pro', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Canva_icon_2021.svg', category: 'design', label: 'Đồ Họa & Thiết Kế' },
+    { keywords: ['capcut'], brand: 'CapCut Pro', logo: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/CapCut_logo.svg', category: 'design', label: 'Biên Tập Video' },
+    { keywords: ['alight motion', 'alight'], brand: 'Alight Motion Pro', logo: 'https://cdn-icons-png.flaticon.com/512/8297/8297437.png', category: 'design', label: 'Biên Tập Video & Motion' },
+    { keywords: ['figma'], brand: 'Figma', logo: 'https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg', category: 'design', label: 'UI/UX Design' },
+    { keywords: ['adobe', 'photoshop', 'illustrator', 'lightroom'], brand: 'Adobe Creative', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8d/Adobe_Corporate_Logo.png', category: 'design', label: 'Thiết Kế Đồ Họa' },
+    { keywords: ['freepik'], brand: 'Freepik Premium', logo: 'https://cdn-icons-png.flaticon.com/512/5968/5968705.png', category: 'design', label: 'Tài Nguyên Thiết Kế' },
+    { keywords: ['envato'], brand: 'Envato Elements', logo: 'https://cdn-icons-png.flaticon.com/512/5968/5968705.png', category: 'design', label: 'Thư Viện Đồ Họa' },
+    { keywords: ['midjourney'], brand: 'Midjourney', logo: 'https://cdn-icons-png.flaticon.com/512/2995/2995101.png', category: 'ai', label: 'AI Art Studio' },
+    { keywords: ['netflix'], brand: 'Netflix', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg', category: 'entertainment', label: 'Phim Ảnh Streaming' },
+    { keywords: ['spotify'], brand: 'Spotify', logo: 'https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg', category: 'entertainment', label: 'Nghe Nhạc Premium' },
+    { keywords: ['youtube'], brand: 'YouTube', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg', category: 'entertainment', label: 'Giải Trí & Video' },
+    { keywords: ['discord', 'nitro'], brand: 'Discord Nitro', logo: 'https://cdn-icons-png.flaticon.com/512/5968/5968756.png', category: 'entertainment', label: 'Cộng Đồng & Chat' },
+    { keywords: ['telegram', 'tele'], brand: 'Telegram Premium', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg', category: 'entertainment', label: 'Tin Nhắn & Đám Mây' },
+    { keywords: ['apple'], brand: 'Apple One / Music', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg', category: 'entertainment', label: 'Hệ Sinh Thái Apple' },
+    { keywords: ['steam'], brand: 'Steam Wallet / Game', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg', category: 'entertainment', label: 'Game Bản Quyền' },
+    { keywords: ['duolingo'], brand: 'Duolingo Super', logo: 'https://upload.wikimedia.org/wikipedia/commons/8/81/Duolingo_logo_2019.svg', category: 'entertainment', label: 'Học Tập Ngoại Ngữ' },
+    { keywords: ['quizlet'], brand: 'Quizlet Plus', logo: 'https://cdn-icons-png.flaticon.com/512/2997/2997295.png', category: 'entertainment', label: 'Học Tập & Kiến Thức' },
+    { keywords: ['twitter', 'x cổ', 'acc x'], brand: 'X / Twitter', logo: 'https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg', category: 'resource', label: 'Tài Khoản Mạng Xã Hội' },
+    { keywords: ['facebook', 'via', 'clone'], brand: 'Facebook', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg', category: 'resource', label: 'Tài Nguyên Facebook' },
+    { keywords: ['instagram'], brand: 'Instagram', logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png', category: 'resource', label: 'Tài Khoản Instagram' },
+    { keywords: ['tiktok'], brand: 'TikTok', logo: 'https://cdn-icons-png.flaticon.com/512/3046/3046121.png', category: 'resource', label: 'Kênh & Tài Khoản TikTok' },
+    { keywords: ['gmail', 'mail', 'outlook', 'hotmail'], brand: 'Google & Microsoft Mail', logo: 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg', category: 'resource', label: 'Email Doanh Nghiệp' }
+  ];
+
+  function detectProductMeta(name) {
+    const nameLower = (name || '').toLowerCase();
+    for (const rule of BRAND_RULES) {
+      if (rule.keywords.some(k => nameLower.includes(k))) {
+        return { brand: rule.brand, logo: rule.logo, category: rule.category, categoryLabel: rule.label };
+      }
+    }
+    return { brand: 'Dịch Vụ Số', logo: 'https://cdn-icons-png.flaticon.com/512/3524/3524636.png', category: 'other', categoryLabel: 'Dịch Vụ Số' };
+  }
+
+  function extractWarranty(name) {
+    const m = (name || '').match(/\((BH[^\)]*|KBH|BHF)\)/i);
+    return m ? m[1].trim() : 'Bảo hành uy tín';
+  }
+
   let liveProducts = [...BR34_CATALOG_DATA];
   let listeners = [];
+  let isFetching = false;
 
   function getSettings() {
     try {
@@ -3326,7 +3388,7 @@ const BR34_PRODUCT_SERVICE = (function () {
     } catch (e) {}
     return {
       marginType: "fixed",
-      marginValue: 15000 // Default margin: +15,000 VND
+      marginValue: 15000 // Mặc định cộng 15.000đ
     };
   }
 
@@ -3361,7 +3423,11 @@ const BR34_PRODUCT_SERVICE = (function () {
     return (Number(amount) || 0).toLocaleString("vi-VN") + "đ";
   }
 
+  // TỰ ĐỘNG CẬP NHẬT TỒN KHO & ĐỒNG BỘ THÊM SẢN PHẨM MỚI TỪ BOT
   async function fetchLiveStock() {
+    if (isFetching) return;
+    isFetching = true;
+
     try {
       const resp = await fetch(API_ENDPOINT, {
         headers: {
@@ -3372,29 +3438,57 @@ const BR34_PRODUCT_SERVICE = (function () {
       if (!resp.ok) return;
       const json = await resp.json();
       const apiProducts = json.products || [];
-      
-      const stockMap = new Map();
-      const priceMap = new Map();
+      if (!Array.isArray(apiProducts) || apiProducts.length === 0) return;
+
+      const existingMap = new Map();
+      liveProducts.forEach(lp => existingMap.set(lp.id, lp));
+
+      let hasChanges = false;
+
       apiProducts.forEach(p => {
-        const av = (p.availability && p.availability.available !== undefined) ? Number(p.availability.available) : null;
-        stockMap.set(p.productId, av);
-        if (p.price && p.price.amount) priceMap.set(p.productId, p.price.amount);
+        if (!p.productId || (p.name && p.name.toLowerCase().includes('api test'))) return;
+
+        const avail = (p.availability && p.availability.available !== undefined) ? Number(p.availability.available) : 0;
+        const priceAmt = (p.price && p.price.amount) ? Number(p.price.amount) : 0;
+
+        if (existingMap.has(p.productId)) {
+          // 1. Cập nhật tồn kho & giá gốc cho sản phẩm đã có
+          const item = existingMap.get(p.productId);
+          if (item.stock !== avail || item.basePrice !== priceAmt) {
+            item.stock = avail;
+            item.inStock = avail > 0;
+            item.basePrice = priceAmt;
+            hasChanges = true;
+          }
+        } else {
+          // 2. PHÁT HIỆN SẢN PHẨM MỚI TỪ BOT -> TỰ ĐỘNG MAP & THÊM VÀO WEB!
+          const meta = detectProductMeta(p.name);
+          const newProduct = {
+            id: p.productId,
+            name: p.name,
+            category: meta.category,
+            categoryLabel: meta.categoryLabel,
+            brand: meta.brand,
+            logo: meta.logo,
+            basePrice: priceAmt,
+            stock: avail,
+            inStock: avail > 0,
+            warranty: extractWarranty(p.name),
+            description: (p.description || '').slice(0, 350).trim()
+          };
+          liveProducts.unshift(newProduct); // Đưa sản phẩm mới lên đầu danh sách
+          existingMap.set(p.productId, newProduct);
+          hasChanges = true;
+        }
       });
 
-      liveProducts.forEach(lp => {
-        if (stockMap.has(lp.id)) {
-          const st = stockMap.get(lp.id);
-          lp.stock = st !== null ? st : 0;
-          lp.inStock = lp.stock > 0;
-        }
-        if (priceMap.has(lp.id)) {
-          lp.basePrice = priceMap.get(lp.id);
-        }
-      });
-
-      notifyListeners();
+      if (hasChanges) {
+        notifyListeners();
+      }
     } catch (err) {
-      console.warn("[BR-34 Catalog] API sync warning:", err);
+      console.warn("[BR-34 Auto-Sync] Sync warning:", err);
+    } finally {
+      isFetching = false;
     }
   }
 
