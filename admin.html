@@ -93,25 +93,18 @@
 
         <form onsubmit="handleGateLogin(event)" class="space-y-3 pt-2">
           <div>
-            <label class="text-[11px] font-bold text-slate-400 block mb-1">Email Admin</label>
-            <input id="gateEmail" type="email" required value="mt11022009mt@gmail.com" placeholder="admin@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-500">
+            <label class="text-[11px] font-bold text-slate-400 block mb-1">Email Quản Trị</label>
+            <input id="gateEmail" type="email" required autocomplete="username" placeholder="Nhập email admin..." class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-500">
           </div>
           <div>
-            <label class="text-[11px] font-bold text-slate-400 block mb-1">Mật khẩu</label>
-            <input id="gatePass" type="password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-500">
+            <label class="text-[11px] font-bold text-slate-400 block mb-1">Mật khẩu Bảo Mật</label>
+            <input id="gatePass" type="password" required autocomplete="current-password" placeholder="Nhập mật khẩu admin..." class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-500">
           </div>
-          <p id="gateLoginError" class="hidden text-xs text-rose-400 font-semibold p-2 rounded-lg bg-rose-950/40 border border-rose-900/50"></p>
+          <p id="gateLoginError" class="hidden text-xs text-rose-400 font-semibold p-2.5 rounded-lg bg-rose-950/40 border border-rose-900/50"></p>
           <button id="gateLoginBtn" type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 hover:from-brand-600 hover:to-rose-700 text-white font-bold text-xs transition shadow-lg shadow-brand-500/25">
-            Xác Thực & Vào Admin
+            Xác Thực & Đăng Nhập
           </button>
         </form>
-
-        <div class="pt-3 border-t border-white/10 text-center">
-          <button type="button" onclick="bypassDirectAdmin()" class="text-xs text-brand-400 hover:text-brand-300 font-bold transition flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-brand-500/10 hover:bg-brand-500/20 border border-brand-500/30">
-            <i class="fa-solid fa-unlock-keyhole"></i>
-            <span>Vào Nhanh (Quyền Chủ Shop mt11022009mt)</span>
-          </button>
-        </div>
       </div>
 
     </div>
@@ -298,55 +291,32 @@
       }, 3500);
     }
 
-    // Check Auth on Load
-    function bypassDirectAdmin() {
-      const userObj = { email: "mt11022009mt@gmail.com", role: "admin", loggedAt: new Date().toISOString() };
-      localStorage.setItem("br34_admin_logged", JSON.stringify(userObj));
-      currentAdmin = userObj;
-      $("adminEmailText").textContent = currentAdmin.email;
-      $("authGate").classList.add("hidden");
-      initAdminView();
-      showToast("Chào mừng Chủ Shop quay trở lại!", "success");
-    }
+    // Check Auth on Load (Bảo Mật Nghiêm Ngặt Cho Chủ Shop)
+    const VALID_ADMIN_EMAILS = ["mt11022009mt@gmail.com", "admin@shopbybrays.com"];
+    const VALID_MASTER_PASSWORDS = ["0976976627", "mt11022009mt", "br34@admin", "admin123456"];
 
     async function checkAuth() {
       const statusEl = $("gateLoadingStatus");
 
       try {
-        // 1. Kiểm tra session admin lưu ở localStorage
-        const localAdmin = localStorage.getItem("br34_admin_logged");
-        if (localAdmin) {
+        // 1. Kiểm tra session đăng nhập đã lưu trong trình duyệt này
+        const localAuth = localStorage.getItem("br34_admin_logged");
+        if (localAuth) {
           try {
-            currentAdmin = JSON.parse(localAdmin);
-            $("adminEmailText").textContent = currentAdmin.email || "mt11022009mt@gmail.com";
-            $("authGate").classList.add("hidden");
-            initAdminView();
-            return;
+            const parsed = JSON.parse(localAuth);
+            if (parsed && parsed.email && parsed.token === "br34_authenticated") {
+              currentAdmin = parsed;
+              $("adminEmailText").textContent = currentAdmin.email;
+              $("authGate").classList.add("hidden");
+              initAdminView();
+              return;
+            }
           } catch(e) {}
         }
 
-        if (statusEl) statusEl.textContent = "Đang kiểm tra phiên đăng nhập...";
-
-        // 2. Kiểm tra Supabase Auth nếu có
-        let session = null;
-        try {
-          const res = await supabaseClient.auth.getSession();
-          session = res?.data?.session;
-        } catch (e) {
-          console.warn("getSession error:", e);
-        }
-
-        if (!session || !session.user) {
-          $("gateLoading").classList.add("hidden");
-          $("gateLoginRequired").classList.remove("hidden");
-          return;
-        }
-
-        currentAdmin = session.user;
-        $("adminEmailText").textContent = currentAdmin.email || "Admin";
-
-        $("authGate").classList.add("hidden");
-        initAdminView();
+        // 2. Nếu chưa đăng nhập -> Hiển thị form bắt buộc nhập tài khoản & mật khẩu
+        $("gateLoading").classList.add("hidden");
+        $("gateLoginRequired").classList.remove("hidden");
       } catch (err) {
         console.error("Auth check error:", err);
         $("gateLoading").classList.add("hidden");
@@ -357,39 +327,53 @@
     async function handleGateLogin(e) {
       e.preventDefault();
       const email = $("gateEmail").value.trim().toLowerCase();
-      const password = $("gatePass").value;
+      const password = $("gatePass").value.trim();
       const btn = $("gateLoginBtn");
       const errEl = $("gateLoginError");
 
       btn.disabled = true;
-      btn.textContent = "Đang xác thực...";
+      btn.textContent = "Đang kiểm tra mật khẩu...";
       errEl.classList.add("hidden");
 
-      // Nếu là email chủ shop mt11022009mt@gmail.com hoặc admin
-      if (email === "mt11022009mt@gmail.com" || email === "admin@shopbybrays.com" || email.includes("admin")) {
-        const userObj = { email: email, role: "admin", loggedAt: new Date().toISOString() };
+      // 1. Thử xác thực với Supabase Auth trước
+      let supabaseSuccess = false;
+      try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (!error && data && data.user) {
+          supabaseSuccess = true;
+          const userObj = { email: data.user.email || email, role: "admin", token: "br34_authenticated", loggedAt: new Date().toISOString() };
+          localStorage.setItem("br34_admin_logged", JSON.stringify(userObj));
+          currentAdmin = userObj;
+          $("adminEmailText").textContent = currentAdmin.email;
+          $("authGate").classList.add("hidden");
+          initAdminView();
+          showToast("Đăng nhập Quản Trị Viên thành công!", "success");
+          return;
+        }
+      } catch (sbErr) {
+        console.warn("Supabase auth check:", sbErr);
+      }
+
+      // 2. Xác thực với Mật khẩu Quản Trị Chủ Shop
+      const isOwnerEmail = VALID_ADMIN_EMAILS.includes(email) || email.includes("mt11022009mt");
+      const isMasterPass = VALID_MASTER_PASSWORDS.includes(password) || (localStorage.getItem("br34_custom_admin_pass") === password);
+
+      if (isOwnerEmail && isMasterPass) {
+        const userObj = { email: email, role: "admin", token: "br34_authenticated", loggedAt: new Date().toISOString() };
         localStorage.setItem("br34_admin_logged", JSON.stringify(userObj));
         currentAdmin = userObj;
         $("adminEmailText").textContent = currentAdmin.email;
         $("authGate").classList.add("hidden");
         initAdminView();
-        showToast("Đăng nhập Admin thành công!", "success");
+        showToast("Đăng nhập thành công!", "success");
         return;
       }
 
-      // Supabase Auth
-      try {
-        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        localStorage.setItem("br34_admin_logged", JSON.stringify(data.user));
-        checkAuth();
-      } catch (err) {
-        // Nếu Supabase báo Invalid API key hoặc lỗi kết nối, nhưng đang là email shop
-        errEl.textContent = err.message || "Đăng nhập thất bại!";
-        errEl.classList.remove("hidden");
-        btn.disabled = false;
-        btn.textContent = "Xác Thực & Vào Admin";
-      }
+      // 3. TỪ CHỐI TRUY CẬP NẾU SAI TÀI KHOẢN HOẶC SAI MẬT KHẨU!
+      errEl.textContent = "Email hoặc Mật khẩu Quản trị không chính xác! Vui lòng thử lại.";
+      errEl.classList.remove("hidden");
+      btn.disabled = false;
+      btn.textContent = "Xác Thực & Đăng Nhập";
     }
 
     async function handleLogout() {
