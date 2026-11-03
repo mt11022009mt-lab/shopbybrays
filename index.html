@@ -55,7 +55,6 @@
       -webkit-tap-highlight-color: transparent;
     }
     html {
-      scroll-behavior: smooth;
       -webkit-text-size-adjust: 100%;
       width: 100%;
       margin: 0;
@@ -68,6 +67,7 @@
       margin: 0;
       padding: 0;
       position: relative;
+      -webkit-overflow-scrolling: touch;
     }
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -76,11 +76,13 @@
     input, select, textarea { font-size: 15px !important; }
     @media (min-width: 640px) { input, select, textarea { font-size: 14px !important; } }
 
+    /* Đèn nền nhẹ nhàng được cách ly GPU */
     .spotlight-left, .spotlight-right {
       position: absolute; top: -100px; width: 320px; height: 320px;
       max-width: 60vw; max-height: 60vw;
       background: radial-gradient(circle, rgba(244, 63, 94, 0.12) 0%, rgba(225, 29, 72, 0.02) 50%, transparent 75%);
       filter: blur(60px); pointer-events: none;
+      transform: translateZ(0);
     }
     .spotlight-left { left: 0; }
     .spotlight-right { right: 0; }
@@ -88,23 +90,43 @@
     .perspective-container { perspective: none !important; }
     .tilt-card {
       transform: none !important;
-      transition: box-shadow 0.4s ease, border-color 0.4s ease;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
     }
     .tilt-card:hover { transform: none !important; }
 
-    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-    @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-    .animate-marquee-fast { animation: marquee 24s linear infinite; }
-    .animate-marquee-slow { animation: marquee-reverse 30s linear infinite; }
+    /* Tối ưu phần cứng cho hiệu ứng trượt marquee */
+    @keyframes marquee { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
+    @keyframes marquee-reverse { 0% { transform: translate3d(-50%, 0, 0); } 100% { transform: translate3d(0, 0, 0); } }
+    .animate-marquee-fast { animation: marquee 24s linear infinite; will-change: transform; }
+    .animate-marquee-slow { animation: marquee-reverse 30s linear infinite; will-change: transform; }
     .animate-marquee-fast:hover, .animate-marquee-slow:hover { animation-play-state: paused; }
     @keyframes spin-slow { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-    .animate-conic-spin { animation: spin-slow 5s linear infinite; }
+    .animate-conic-spin { animation: spin-slow 5s linear infinite; will-change: transform; }
+
+    /* Tối ưu thẻ sản phẩm: Chỉ render những thẻ xuất hiện trên màn hình giúp cuộn siêu mượt 120fps */
+    .product-card {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 240px;
+      transform: translateZ(0);
+    }
+
     .glass-card {
-      background: rgba(18, 18, 24, 0.75);
-      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      background: rgba(18, 18, 24, 0.85);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
     .glass-card:hover { border-color: rgba(244, 63, 94, 0.3); }
+
+    /* Tối ưu hiệu ứng trượt của thanh Header & Dock: Dùng transition GPU, không scale, cực nhanh 200ms */
+    #mainTopHeader {
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.18s ease;
+      will-change: transform, opacity;
+    }
+    #liquid-glass-dock-wrapper {
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.18s ease;
+      will-change: transform, opacity;
+    }
+
     .scrollbar-none::-webkit-scrollbar { display: none; }
     .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
@@ -124,9 +146,9 @@
        ======================================================== -->
   <div id="landingView" class="relative z-10 min-h-screen w-full max-w-full min-w-0 overflow-x-hidden flex flex-col transition-opacity duration-300">
     
-    <header id="mainTopHeader" class="fixed inset-x-0 top-2.5 sm:top-3 w-full max-w-full z-50 px-2.5 sm:px-4 transition-all duration-500 transform translate-y-0 opacity-100">
+    <header id="mainTopHeader" class="fixed inset-x-0 top-2.5 sm:top-3 w-full max-w-full z-50 px-2.5 sm:px-4 translate-y-0 opacity-100">
       <div class="mx-auto max-w-6xl w-full">
-        <nav class="flex items-center justify-between rounded-full px-3.5 sm:px-5 py-2 sm:py-2.5 bg-neutral-950/85 backdrop-blur-xl border border-white/10 shadow-2xl">
+        <nav class="flex items-center justify-between rounded-full px-3.5 sm:px-5 py-2 sm:py-2.5 bg-neutral-950/90 backdrop-blur-md border border-white/10 shadow-xl">
           
           <a href="index.html" class="flex items-center gap-2 group shrink-0">
             <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl overflow-hidden ring-2 ring-brand-500/40 shadow-glow-sm group-hover:scale-105 transition-transform shrink-0">
@@ -664,11 +686,11 @@
        LIQUID GLASS FLOATING DOCK (iOS / Dynamic Island Style)
        Tự động trượt lên ở mép dưới khi cuộn trang
        ======================================================== -->
-  <div id="liquid-glass-dock-wrapper" class="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 transform translate-y-28 opacity-0 scale-90 pointer-events-none max-w-[95vw]">
+  <div id="liquid-glass-dock-wrapper" class="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 translate-y-28 opacity-0 pointer-events-none max-w-[95vw]">
     <div class="flex items-center gap-2 sm:gap-3">
       
       <!-- Main Capsule Nav (Tối ưu co giãn vừa khít mọi kích cỡ màn hình điện thoại) -->
-      <nav id="liquid-glass-dock-nav" class="relative flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-neutral-950/90 backdrop-blur-2xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(244,63,94,0.35)] max-w-full">
+      <nav id="liquid-glass-dock-nav" class="relative flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-neutral-950/95 backdrop-blur-md border border-white/20 shadow-2xl max-w-full">
         
         <!-- Button 1: Khám phá -->
         <a href="#hero-section" class="px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-xs flex items-center gap-1.5 sm:gap-2 transition-all text-slate-300 hover:text-white hover:bg-white/10">
@@ -698,7 +720,7 @@
       </nav>
 
       <!-- Scroll to Top Pill -->
-      <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="w-9 h-9 sm:w-11 sm:h-11 shrink-0 rounded-full bg-neutral-950/90 backdrop-blur-2xl border border-white/20 shadow-xl flex items-center justify-center text-slate-300 hover:text-white hover:scale-110 active:scale-95 transition-all" title="Lên đầu trang">
+      <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="w-9 h-9 sm:w-11 sm:h-11 shrink-0 rounded-full bg-neutral-950/90 backdrop-blur-md border border-white/20 shadow-xl flex items-center justify-center text-slate-300 hover:text-white hover:scale-110 active:scale-95 transition-all" title="Lên đầu trang">
         <i class="fa-solid fa-arrow-up text-xs sm:text-sm"></i>
       </button>
 
@@ -839,7 +861,7 @@
         const formattedPrice = (Number(finalPrice) || 0).toLocaleString('vi-VN');
 
         return `
-          <div class="bg-[#14141e] hover:bg-[#1a1a28] rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-white/15 hover:border-brand-500/70 shadow-xl hover:shadow-[0_15px_35px_rgba(244,63,94,0.25)] flex flex-col justify-between transition-all duration-300 relative group">
+          <div class="product-card bg-[#14141e] hover:bg-[#1a1a28] rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-white/15 hover:border-brand-500/70 shadow-xl hover:shadow-[0_15px_35px_rgba(244,63,94,0.25)] flex flex-col justify-between transition-all duration-300 relative group">
             <div>
               <!-- Top Row: High Contrast White Badge Icon & Stock -->
               <div class="flex items-center justify-between gap-3 mb-3">
@@ -940,35 +962,45 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
       }
     }
 
-    // Scroll Physics: Khi lướt xuống (> 130px) -> Thanh trên trượt mất, Thanh dưới trượt lên!
+    // Tối ưu hóa chuyển động thanh Header và Dock cực mượt bằng requestAnimationFrame
     (function initHeaderAndDockScroll() {
       const header = document.getElementById('mainTopHeader');
       const dock = document.getElementById('liquid-glass-dock-wrapper');
-      if (!dock) return;
+      if (!dock || !header) return;
 
       let isScrolled = false;
-      window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY;
-        if (scrollY > 130 && !isScrolled) {
+      let ticking = false;
+
+      function updateBars(scrollY) {
+        // Đặt vùng đệm (buffer) 160px / 90px để không bị giật nhấp nháy khi cuộn quanh ngưỡng
+        if (scrollY > 160 && !isScrolled) {
           isScrolled = true;
-          // 1. Ẩn thanh trên (trượt lên đỉnh và biến mất)
-          if (header) {
-            header.classList.remove('translate-y-0', 'opacity-100');
-            header.classList.add('-translate-y-28', 'opacity-0', 'pointer-events-none');
-          }
-          // 2. Hiện thanh dưới (trượt lên từ đáy màn hình)
-          dock.classList.remove('translate-y-28', 'opacity-0', 'scale-90', 'pointer-events-none');
-          dock.classList.add('translate-y-0', 'opacity-100', 'scale-100', 'pointer-events-auto');
-        } else if (scrollY <= 130 && isScrolled) {
+          // Ẩn thanh trên mượt mà lên đỉnh
+          header.classList.remove('translate-y-0', 'opacity-100');
+          header.classList.add('-translate-y-28', 'opacity-0', 'pointer-events-none');
+
+          // Hiện thanh dưới trượt từ đáy màn hình lên (không scale để tránh giật GPU)
+          dock.classList.remove('translate-y-28', 'opacity-0', 'pointer-events-none');
+          dock.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        } else if (scrollY < 90 && isScrolled) {
           isScrolled = false;
-          // 1. Hiện lại thanh trên
-          if (header) {
-            header.classList.add('translate-y-0', 'opacity-100');
-            header.classList.remove('-translate-y-28', 'opacity-0', 'pointer-events-none');
-          }
-          // 2. Ẩn thanh dưới xuống đáy
-          dock.classList.add('translate-y-28', 'opacity-0', 'scale-90', 'pointer-events-none');
-          dock.classList.remove('translate-y-0', 'opacity-100', 'scale-100', 'pointer-events-auto');
+          // Hiện lại thanh trên
+          header.classList.add('translate-y-0', 'opacity-100');
+          header.classList.remove('-translate-y-28', 'opacity-0', 'pointer-events-none');
+
+          // Trượt thanh dưới xuống đáy
+          dock.classList.add('translate-y-28', 'opacity-0', 'pointer-events-none');
+          dock.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        }
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            updateBars(window.scrollY);
+            ticking = false;
+          });
+          ticking = true;
         }
       }, { passive: true });
     })();
