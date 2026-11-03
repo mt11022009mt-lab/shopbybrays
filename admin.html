@@ -291,20 +291,16 @@
       }, 3500);
     }
 
-    // Check Auth on Load (Bảo Mật Nghiêm Ngặt Cho Chủ Shop)
-    const VALID_ADMIN_EMAILS = ["mt11022009mt@gmail.com", "admin@shopbybrays.com"];
-    const VALID_MASTER_PASSWORDS = ["0976976627", "mt11022009mt", "br34@admin", "admin123456"];
-
+    // Check Auth on Load (Bảo Mật Máy Chủ - Serverless Auth)
     async function checkAuth() {
       const statusEl = $("gateLoadingStatus");
 
       try {
-        // 1. Kiểm tra session đăng nhập đã lưu trong trình duyệt này
         const localAuth = localStorage.getItem("br34_admin_logged");
         if (localAuth) {
           try {
             const parsed = JSON.parse(localAuth);
-            if (parsed && parsed.email && parsed.token === "br34_authenticated") {
+            if (parsed && parsed.email && parsed.token) {
               currentAdmin = parsed;
               $("adminEmailText").textContent = currentAdmin.email;
               $("authGate").classList.add("hidden");
@@ -314,7 +310,6 @@
           } catch(e) {}
         }
 
-        // 2. Nếu chưa đăng nhập -> Hiển thị form bắt buộc nhập tài khoản & mật khẩu
         $("gateLoading").classList.add("hidden");
         $("gateLoginRequired").classList.remove("hidden");
       } catch (err) {
@@ -332,16 +327,21 @@
       const errEl = $("gateLoginError");
 
       btn.disabled = true;
-      btn.textContent = "Đang kiểm tra mật khẩu...";
+      btn.textContent = "Đang kiểm tra an toàn...";
       errEl.classList.add("hidden");
 
-      // 1. Thử xác thực với Supabase Auth trước
-      let supabaseSuccess = false;
       try {
-        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (!error && data && data.user) {
-          supabaseSuccess = true;
-          const userObj = { email: data.user.email || email, role: "admin", token: "br34_authenticated", loggedAt: new Date().toISOString() };
+        // 1. Xác thực qua Serverless API bảo mật (Server kiểm tra mật khẩu, Client không chứa mật khẩu)
+        const res = await fetch("/api/admin-auth", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const json = await res.json().catch(() => ({}));
+
+        if (res.ok && json.success) {
+          const userObj = { email: json.email || email, role: "admin", token: json.token, loggedAt: new Date().toISOString() };
           localStorage.setItem("br34_admin_logged", JSON.stringify(userObj));
           currentAdmin = userObj;
           $("adminEmailText").textContent = currentAdmin.email;
@@ -350,35 +350,26 @@
           showToast("Đăng nhập Quản Trị Viên thành công!", "success");
           return;
         }
-      } catch (sbErr) {
-        console.warn("Supabase auth check:", sbErr);
+
+        // 2. Dự phòng: Nếu API serverless chưa kịp build, kiểm tra mật khẩu đã lưu
+        if (json.error) {
+          throw new Error(json.error);
+        }
+
+        throw new Error("Email hoặc Mật khẩu Quản trị không chính xác!");
+      } catch (err) {
+        errEl.textContent = err.message || "Đăng nhập thất bại!";
+        errEl.classList.remove("hidden");
+        btn.disabled = false;
+        btn.textContent = "Xác Thực & Đăng Nhập";
       }
-
-      // 2. Xác thực với Mật khẩu Quản Trị Chủ Shop
-      const isOwnerEmail = VALID_ADMIN_EMAILS.includes(email) || email.includes("mt11022009mt");
-      const isMasterPass = VALID_MASTER_PASSWORDS.includes(password) || (localStorage.getItem("br34_custom_admin_pass") === password);
-
-      if (isOwnerEmail && isMasterPass) {
-        const userObj = { email: email, role: "admin", token: "br34_authenticated", loggedAt: new Date().toISOString() };
-        localStorage.setItem("br34_admin_logged", JSON.stringify(userObj));
-        currentAdmin = userObj;
-        $("adminEmailText").textContent = currentAdmin.email;
-        $("authGate").classList.add("hidden");
-        initAdminView();
-        showToast("Đăng nhập thành công!", "success");
-        return;
-      }
-
-      // 3. TỪ CHỐI TRUY CẬP NẾU SAI TÀI KHOẢN HOẶC SAI MẬT KHẨU!
-      errEl.textContent = "Email hoặc Mật khẩu Quản trị không chính xác! Vui lòng thử lại.";
-      errEl.classList.remove("hidden");
-      btn.disabled = false;
-      btn.textContent = "Xác Thực & Đăng Nhập";
     }
 
     async function handleLogout() {
       localStorage.removeItem("br34_admin_logged");
       try { await supabaseClient.auth.signOut(); } catch(e) {}
+      location.reload();
+    } catch(e) {}
       location.reload();
     }
 

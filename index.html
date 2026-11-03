@@ -1007,5 +1007,30 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
       }
     });
   </script>
+
+  <!-- ANTI-INSPECT / ANTI-DEVTOOLS SHIELD -->
+  <script>
+    (function () {
+      // 1. Chống chuột phải xem mã nguồn
+      document.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        return false;
+      }, false);
+
+      // 2. Chống phím tắt F12, Ctrl+U, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+S
+      document.addEventListener("keydown", function (e) {
+        if (
+          e.keyCode === 123 || // F12
+          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || // Ctrl+Shift+I/J/C
+          (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83)) || // Ctrl+U / Ctrl+S
+          (e.metaKey && (e.keyCode === 85 || e.keyCode === 83)) // Cmd+U / Cmd+S on Mac
+        ) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      }, false);
+    })();
+  </script>
 </body>
 </html>

@@ -3310,8 +3310,7 @@ const BR34_CATALOG_DATA = [
 ];
 
 const BR34_PRODUCT_SERVICE = (function () {
-  const BUYER_KEY = "tgb_0e970ffebbe8c5d6249715d579f3e3f9e54048b6e6fd7bbd";
-  const API_ENDPOINT = "https://canboso.com/api/v2/telegram-buyer/products";
+  const API_ENDPOINT = "/api/stock";
   
   const STORAGE_KEY_SETTINGS = "br34_pricing_settings";
   const STORAGE_KEY_CUSTOM_PRICES = "br34_custom_prices";
@@ -3436,12 +3435,7 @@ const BR34_PRODUCT_SERVICE = (function () {
     isFetching = true;
 
     try {
-      const resp = await fetch(API_ENDPOINT, {
-        headers: {
-          "x-buyer-key": BUYER_KEY,
-          "Accept": "application/json"
-        }
-      });
+      const resp = await fetch(API_ENDPOINT, { headers: { "Accept": "application/json" } });
       if (!resp.ok) return;
       const json = await resp.json();
       const apiProducts = json.products || [];
