@@ -150,7 +150,7 @@
       <div class="mx-auto max-w-6xl w-full">
         <nav class="flex items-center justify-between rounded-full px-3.5 sm:px-5 py-2 sm:py-2.5 bg-neutral-950/90 backdrop-blur-md border border-white/10 shadow-xl">
           
-          <a href="index.html" class="flex items-center gap-2 group shrink-0">
+          <a href="index.html" onclick="handleLogoSecretClick(event)" class="flex items-center gap-2 group shrink-0" title="BR-34 Store">
             <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl overflow-hidden ring-2 ring-brand-500/40 shadow-glow-sm group-hover:scale-105 transition-transform shrink-0">
               <img src="https://i.postimg.cc/ydDPJG36/1772770755743-215405081644931365-408525348754147443-3c4e7c3d115317eabbaad4b6bbfc4995.jpg" alt="BR-34" class="w-full h-full object-cover">
             </div>
@@ -589,7 +589,7 @@
         </div>
       </div>
       <div class="max-w-6xl mx-auto pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
-        <p>© 2026 <strong class="text-slate-300">BR-34</strong> SMM Panel. All rights reserved.</p>
+        <p>© 2026 <strong class="text-slate-300 cursor-pointer hover:text-white transition" ondblclick="window.location.href='admin.html'" title="ShopByBrays">BR-34</strong> SMM Panel. All rights reserved.</p>
         <p>Phát triển trên nền tảng Supabase & Tailwind CSS tốc độ cao.</p>
       </div>
     </footer>
@@ -1032,5 +1032,39 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
       }, false);
     })();
   </script>
+
+  <!-- SECRET ADMIN ENTRY FOR OWNER ONLY (CHẠM 5 LẦN LOGO HOẶC ALT+A ĐỂ VÀO ADMIN) -->
+  <script>
+    (function initSecretAdminGateway() {
+      let clickCount = 0;
+      let lastClickTime = 0;
+
+      // 1. Chạm 5 lần liên tiếp vào logo BR-34 ở góc trên để vào Admin
+      window.handleLogoSecretClick = function(e) {
+        const now = Date.now();
+        if (now - lastClickTime < 1500) {
+          clickCount++;
+        } else {
+          clickCount = 1;
+        }
+        lastClickTime = now;
+
+        if (clickCount >= 5) {
+          e.preventDefault();
+          clickCount = 0;
+          window.location.href = 'admin.html';
+        }
+      };
+
+      // 2. Phím tắt Alt + A hoặc Ctrl + Shift + A trên máy tính
+      document.addEventListener('keydown', function(e) {
+        if ((e.altKey && (e.key === 'a' || e.key === 'A')) || (e.ctrlKey && e.shiftKey && (e.key === 'a' || e.key === 'A'))) {
+          e.preventDefault();
+          window.location.href = 'admin.html';
+        }
+      });
+    })();
+  </script>
+
 </body>
 </html>
