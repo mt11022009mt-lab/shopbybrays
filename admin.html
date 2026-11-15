@@ -57,74 +57,87 @@
 <body class="bg-background text-foreground font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white">
 
   <!-- ========================================================
-       AUTH GATE (BẢO VỆ QUYỀN ADMIN SUPABASE)
+       AUTH GATE: CINEMATIC VAULT DOOR (CỬA HẦM BỌC THÉP & KHÓI)
        ======================================================== -->
-  <div id="authGate" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-    <div class="glass-card max-w-sm w-full p-6 sm:p-7 rounded-3xl text-center shadow-2xl relative">
-      
-      <!-- Loading State -->
-      <div id="gateLoading" class="hidden py-6 space-y-3">
-        <div class="w-12 h-12 rounded-2xl bg-brand-500/20 text-brand-400 grid place-items-center text-xl mx-auto animate-pulse">
-          <i class="fa-solid fa-shield-halved"></i>
-        </div>
-        <h3 class="text-sm font-black text-white">Đang kiểm tra quyền Admin...</h3>
-        <p id="gateLoadingStatus" class="text-xs text-slate-400">Vui lòng chờ trong giây lát</p>
+  <div id="authGate" class="fixed inset-0 z-50 overflow-hidden select-none font-sans">
+    
+    <!-- Dark Backdrop for depth -->
+    <div class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
+
+    <!-- Left Blast Door Panel -->
+    <div id="adminDoorLeft" class="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-[#07080b] via-[#10121a] to-[#181a24] border-r-2 border-cyan-500/50 shadow-[25px_0_50px_rgba(0,0,0,0.9)] transition-transform duration-1000 ease-[cubic-bezier(0.77,0,0.175,1)] flex flex-col justify-between p-6 sm:p-12 z-10 pointer-events-auto">
+      <div class="flex items-center gap-3 opacity-30">
+        <div class="w-3 h-3 rounded-full bg-cyan-400 animate-ping"></div>
+        <div class="font-mono text-xs text-cyan-300 tracking-widest font-bold">ARMOR CLASS: TITANIUM-X // ZONE 01</div>
       </div>
-
-      <!-- Denied State -->
-      <div id="gateDenied" class="hidden py-4 space-y-4">
-        <div class="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 grid place-items-center text-xl mx-auto">
-          <i class="fa-solid fa-ban"></i>
-        </div>
-        <h3 class="text-sm font-bold text-white">Truy Cập Bị Từ Chối</h3>
-        <p class="text-xs text-slate-400">Tài khoản của bạn không có quyền Quản trị viên hệ thống.</p>
-        <button onclick="handleLogout()" class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold transition">Đăng xuất</button>
+      <div class="space-y-4 my-auto opacity-20">
+        <div class="h-2 w-48 bg-gradient-to-r from-cyan-500 to-transparent rounded-full"></div>
+        <div class="h-1 w-32 bg-slate-400 rounded-full"></div>
+        <div class="h-1 w-20 bg-slate-600 rounded-full"></div>
       </div>
+      <div class="font-mono text-[10px] text-slate-500 tracking-widest">BR-34 HEAVY BIOMETRIC BLAST PORTAL</div>
+    </div>
 
-      <!-- Hardware Key Required State Only -->
-      <div id="gateLoginRequired" class="py-4 space-y-4 text-center">
-        <div class="space-y-1">
-          <div class="w-14 h-14 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 grid place-items-center text-2xl mx-auto mb-3 shadow-lg shadow-cyan-500/20">
-            <i class="fa-solid fa-shield-halved animate-pulse"></i>
-          </div>
-          <h3 class="text-base font-black text-white">YÊU CẦU KHÓA VẬT LÝ USB</h3>
-          <p class="text-xs text-slate-400 max-w-xs mx-auto">Khu vực quản trị tối mật — Chỉ Quản Trị Viên cắm USB Chìa Khóa BR-34 mới có quyền truy cập.</p>
-        </div>
-
-        <!-- VIP HARDWARE KEY USB DONGLE -->
-        <div class="p-4 rounded-2xl bg-gradient-to-br from-cyan-950/60 via-slate-900 to-indigo-950/60 border border-cyan-500/50 text-center space-y-3 shadow-2xl relative overflow-hidden">
-          <div class="flex items-center justify-between text-[11px] font-black text-cyan-400">
-            <span class="flex items-center gap-1.5">
-              <i class="fa-solid fa-microchip text-xs"></i>
-              XÁC THỰC PHẦN CỨNG
-            </span>
-            <span class="px-2.5 py-0.5 rounded-full text-[9px] bg-cyan-500/20 text-cyan-300 font-mono font-bold border border-cyan-500/40">HARDWARE ONLY</span>
-          </div>
-
-          <button type="button" onclick="triggerUsbAuth()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-neutral-950 font-black text-xs transition flex items-center justify-center gap-2.5 shadow-xl shadow-cyan-500/30 active:scale-95 group">
-            <div class="w-7 h-7 rounded-lg bg-black/20 grid place-items-center text-sm">
-              <i class="fa-solid fa-key group-hover:rotate-12 transition"></i>
-            </div>
-            <span class="text-sm">QUÉT USB CHÌA KHÓA</span>
-          </button>
-          
-          <input type="file" id="usbFileInput" accept=".br34,.key,.bin,*" class="hidden" onchange="handleUsbFileSelected(event)">
-
-          <div class="text-[11px] text-cyan-300/80 font-medium flex items-center justify-center gap-1.5 pt-1">
-            <i class="fa-solid fa-circle-check text-xs text-emerald-400"></i>
-            <span>Cắm USB và chọn file 'BR34_SECURITY_KEY.br34'</span>
-          </div>
-        </div>
-
-        <p id="gateLoginError" class="hidden text-xs text-rose-400 font-semibold p-3 rounded-xl bg-rose-950/50 border border-rose-900/60 text-left"></p>
-
-        <a href="index.html" class="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 font-bold transition pt-2">
-          <i class="fa-solid fa-arrow-left text-[10px]"></i>
-          <span>Quay lại trang bán hàng</span>
+    <!-- Right Blast Door Panel -->
+    <div id="adminDoorRight" class="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-[#07080b] via-[#10121a] to-[#181a24] border-l-2 border-cyan-500/50 shadow-[-25px_0_50px_rgba(0,0,0,0.9)] transition-transform duration-1000 ease-[cubic-bezier(0.77,0,0.175,1)] flex flex-col justify-between p-6 sm:p-12 z-10 text-right pointer-events-auto">
+      <div class="flex justify-end">
+        <a href="index.html" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-rose-500/20 border border-white/10 hover:border-rose-500/40 text-slate-300 hover:text-rose-400 text-xs font-bold transition-all flex items-center gap-2">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Về Cửa Hàng</span>
         </a>
       </div>
+      <div class="space-y-4 my-auto flex flex-col items-end opacity-20">
+        <div class="h-2 w-48 bg-gradient-to-l from-cyan-500 to-transparent rounded-full"></div>
+        <div class="h-1 w-32 bg-slate-400 rounded-full"></div>
+        <div class="h-1 w-20 bg-slate-600 rounded-full"></div>
+      </div>
+      <div class="font-mono text-[10px] text-slate-500 tracking-widest">PNEUMATIC SEAL PRESSURE: 450 PSI</div>
+    </div>
+
+    <!-- Vertical Neon Seam -->
+    <div id="adminLightSeam" class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-1.5 bg-cyan-400 shadow-[0_0_35px_#22d3ee] z-20 transition-opacity duration-300"></div>
+
+    <!-- Canvas for Billowing Smoke & Steam -->
+    <canvas id="adminSteamCanvas" class="absolute inset-0 pointer-events-none z-30"></canvas>
+
+    <!-- Center Vault Mechanism & Terminal -->
+    <div id="adminCenterCore" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-center p-6 text-center max-w-sm sm:max-w-md w-full transition-all duration-700">
+      
+      <!-- Big Sci-Fi Wheel / Cog -->
+      <div class="relative w-36 h-36 sm:w-44 sm:h-44 grid place-items-center mb-6">
+        <div class="absolute inset-0 rounded-full border-2 border-dashed border-cyan-500/40 animate-[spin_15s_linear_infinite]"></div>
+        <div class="absolute inset-2 rounded-full border border-cyan-400/20 animate-[spin_10s_linear_infinite_reverse]"></div>
+        
+        <div id="adminInnerCog" class="absolute inset-4 rounded-full border-2 border-cyan-400/70 bg-neutral-950/95 backdrop-blur-2xl shadow-[0_0_40px_rgba(6,182,212,0.4)] grid place-items-center transition-transform duration-700">
+          <div id="adminCoreIcon" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-cyan-500/20 border border-cyan-400/50 grid place-items-center text-3xl sm:text-4xl text-cyan-400 shadow-inner transition-colors duration-500">
+            <i id="adminIconInner" class="fa-solid fa-key"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terminal Text -->
+      <div class="space-y-1.5 mb-6">
+        <div id="adminBadge" class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[10px] font-mono font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+          <span>KHU VỰC QUẢN TRỊ TỐI MẬT // HARDWARE ONLY</span>
+        </div>
+        <h2 id="adminStatusTitle" class="text-xl sm:text-2xl font-black text-white tracking-wider">CỬA HẦM ĐANG KHÓA CHẶT</h2>
+        <p id="adminStatusDesc" class="text-xs text-slate-400 max-w-xs mx-auto">Vui lòng tra Chìa Khóa USB BR-34 vào ổ khóa để xả khí và mở cửa hầm</p>
+      </div>
+
+      <!-- Action Key Button -->
+      <button id="adminActionBtn" type="button" onclick="triggerUsbAuth()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-neutral-950 font-black text-sm tracking-wide transition-all shadow-2xl shadow-cyan-500/40 active:scale-95 flex items-center justify-center gap-3 group">
+        <i class="fa-solid fa-key group-hover:rotate-12 transition"></i>
+        <span>TRA CHÌA KHÓA USB ĐỂ MỞ CỬA</span>
+      </button>
+
+      <input type="file" id="usbFileInput" accept=".br34,.key,.bin,*" class="hidden" onchange="handleUsbFileSelected(event)">
+
+      <div class="text-[11px] text-slate-500 font-mono mt-3">FILE CHỨNG THỰC: BR34_SECURITY_KEY.br34</div>
+      <p id="gateLoginError" class="hidden text-xs text-rose-400 font-semibold p-3 rounded-xl bg-rose-950/60 border border-rose-900/60 mt-3"></p>
 
     </div>
+
   </div>
 
   <!-- ========================================================
@@ -307,24 +320,148 @@
     // ========================================================
     // USB HARDWARE SECURITY KEY AUTHENTICATION
     // ========================================================
-    function playSciFiUnlockSound() {
+    
+    // 1. Âm thanh Cửa Thép Sập Xuống (Heavy Metal Slam)
+    function playDoorSlamSound() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const now = ctx.currentTime;
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.connect(gain);
         gain.connect(ctx.destination);
-        osc.type = "sine";
-        const now = ctx.currentTime;
-        osc.frequency.setValueAtTime(587.33, now); // D5
-        osc.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
-        osc.frequency.exponentialRampToValueAtTime(1174.66, now + 0.25); // D6
-        gain.gain.setValueAtTime(0.35, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+        osc.frequency.setValueAtTime(140, now);
+        osc.frequency.exponentialRampToValueAtTime(35, now + 0.4);
+        gain.gain.setValueAtTime(0.7, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
         osc.start(now);
-        osc.stop(now + 0.35);
+        osc.stop(now + 0.5);
       } catch(e) {}
     }
+
+    // 2. Âm thanh Mở Khóa Răng Cưa + Xả Khí Áp Suất (Clank & Pneumatic Steam)
+    function playVaultUnlockAndSteamSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const now = ctx.currentTime;
+
+        // Tiếng răng cưa cơ khí quay
+        [0, 0.12, 0.24].forEach((delay, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(280 + idx * 160, now + delay);
+          gain.gain.setValueAtTime(0.4, now + delay);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + delay + 0.08);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + delay);
+          osc.stop(now + delay + 0.08);
+        });
+
+        // Tiếng xả khói hơi nước áp lực cao
+        const bufferSize = Math.floor(ctx.sampleRate * 2.2);
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.frequency.setValueAtTime(3200, now + 0.3);
+        filter.frequency.exponentialRampToValueAtTime(700, now + 2.0);
+        filter.Q.value = 1.6;
+
+        const noiseGain = ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.01, now);
+        noiseGain.gain.linearRampToValueAtTime(0.55, now + 0.35);
+        noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 2.1);
+
+        noise.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(ctx.destination);
+        noise.start(now + 0.3);
+        noise.stop(now + 2.1);
+
+        // Tiếng mô tơ trượt cửa
+        const servo = ctx.createOscillator();
+        const servoGain = ctx.createGain();
+        servo.type = "triangle";
+        servo.frequency.setValueAtTime(80, now + 0.6);
+        servo.frequency.linearRampToValueAtTime(160, now + 1.8);
+        servoGain.gain.setValueAtTime(0.25, now + 0.6);
+        servoGain.gain.exponentialRampToValueAtTime(0.01, now + 1.9);
+        servo.connect(servoGain);
+        servoGain.connect(ctx.destination);
+        servo.start(now + 0.6);
+        servo.stop(now + 1.9);
+      } catch(e) {}
+    }
+
+    // 3. Hiệu ứng Khói Hơi Nước Bốc Lên Từ Khe Cửa
+    function startSteamSmokeEffectAdmin() {
+      const canvas = document.getElementById("adminSteamCanvas");
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+
+      const particles = [];
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+
+      for (let i = 0; i < 90; i++) {
+        particles.push({
+          x: centerX + (Math.random() - 0.5) * 20,
+          y: centerY + (Math.random() - 0.5) * (canvas.height * 0.9),
+          vx: (Math.random() - 0.5) * 16,
+          vy: (Math.random() - 0.5) * 8 - 2.5,
+          size: Math.random() * 45 + 30,
+          growth: Math.random() * 2.2 + 1.5,
+          alpha: Math.random() * 0.6 + 0.4,
+          decay: Math.random() * 0.012 + 0.007,
+          color: Math.random() > 0.4 ? "255, 255, 255" : "180, 245, 255"
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let active = 0;
+
+        particles.forEach(p => {
+          if (p.alpha > 0.01) {
+            active++;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vx *= 0.96;
+            p.vy *= 0.96;
+            p.size += p.growth;
+            p.alpha -= p.decay;
+
+            const g = ctx.createRadialGradient(p.x, p.y, p.size * 0.1, p.x, p.y, p.size);
+            g.addColorStop(0, "rgba(" + p.color + ", " + p.alpha + ")");
+            g.addColorStop(0.5, "rgba(" + p.color + ", " + (p.alpha * 0.4) + ")");
+            g.addColorStop(1, "rgba(" + p.color + ", 0)");
+
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        });
+
+        if (active > 0) {
+          requestAnimationFrame(render);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+      render();
+    }
+
 
     function triggerUsbAuth() {
       const errEl = $("gateLoginError");
@@ -354,7 +491,35 @@
         const isMatched = data && data.keyId === "BR34-USB-KEY-2026-X99" && (data.signature === expectedSig || (data.rawToken && data.rawToken.includes("BR34_HARDWARE_TOKEN_SECURE_VAULT")));
 
         if (isMatched) {
-          playSciFiUnlockSound();
+          // == BƯỚC 1: CẬP NHẬT HUD XÁC THỰC ==
+          const title = $("adminStatusTitle");
+          const desc = $("adminStatusDesc");
+          const btn = $("adminActionBtn");
+          const badge = $("adminBadge");
+          const innerCog = $("adminInnerCog");
+          const coreIcon = $("adminCoreIcon");
+          const iconInner = $("adminIconInner");
+
+          if (title) title.textContent = "KHÓA ĐÃ KHỚP // ĐANG XẢ ÁP SUẤT";
+          if (desc) desc.textContent = "Chữ ký hợp lệ — Khí nén đang xả, cửa hầm chuẩn bị mở...";
+          if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i><span>ĐANG MỞ KHÓA CỬA HẦM...</span>';
+            btn.className = "w-full py-4 px-6 rounded-2xl bg-emerald-500 text-neutral-950 font-black text-sm tracking-wide shadow-2xl shadow-emerald-500/50 flex items-center justify-center gap-3";
+          }
+          if (badge) {
+            badge.className = "inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[10px] font-mono font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+            badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span><span>XÁC THỰC THÀNH CÔNG (ACCESS GRANTED)</span>';
+          }
+          if (innerCog) innerCog.style.transform = "rotate(360deg) scale(1.15)";
+          if (coreIcon) {
+            coreIcon.className = "w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-500/30 border border-emerald-400 grid place-items-center text-3xl sm:text-4xl text-emerald-300 shadow-xl shadow-emerald-500/50";
+          }
+          if (iconInner) iconInner.className = "fa-solid fa-lock-open text-emerald-300";
+
+          // == BƯỚC 2: PHÁT ÂM THANH XẢ KHÍ & BẮN KHÓI HƠI NƯỚC ==
+          playVaultUnlockAndSteamSound();
+          startSteamSmokeEffectAdmin();
 
           const userObj = {
             email: data.owner || "mt11022009mt@gmail.com",
@@ -364,19 +529,38 @@
             token: "br34_hardware_key_authenticated",
             loggedAt: new Date().toISOString()
           };
-
           localStorage.setItem("br34_admin_logged", JSON.stringify(userObj));
           currentAdmin = userObj;
-          const emailEl = $("adminEmailText");
-          if (emailEl) emailEl.innerHTML = '<i class="fa-solid fa-key text-cyan-400 mr-1"></i> ' + (currentAdmin.email || "Admin");
 
-          showToast("Xác thực USB Khóa Vật Lý thành công! Mở cửa Admin...", "success");
+          // == BƯỚC 3: CỬA THÉP KHỔNG LỒ TỪ TỪ TRƯỢT SANG 2 BÊN ==
+          setTimeout(() => {
+            const left = $("adminDoorLeft");
+            const right = $("adminDoorRight");
+            const core = $("adminCenterCore");
+            const seam = $("adminLightSeam");
 
+            if (left) left.style.transform = "translateX(-100%)";
+            if (right) right.style.transform = "translateX(100%)";
+            if (seam) seam.style.opacity = "0";
+            if (core) {
+              core.style.opacity = "0";
+              core.style.transform = "translate(-50%, -50%) scale(0.85)";
+            }
+
+            // Hiện dashboard bên dưới cánh cửa đang mở
+            const dash = $("adminDashboard");
+            if (dash) dash.classList.remove("hidden");
+            const emailEl = $("adminEmailText");
+            if (emailEl) emailEl.innerHTML = '<i class="fa-solid fa-key text-cyan-400 mr-1"></i> ' + (currentAdmin.email || "Admin") + ' (USB)';
+            initAdminView();
+          }, 600);
+
+          // == BƯỚC 4: ẨN HOÀN TOÀN CỔNG KHI CỬA ĐÃ MỞ HẾT ==
           setTimeout(() => {
             const gate = $("authGate");
             if (gate) gate.classList.add("hidden");
-            initAdminView();
-          }, 400);
+          }, 1600);
+
           return;
         }
 
