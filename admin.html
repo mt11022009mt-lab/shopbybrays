@@ -81,56 +81,47 @@
         <button onclick="handleLogout()" class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold transition">Đăng xuất</button>
       </div>
 
-      <!-- Login Required State -->
-      <div id="gateLoginRequired" class="py-4 space-y-4 text-left">
-        <div class="text-center space-y-1">
-          <div class="w-12 h-12 rounded-2xl bg-brand-500/20 text-brand-400 grid place-items-center text-xl mx-auto mb-2">
-            <i class="fa-solid fa-shield-halved"></i>
+      <!-- Hardware Key Required State Only -->
+      <div id="gateLoginRequired" class="py-4 space-y-4 text-center">
+        <div class="space-y-1">
+          <div class="w-14 h-14 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 grid place-items-center text-2xl mx-auto mb-3 shadow-lg shadow-cyan-500/20">
+            <i class="fa-solid fa-shield-halved animate-pulse"></i>
           </div>
-          <h3 class="text-base font-black text-white">Đăng Nhập Quản Trị Viên</h3>
-          <p class="text-xs text-slate-400">Quét USB Khóa Vật Lý hoặc Mật khẩu</p>
+          <h3 class="text-base font-black text-white">YÊU CẦU KHÓA VẬT LÝ USB</h3>
+          <p class="text-xs text-slate-400 max-w-xs mx-auto">Khu vực quản trị tối mật — Chỉ Quản Trị Viên cắm USB Chìa Khóa BR-34 mới có quyền truy cập.</p>
         </div>
 
         <!-- VIP HARDWARE KEY USB DONGLE -->
-        <div class="p-3.5 rounded-2xl bg-gradient-to-br from-cyan-950/60 via-slate-900 to-indigo-950/60 border border-cyan-500/50 text-center space-y-2.5 shadow-xl relative overflow-hidden">
+        <div class="p-4 rounded-2xl bg-gradient-to-br from-cyan-950/60 via-slate-900 to-indigo-950/60 border border-cyan-500/50 text-center space-y-3 shadow-2xl relative overflow-hidden">
           <div class="flex items-center justify-between text-[11px] font-black text-cyan-400">
             <span class="flex items-center gap-1.5">
-              <i class="fa-solid fa-microchip text-xs animate-pulse"></i>
-              KHÓA VẬT LÝ USB
+              <i class="fa-solid fa-microchip text-xs"></i>
+              XÁC THỰC PHẦN CỨNG
             </span>
-            <span class="px-2 py-0.5 rounded-full text-[9px] bg-cyan-500/20 text-cyan-300 font-mono font-bold border border-cyan-500/40">VIP DONGLE</span>
+            <span class="px-2.5 py-0.5 rounded-full text-[9px] bg-cyan-500/20 text-cyan-300 font-mono font-bold border border-cyan-500/40">HARDWARE ONLY</span>
           </div>
-          <button type="button" onclick="triggerUsbAuth()" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-neutral-950 font-black text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/25 active:scale-95">
-            <i class="fa-solid fa-key"></i>
-            <span>CHẠM QUÉT USB CHÌA KHÓA</span>
+
+          <button type="button" onclick="triggerUsbAuth()" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-neutral-950 font-black text-xs transition flex items-center justify-center gap-2.5 shadow-xl shadow-cyan-500/30 active:scale-95 group">
+            <div class="w-7 h-7 rounded-lg bg-black/20 grid place-items-center text-sm">
+              <i class="fa-solid fa-key group-hover:rotate-12 transition"></i>
+            </div>
+            <span class="text-sm">QUÉT USB CHÌA KHÓA</span>
           </button>
+          
           <input type="file" id="usbFileInput" accept=".br34,.key,.bin" class="hidden" onchange="handleUsbFileSelected(event)">
-          <div class="text-[10px] text-cyan-300/80 font-medium flex items-center justify-center gap-1">
-            <i class="fa-solid fa-circle-check text-[9px] text-emerald-400"></i>
-            <span>Cắm USB và bấm quét file 'BR34_SECURITY_KEY.br34'</span>
+
+          <div class="text-[11px] text-cyan-300/80 font-medium flex items-center justify-center gap-1.5 pt-1">
+            <i class="fa-solid fa-circle-check text-xs text-emerald-400"></i>
+            <span>Cắm USB và chọn file 'BR34_SECURITY_KEY.br34'</span>
           </div>
         </div>
 
-        <div class="relative flex py-1 items-center">
-          <div class="flex-grow border-t border-white/10"></div>
-          <span class="flex-shrink mx-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">HOẶC DÙNG MẬT KHẨU</span>
-          <div class="flex-grow border-t border-white/10"></div>
-        </div>
+        <p id="gateLoginError" class="hidden text-xs text-rose-400 font-semibold p-3 rounded-xl bg-rose-950/50 border border-rose-900/60 text-left"></p>
 
-        <form onsubmit="handleGateLogin(event)" class="space-y-3 pt-1">
-          <div>
-            <label class="text-[11px] font-bold text-slate-400 block mb-1">Email Quản Trị</label>
-            <input id="gateEmail" type="email" required autocomplete="username" placeholder="Nhập email admin..." class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-500">
-          </div>
-          <div>
-            <label class="text-[11px] font-bold text-slate-400 block mb-1">Mật khẩu Bảo Mật</label>
-            <input id="gatePass" type="password" required autocomplete="current-password" placeholder="Nhập mật khẩu admin..." class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-500">
-          </div>
-          <p id="gateLoginError" class="hidden text-xs text-rose-400 font-semibold p-2.5 rounded-lg bg-rose-950/40 border border-rose-900/50"></p>
-          <button id="gateLoginBtn" type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-500 to-rose-600 hover:from-brand-600 hover:to-rose-700 text-white font-bold text-xs transition shadow-lg shadow-brand-500/25">
-            Xác Thực & Đăng Nhập
-          </button>
-        </form>
+        <a href="index.html" class="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 font-bold transition pt-2">
+          <i class="fa-solid fa-arrow-left text-[10px]"></i>
+          <span>Quay lại trang bán hàng</span>
+        </a>
       </div>
 
     </div>
@@ -448,70 +439,6 @@
       if (loadingEl) loadingEl.classList.add("hidden");
       const loginEl = $("gateLoginRequired");
       if (loginEl) loginEl.classList.remove("hidden");
-    }
-
-    async function handleGateLogin(e) {
-      e.preventDefault();
-      const email = $("gateEmail").value.trim().toLowerCase();
-      const password = $("gatePass").value.trim();
-      const btn = $("gateLoginBtn");
-      const errEl = $("gateLoginError");
-
-      btn.disabled = true;
-      btn.textContent = "Đang xác thực...";
-      errEl.classList.add("hidden");
-
-      // 1. Xác thực bảo mật qua Vercel Serverless API (Mật khẩu được kiểm tra trên Server)
-      try {
-        const res = await fetch("/api/admin-auth", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        });
-        const json = await res.json().catch(() => ({}));
-
-        if (res.ok && json.success) {
-          const userObj = { email: json.email || email, role: "admin", token: json.token, loggedAt: new Date().toISOString() };
-          localStorage.setItem("br34_admin_logged", JSON.stringify(userObj));
-          currentAdmin = userObj;
-          $("adminEmailText").textContent = currentAdmin.email;
-          $("authGate").classList.add("hidden");
-          initAdminView();
-          showToast("Đăng nhập Quản Trị Viên thành công!", "success");
-          return;
-        }
-      } catch (networkErr) {
-        console.warn("Serverless auth check offline, trying cryptographic hash verification");
-      }
-
-      // 2. Dự phòng: Xác thực bằng mã băm mật mã Cryptographic SHA-256 (KHÔNG CHỨA MẬT KHẨU GỐC)
-      try {
-        const passHash = await sha256(password);
-        const VALID_HASHES = [
-          "59f9acc712f52616b073fae41cbc9db98e3cea519ce89181f2ba2b299471ae2b", // master 1
-          "099d00bb3997fa1327ead63f0c1360843fa183e969a14d47a2e22857a99ec77e", // master 2
-          "08c6a6669fcf32d2f7a0dc0258cb0d7ff3f06b12a865f12eefc4c23dbfa51c88"  // master 3
-        ];
-        const isOwnerEmail = (email === "mt11022009mt@gmail.com" || email === "admin@shopbybrays.com" || email.includes("mt11022009mt"));
-
-        if (isOwnerEmail && VALID_HASHES.includes(passHash)) {
-          const userObj = { email: email, role: "admin", token: "br34_sha256_verified", loggedAt: new Date().toISOString() };
-          localStorage.setItem("br34_admin_logged", JSON.stringify(userObj));
-          currentAdmin = userObj;
-          $("adminEmailText").textContent = currentAdmin.email;
-          $("authGate").classList.add("hidden");
-          initAdminView();
-          showToast("Đăng nhập Quản Trị Viên thành công!", "success");
-          return;
-        }
-
-        throw new Error("Email hoặc Mật khẩu Quản trị không chính xác!");
-      } catch (err) {
-        errEl.textContent = err.message || "Email hoặc Mật khẩu Quản trị không chính xác!";
-        errEl.classList.remove("hidden");
-        btn.disabled = false;
-        btn.textContent = "Xác Thực & Đăng Nhập";
-      }
     }
 
     function handleLogout() {
