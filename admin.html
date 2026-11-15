@@ -53,8 +53,51 @@
     }
   
     /* ========================================================
-       HEAVY BLAST VAULT DOOR STYLES (CỬA HẦM BỌC THÉP 3D)
+       HEAVY BLAST VAULT DOOR STYLES (SIÊU MƯỢT 120FPS GPU)
        ======================================================== */
+    .gpu-layer {
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+    .vault-hazard-tape {
+      background: repeating-linear-gradient(-45deg, #f59e0b 0, #f59e0b 14px, #18181b 14px, #18181b 28px);
+    }
+    .vault-steel-slab {
+      background: linear-gradient(135deg, #222634 0%, #12141c 45%, #191d28 100%);
+      border-color: #334155;
+    }
+    .vault-panel-inset {
+      background: radial-gradient(circle at 50% 50%, #1a1e28 0%, #0d0f15 100%);
+      border: 2px solid #2d3446;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+    }
+    .vault-rivet {
+      width: 9px;
+      height: 9px;
+      border-radius: 9999px;
+      background: radial-gradient(circle at 35% 35%, #cbd5e1 0%, #64748b 45%, #0f172a 100%);
+      box-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
+    .vault-deadbolt {
+      background: linear-gradient(180deg, #94a3b8 0%, #ffffff 28%, #64748b 55%, #1e293b 100%);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
+    }
+    .vault-deadbolt-socket {
+      background: #07080c;
+      border: 2px solid #334155;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.9);
+    }
+    .vault-girder {
+      background: linear-gradient(180deg, #333a4d 0%, #1a1e28 50%, #0f1219 100%);
+      border: 1px solid #3e475e;
+    }
+    .vault-spoke {
+      background: linear-gradient(90deg, #475569 0%, #f1f5f9 45%, #94a3b8 70%, #1e293b 100%);
+    }
     .vault-hazard-tape {
       background: repeating-linear-gradient(-45deg, #f59e0b 0, #f59e0b 14px, #18181b 14px, #18181b 28px);
     }
@@ -106,14 +149,18 @@
   <!-- ========================================================
        CINEMATIC VAULT DOOR (CỬA HẦM BỌC THÉP 3D & 4 CHỐT KHÓA KHỔNG LỒ)
        ======================================================== -->
+  
+  <!-- ========================================================
+       CINEMATIC VAULT DOOR (SIÊU MƯỢT 120FPS GPU HARDWARE)
+       ======================================================== -->
   <div id="authGate" class="fixed inset-0 z-[100]  overflow-hidden select-none font-sans">
     
-    <!-- Dark Backdrop for depth -->
-    <div class="absolute inset-0 bg-black/95 backdrop-blur-md"></div>
+    <!-- Solid Dark Backdrop (Không dùng backdrop-blur toàn màn hình để triệt tiêu 100% giật lag) -->
+    <div class="absolute inset-0 bg-[#07080c] z-0"></div>
 
     <!-- Outer Heavy Concrete & Steel Bunker Frame (Top Bulkhead) -->
-    <div class="absolute inset-x-0 top-0 h-9 bg-neutral-950 border-b-2 border-neutral-700 flex flex-col justify-between z-30 shadow-2xl">
-      <div class="h-2.5 w-full vault-hazard-tape"></div>
+    <div class="absolute inset-x-0 top-0 h-9 bg-neutral-950 border-b border-neutral-700 flex flex-col justify-between z-30 shadow-lg">
+      <div class="h-2 w-full vault-hazard-tape"></div>
       <div class="px-4 pb-0.5 flex items-center justify-between text-[10px] font-mono font-black text-amber-400 tracking-wider">
         <span>⚡ SECTOR 01: HEAVY BLAST BULKHEAD // CLASSIFIED ⚡</span>
         <span class="hidden sm:inline">DUAL HYDRAULIC COMPRESSION // 5000 PSI MAX</span>
@@ -122,17 +169,17 @@
     </div>
 
     <!-- Outer Heavy Concrete & Steel Bunker Frame (Bottom Bulkhead) -->
-    <div class="absolute inset-x-0 bottom-0 h-9 bg-neutral-950 border-t-2 border-neutral-700 flex flex-col justify-between z-30 shadow-2xl">
+    <div class="absolute inset-x-0 bottom-0 h-9 bg-neutral-950 border-t border-neutral-700 flex flex-col justify-between z-30 shadow-lg">
       <div class="px-4 pt-0.5 flex items-center justify-between text-[10px] font-mono font-black text-amber-400 tracking-wider">
         <span>▲ DANGER: HIGH PRESSURE PNEUMATICS // AUTOMATIC SEAL ▲</span>
         <span class="hidden sm:inline">BLAST MITIGATION BARRIER // MIL-SPEC</span>
         <span>BR-34 HARDWARE VAULT</span>
       </div>
-      <div class="h-2.5 w-full vault-hazard-tape"></div>
+      <div class="h-2 w-full vault-hazard-tape"></div>
     </div>
 
-    <!-- LEFT BLAST DOOR PANEL (Cánh Trái bọc thép dày 180mm) -->
-    <div id="adminDoorLeft" class="absolute inset-y-9 left-0 w-1/2 vault-steel-slab border-r-4 border-slate-700 shadow-[35px_0_60px_rgba(0,0,0,0.95)] transition-transform duration-1000 ease-[cubic-bezier(0.77,0,0.175,1)] flex flex-col justify-between p-3 sm:p-6 z-10 overflow-hidden">
+    <!-- LEFT BLAST DOOR PANEL (Cánh Trái GPU Layer) -->
+    <div id="adminDoorLeft" class="gpu-layer absolute inset-y-9 left-0 w-1/2 vault-steel-slab border-r-4 border-slate-700 shadow-2xl transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between p-3 sm:p-6 z-10 overflow-hidden">
       
       <!-- Top Armor Section -->
       <div class="vault-panel-inset rounded-xl p-3 sm:p-4 relative">
@@ -141,8 +188,8 @@
         <div class="absolute bottom-2 left-2 vault-rivet"></div>
         <div class="absolute bottom-2 right-2 vault-rivet"></div>
         
-        <div class="flex items-center gap-2 mb-2">
-          <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></div>
+        <div class="flex items-center gap-2 mb-1.5">
+          <div class="w-2.5 h-2.5 rounded-full bg-cyan-400"></div>
           <span class="font-mono text-[10px] sm:text-xs text-cyan-300 font-black tracking-widest">ARMOR CLASS: TITANIUM-X // ZONE 01A</span>
         </div>
         <div class="space-y-1 opacity-40">
@@ -151,23 +198,23 @@
         </div>
       </div>
 
-      <!-- Center Heavy Cross-Girder & Hydraulic Piston Graphics -->
+      <!-- Center Heavy Cross-Girder & Hydraulic Graphics -->
       <div class="my-auto py-2 relative flex items-center justify-around opacity-75">
-        <div class="w-1.5 h-36 bg-gradient-to-b from-slate-300 via-slate-600 to-slate-900 rounded-full shadow-lg border border-slate-500"></div>
+        <div class="w-1.5 h-32 bg-gradient-to-b from-slate-400 to-slate-800 rounded-full border border-slate-600"></div>
         <div class="flex-1 px-4 space-y-2">
-          <div class="h-4 vault-girder rounded flex items-center justify-around px-2">
+          <div class="h-3.5 vault-girder rounded flex items-center justify-around px-2">
             <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
             <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
             <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
           </div>
           <div class="font-mono text-[9px] text-slate-400 tracking-widest text-center">PRIMARY LOCK MECHANISM // HYDRAULIC DRIVE</div>
-          <div class="h-4 vault-girder rounded flex items-center justify-around px-2">
+          <div class="h-3.5 vault-girder rounded flex items-center justify-around px-2">
             <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
             <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
             <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
           </div>
         </div>
-        <div class="w-1.5 h-36 bg-gradient-to-b from-slate-300 via-slate-600 to-slate-900 rounded-full shadow-lg border border-slate-500"></div>
+        <div class="w-1.5 h-32 bg-gradient-to-b from-slate-400 to-slate-800 rounded-full border border-slate-600"></div>
       </div>
 
       <!-- Bottom Armor Section -->
@@ -184,7 +231,7 @@
       <div class="absolute right-0 top-0 bottom-0 w-28 pointer-events-none flex flex-col justify-around py-12 z-20">
         <!-- Bolt 1 -->
         <div class="relative flex items-center justify-end">
-          <div class="w-10 h-7 bg-neutral-900 border border-slate-500 rounded-l-md shadow-inner flex items-center justify-center">
+          <div class="w-10 h-7 bg-neutral-900 border border-slate-600 rounded-l-md flex items-center justify-center">
             <div class="w-1.5 h-4 bg-slate-600 rounded-full"></div>
           </div>
           <div id="adminDeadbolt1" class="vault-deadbolt w-16 h-6 rounded-r-md translate-x-8 flex items-center justify-end pr-1 border border-slate-300">
@@ -193,7 +240,7 @@
         </div>
         <!-- Bolt 2 -->
         <div class="relative flex items-center justify-end">
-          <div class="w-10 h-7 bg-neutral-900 border border-slate-500 rounded-l-md shadow-inner flex items-center justify-center">
+          <div class="w-10 h-7 bg-neutral-900 border border-slate-600 rounded-l-md flex items-center justify-center">
             <div class="w-1.5 h-4 bg-slate-600 rounded-full"></div>
           </div>
           <div id="adminDeadbolt2" class="vault-deadbolt w-16 h-6 rounded-r-md translate-x-8 flex items-center justify-end pr-1 border border-slate-300">
@@ -202,7 +249,7 @@
         </div>
         <!-- Bolt 3 -->
         <div class="relative flex items-center justify-end">
-          <div class="w-10 h-7 bg-neutral-900 border border-slate-500 rounded-l-md shadow-inner flex items-center justify-center">
+          <div class="w-10 h-7 bg-neutral-900 border border-slate-600 rounded-l-md flex items-center justify-center">
             <div class="w-1.5 h-4 bg-slate-600 rounded-full"></div>
           </div>
           <div id="adminDeadbolt3" class="vault-deadbolt w-16 h-6 rounded-r-md translate-x-8 flex items-center justify-end pr-1 border border-slate-300">
@@ -211,7 +258,7 @@
         </div>
         <!-- Bolt 4 -->
         <div class="relative flex items-center justify-end">
-          <div class="w-10 h-7 bg-neutral-900 border border-slate-500 rounded-l-md shadow-inner flex items-center justify-center">
+          <div class="w-10 h-7 bg-neutral-900 border border-slate-600 rounded-l-md flex items-center justify-center">
             <div class="w-1.5 h-4 bg-slate-600 rounded-full"></div>
           </div>
           <div id="adminDeadbolt4" class="vault-deadbolt w-16 h-6 rounded-r-md translate-x-8 flex items-center justify-end pr-1 border border-slate-300">
@@ -222,8 +269,8 @@
 
     </div>
 
-    <!-- RIGHT BLAST DOOR PANEL (Cánh Phải bọc thép dày 180mm) -->
-    <div id="adminDoorRight" class="absolute inset-y-9 right-0 w-1/2 vault-steel-slab border-l-4 border-slate-700 shadow-[-35px_0_60px_rgba(0,0,0,0.95)] transition-transform duration-1000 ease-[cubic-bezier(0.77,0,0.175,1)] flex flex-col justify-between p-3 sm:p-6 z-10 overflow-hidden text-right">
+    <!-- RIGHT BLAST DOOR PANEL (Cánh Phải GPU Layer) -->
+    <div id="adminDoorRight" class="gpu-layer absolute inset-y-9 right-0 w-1/2 vault-steel-slab border-l-4 border-slate-700 shadow-2xl transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between p-3 sm:p-6 z-10 overflow-hidden text-right">
       
       <!-- Top Armor Section with Exit Button -->
       <div class="vault-panel-inset rounded-xl p-3 sm:p-4 relative flex items-center justify-between">
@@ -233,29 +280,29 @@
         <div class="absolute bottom-2 right-2 vault-rivet"></div>
         
         <div class="font-mono text-[10px] sm:text-xs text-slate-400 font-bold pl-4">SECTOR 01B // RIGHT WING</div>
-        <button type="button" onclick="window.location.href='index.html'" class="px-3 py-1.5 rounded-lg bg-neutral-900/90 hover:bg-rose-950/80 border border-amber-500/40 hover:border-rose-500 text-amber-300 hover:text-rose-400 text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+        <button type="button" onclick="window.location.href='index.html'" class="px-3 py-1.5 rounded-lg bg-neutral-900 hover:bg-rose-950 border border-amber-500/40 hover:border-rose-500 text-amber-300 hover:text-rose-400 text-xs font-bold transition flex items-center gap-1.5 shadow">
           <i class="fa-solid fa-xmark"></i>
           <span>Thoát</span>
         </button>
       </div>
 
-      <!-- Center Heavy Cross-Girder & Hydraulic Piston Graphics -->
+      <!-- Center Heavy Cross-Girder & Hydraulic Graphics -->
       <div class="my-auto py-2 relative flex items-center justify-around opacity-75">
-        <div class="w-1.5 h-36 bg-gradient-to-b from-slate-300 via-slate-600 to-slate-900 rounded-full shadow-lg border border-slate-500"></div>
+        <div class="w-1.5 h-32 bg-gradient-to-b from-slate-400 to-slate-800 rounded-full border border-slate-600"></div>
         <div class="flex-1 px-4 space-y-2">
-          <div class="h-4 vault-girder rounded flex items-center justify-around px-2">
+          <div class="h-3.5 vault-girder rounded flex items-center justify-around px-2">
             <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
             <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
             <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
           </div>
           <div class="font-mono text-[9px] text-slate-400 tracking-widest text-center">EMERGENCY EXHAUST // VENTURI DUCT</div>
-          <div class="h-4 vault-girder rounded flex items-center justify-around px-2">
+          <div class="h-3.5 vault-girder rounded flex items-center justify-around px-2">
             <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
             <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
             <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
           </div>
         </div>
-        <div class="w-1.5 h-36 bg-gradient-to-b from-slate-300 via-slate-600 to-slate-900 rounded-full shadow-lg border border-slate-500"></div>
+        <div class="w-1.5 h-32 bg-gradient-to-b from-slate-400 to-slate-800 rounded-full border border-slate-600"></div>
       </div>
 
       <!-- Bottom Armor Section -->
@@ -273,79 +320,79 @@
         <!-- Socket 1 -->
         <div class="flex items-center gap-2 pl-2">
           <div class="vault-deadbolt-socket w-11 h-8 rounded-r-lg flex items-center justify-center">
-            <div class="w-4 h-5 rounded-sm bg-black/90 border border-slate-700"></div>
+            <div class="w-4 h-5 rounded-sm bg-black border border-slate-700"></div>
           </div>
-          <div id="adminSocketLed1" class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse"></div>
+          <div id="adminSocketLed1" class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]"></div>
         </div>
         <!-- Socket 2 -->
         <div class="flex items-center gap-2 pl-2">
           <div class="vault-deadbolt-socket w-11 h-8 rounded-r-lg flex items-center justify-center">
-            <div class="w-4 h-5 rounded-sm bg-black/90 border border-slate-700"></div>
+            <div class="w-4 h-5 rounded-sm bg-black border border-slate-700"></div>
           </div>
-          <div id="adminSocketLed2" class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse"></div>
+          <div id="adminSocketLed2" class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]"></div>
         </div>
         <!-- Socket 3 -->
         <div class="flex items-center gap-2 pl-2">
           <div class="vault-deadbolt-socket w-11 h-8 rounded-r-lg flex items-center justify-center">
-            <div class="w-4 h-5 rounded-sm bg-black/90 border border-slate-700"></div>
+            <div class="w-4 h-5 rounded-sm bg-black border border-slate-700"></div>
           </div>
-          <div id="adminSocketLed3" class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse"></div>
+          <div id="adminSocketLed3" class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]"></div>
         </div>
         <!-- Socket 4 -->
         <div class="flex items-center gap-2 pl-2">
           <div class="vault-deadbolt-socket w-11 h-8 rounded-r-lg flex items-center justify-center">
-            <div class="w-4 h-5 rounded-sm bg-black/90 border border-slate-700"></div>
+            <div class="w-4 h-5 rounded-sm bg-black border border-slate-700"></div>
           </div>
-          <div id="adminSocketLed4" class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse"></div>
+          <div id="adminSocketLed4" class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_6px_#f43f5e]"></div>
         </div>
       </div>
 
     </div>
 
-    <!-- Vertical Neon Seam -->
-    <div id="adminLightSeam" class="absolute top-9 bottom-9 left-1/2 -translate-x-1/2 w-1.5 bg-cyan-400 shadow-[0_0_35px_#22d3ee] z-20 transition-opacity duration-300"></div>
+    <!-- Vertical Center Neon Seam -->
+    <div id="adminLightSeam" class="absolute top-9 bottom-9 left-1/2 -translate-x-1/2 w-1 bg-cyan-400 shadow-[0_0_20px_#22d3ee] z-20 transition-opacity duration-300"></div>
 
     <!-- Canvas for Billowing Smoke & Steam -->
     <canvas id="adminSteamCanvas" class="absolute inset-0 pointer-events-none z-30"></canvas>
 
     <!-- CENTER VAULT WHEEL & TERMINAL MECHANISM -->
-    <div id="adminCenterCore" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-center p-4 text-center max-w-sm sm:max-w-md w-full transition-all duration-700">
+    <div id="adminCenterCore" class="gpu-layer absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-center p-4 text-center max-w-sm sm:max-w-md w-full transition-all duration-500">
       
       <!-- 4-Spoke Heavy Vault Handwheel -->
       <div class="relative w-44 h-44 sm:w-52 sm:h-52 grid place-items-center mb-5">
         
         <!-- Outer Gear Ring -->
-        <div class="absolute inset-0 rounded-full border-4 border-dashed border-slate-600/60 shadow-[0_0_30px_rgba(0,0,0,0.8)]"></div>
-        <div class="absolute -inset-2 rounded-full border border-cyan-500/30 animate-[spin_20s_linear_infinite]"></div>
+        <div class="absolute inset-0 rounded-full border-2 border-dashed border-slate-600/60"></div>
+        <div class="absolute -inset-1.5 rounded-full border border-cyan-500/30"></div>
 
         <!-- The 4-Spoke Turning Wheel (rotates on unlock) -->
-        <div id="adminMainWheel" class="absolute inset-2 rounded-full bg-neutral-950/95 border-4 border-slate-500 shadow-[0_0_40px_rgba(0,0,0,0.9),inset_0_2px_6px_rgba(255,255,255,0.4)] transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex items-center justify-center">
+        <div id="adminMainWheel" class="gpu-layer absolute inset-2 rounded-full bg-neutral-950 border-4 border-slate-500 shadow-xl transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex items-center justify-center">
           
           <!-- Spoke 1 (Vertical) -->
-          <div class="absolute inset-y-0 w-3 vault-spoke rounded-full"></div>
+          <div class="absolute inset-y-0 w-2.5 vault-spoke rounded-full"></div>
           <!-- Spoke 2 (Horizontal) -->
-          <div class="absolute inset-x-0 h-3 vault-spoke rounded-full"></div>
+          <div class="absolute inset-x-0 h-2.5 vault-spoke rounded-full"></div>
           
           <!-- 4 Turning Grip Knobs on Perimeter -->
-          <div class="absolute top-1 w-4 h-4 rounded-full bg-gradient-to-br from-slate-200 to-slate-700 shadow-md border border-slate-400"></div>
-          <div class="absolute bottom-1 w-4 h-4 rounded-full bg-gradient-to-br from-slate-200 to-slate-700 shadow-md border border-slate-400"></div>
-          <div class="absolute left-1 w-4 h-4 rounded-full bg-gradient-to-br from-slate-200 to-slate-700 shadow-md border border-slate-400"></div>
-          <div class="absolute right-1 w-4 h-4 rounded-full bg-gradient-to-br from-slate-200 to-slate-700 shadow-md border border-slate-400"></div>
+          <div class="absolute top-1 w-3.5 h-3.5 rounded-full bg-slate-300 border border-slate-600"></div>
+          <div class="absolute bottom-1 w-3.5 h-3.5 rounded-full bg-slate-300 border border-slate-600"></div>
+          <div class="absolute left-1 w-3.5 h-3.5 rounded-full bg-slate-300 border border-slate-600"></div>
+          <div class="absolute right-1 w-3.5 h-3.5 rounded-full bg-slate-300 border border-slate-600"></div>
 
           <!-- Central Hub: Analog Pressure Gauge -->
-          <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-b from-neutral-800 to-neutral-950 border-2 border-slate-400 shadow-[inset_0_4px_10px_rgba(0,0,0,0.9)] flex flex-col items-center justify-center p-1.5 z-10">
+          <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-neutral-900 border-2 border-slate-400 flex flex-col items-center justify-center p-1.5 z-10 shadow-inner">
             <!-- Gauge Dial Face -->
-            <div class="relative w-full h-full rounded-full bg-[#0a0d14] border border-slate-700/80 flex flex-col items-center justify-between py-1 overflow-hidden">
+            <div class="relative w-full h-full rounded-full bg-[#0a0d14] border border-slate-700 flex flex-col items-center justify-between py-1 overflow-hidden">
               <div class="text-[8px] font-mono text-cyan-400 font-black tracking-tighter">PNEUMATIC</div>
               
               <!-- Dial Tick Marks & Red Zone -->
               <div class="absolute inset-1 rounded-full border border-dashed border-slate-600/40 pointer-events-none"></div>
               
               <!-- Rotating Gauge Needle -->
-              <div id="adminGaugeNeedle" class="absolute w-1 h-9 bg-rose-500 rounded-t-full origin-bottom top-1 left-1/2 -translate-x-1/2 transition-transform duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] shadow-[0_0_6px_#f43f5e]" style="transform: rotate(85deg);"></div>
+              <div id="adminGaugeNeedle" class="gpu-layer absolute w-1 h-9 bg-rose-500 rounded-t-full origin-bottom top-1 left-1/2 -translate-x-1/2 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]" style="transform: rotate(85deg);"></div>
               
               <!-- Needle Pivot Cap -->
-              <div class="absolute w-3 h-3 rounded-full bg-slate-300 border border-slate-700 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-md"></div>
+              <div class="absolute w-3 h-3 rounded-full bg-slate-300 border border-slate-700 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
               
               <div class="text-[9px] font-mono text-slate-400 font-bold z-10">
                 <span id="adminPsiText" class="text-rose-400 font-black">450</span> <span class="text-[7px]">PSI</span>
@@ -359,7 +406,7 @@
 
       <!-- Terminal Badges & Texts -->
       <div class="space-y-1.5 mb-5 w-full">
-        <div id="adminBadge" class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[10px] font-mono font-black bg-rose-950/60 text-rose-300 border border-rose-500/50 shadow-sm">
+        <div id="adminBadge" class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[10px] font-mono font-black bg-rose-950/80 text-rose-300 border border-rose-500/50 shadow-sm">
           <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
           <span id="adminBadgeText">KHÓA AN TOÀN ĐANG ĐÓNG CHẶT // ARMED</span>
         </div>
@@ -368,7 +415,7 @@
       </div>
 
       <!-- Action Button -->
-      <button id="adminActionBtn" type="button" onclick="triggerUsbAuth()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-neutral-950 font-black text-sm tracking-wide transition-all shadow-2xl shadow-amber-500/30 active:scale-95 flex items-center justify-center gap-3 group border border-amber-300/40">
+      <button id="adminActionBtn" type="button" onclick="triggerUsbAuth()" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-neutral-950 font-black text-sm tracking-wide transition-all shadow-xl shadow-amber-500/20 active:scale-95 flex items-center justify-center gap-3 group border border-amber-300/40">
         <i class="fa-solid fa-key group-hover:rotate-12 transition text-base"></i>
         <span>TRA CHÌA KHÓA USB ĐỂ MỞ CỬA</span>
       </button>
@@ -562,7 +609,7 @@
     // USB HARDWARE SECURITY KEY AUTHENTICATION
     // ========================================================
     
-    // 1. Âm thanh Cửa Thép Sập Xuống
+    // 1. Âm thanh Cửa Thép Sập Xuống (Siêu nhẹ)
     function playDoorSlamSound() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -570,61 +617,49 @@
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = "sine";
-        osc.frequency.setValueAtTime(180, now);
-        osc.frequency.exponentialRampToValueAtTime(32, now + 0.45);
-        gain.gain.setValueAtTime(0.7, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+        osc.frequency.setValueAtTime(160, now);
+        osc.frequency.exponentialRampToValueAtTime(32, now + 0.35);
+        gain.gain.setValueAtTime(0.6, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start(now);
-        osc.stop(now + 0.45);
+        osc.stop(now + 0.35);
 
         const osc2 = ctx.createOscillator();
         const gain2 = ctx.createGain();
         osc2.type = "triangle";
-        osc2.frequency.setValueAtTime(460, now);
-        osc2.frequency.exponentialRampToValueAtTime(80, now + 0.38);
-        gain2.gain.setValueAtTime(0.5, now);
-        gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.38);
+        osc2.frequency.setValueAtTime(420, now);
+        osc2.frequency.exponentialRampToValueAtTime(80, now + 0.28);
+        gain2.gain.setValueAtTime(0.4, now);
+        gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.28);
         osc2.connect(gain2);
         gain2.connect(ctx.destination);
         osc2.start(now);
-        osc2.stop(now + 0.38);
+        osc2.stop(now + 0.28);
       } catch(e) {}
     }
 
-    // 2. Âm thanh Rút 4 Chốt Khóa + Xả Khí Nén Áp Suất Cao
+    // 2. Âm thanh Rút 4 Chốt Khóa + Xả Khí Nén Áp Suất
     function playVaultUnlockAndSteamSound() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const now = ctx.currentTime;
 
-        [0, 0.08, 0.16, 0.24].forEach((delay, idx) => {
+        [0, 0.07, 0.14, 0.21].forEach((delay, idx) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = "sawtooth";
-          osc.frequency.setValueAtTime(320 + idx * 120, now + delay);
-          gain.gain.setValueAtTime(0.45, now + delay);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + delay + 0.07);
+          osc.frequency.setValueAtTime(320 + idx * 110, now + delay);
+          gain.gain.setValueAtTime(0.4, now + delay);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + delay + 0.06);
           osc.connect(gain);
           gain.connect(ctx.destination);
           osc.start(now + delay);
-          osc.stop(now + delay + 0.07);
+          osc.stop(now + delay + 0.06);
         });
 
-        const masterOsc = ctx.createOscillator();
-        const masterGain = ctx.createGain();
-        masterOsc.type = "triangle";
-        masterOsc.frequency.setValueAtTime(140, now + 0.28);
-        masterOsc.frequency.exponentialRampToValueAtTime(45, now + 0.6);
-        masterGain.gain.setValueAtTime(0.6, now + 0.28);
-        masterGain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
-        masterOsc.connect(masterGain);
-        masterGain.connect(ctx.destination);
-        masterOsc.start(now + 0.28);
-        masterOsc.stop(now + 0.6);
-
-        const bufferSize = Math.floor(ctx.sampleRate * 2.4);
+        const bufferSize = Math.floor(ctx.sampleRate * 0.2);
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) {
@@ -632,45 +667,66 @@
         }
         const noise = ctx.createBufferSource();
         noise.buffer = buffer;
+        noise.loop = true;
 
         const filter = ctx.createBiquadFilter();
         filter.type = "bandpass";
-        filter.frequency.setValueAtTime(3800, now + 0.3);
-        filter.frequency.exponentialRampToValueAtTime(650, now + 2.2);
-        filter.Q.value = 1.8;
+        filter.frequency.setValueAtTime(3600, now + 0.25);
+        filter.frequency.exponentialRampToValueAtTime(650, now + 1.8);
+        filter.Q.value = 1.6;
 
         const noiseGain = ctx.createGain();
         noiseGain.gain.setValueAtTime(0.01, now);
-        noiseGain.gain.linearRampToValueAtTime(0.65, now + 0.35);
-        noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 2.3);
+        noiseGain.gain.linearRampToValueAtTime(0.55, now + 0.3);
+        noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 1.9);
 
         noise.connect(filter);
         filter.connect(noiseGain);
         noiseGain.connect(ctx.destination);
-        noise.start(now + 0.3);
-        noise.stop(now + 2.3);
+        noise.start(now + 0.25);
+        noise.stop(now + 1.9);
 
         const servo = ctx.createOscillator();
         const servoGain = ctx.createGain();
         servo.type = "triangle";
-        servo.frequency.setValueAtTime(75, now + 0.6);
-        servo.frequency.linearRampToValueAtTime(155, now + 1.8);
-        servoGain.gain.setValueAtTime(0.3, now + 0.6);
-        servoGain.gain.exponentialRampToValueAtTime(0.01, now + 1.9);
+        servo.frequency.setValueAtTime(75, now + 0.4);
+        servo.frequency.linearRampToValueAtTime(145, now + 1.3);
+        servoGain.gain.setValueAtTime(0.25, now + 0.4);
+        servoGain.gain.exponentialRampToValueAtTime(0.01, now + 1.4);
         servo.connect(servoGain);
         servoGain.connect(ctx.destination);
-        servo.start(now + 0.6);
-        servo.stop(now + 1.9);
+        servo.start(now + 0.4);
+        servo.stop(now + 1.4);
       } catch(e) {}
     }
 
-    // 3. Hiệu ứng Khói Hơi Nước Bốc Lên Từ Khe Cửa & Lỗ Chốt Khóa (Multi-Point Steam Jets)
+    let _adminSmokeSprite = null;
+    function getAdminSmokeSprite() {
+      if (_adminSmokeSprite) return _adminSmokeSprite;
+      const off = document.createElement("canvas");
+      off.width = 64;
+      off.height = 64;
+      const octx = off.getContext("2d");
+      const g = octx.createRadialGradient(32, 32, 2, 32, 32, 32);
+      g.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+      g.addColorStop(0.35, "rgba(215, 245, 255, 0.65)");
+      g.addColorStop(0.75, "rgba(180, 225, 245, 0.2)");
+      g.addColorStop(1, "rgba(180, 225, 245, 0)");
+      octx.fillStyle = g;
+      octx.beginPath();
+      octx.arc(32, 32, 32, 0, Math.PI * 2);
+      octx.fill();
+      _adminSmokeSprite = off;
+      return _adminSmokeSprite;
+    }
+
     function startSteamSmokeEffectAdmin() {
       const canvas = document.getElementById("adminSteamCanvas");
       if (!canvas) return;
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.width = Math.min(window.innerWidth, 1920);
+      canvas.height = Math.min(window.innerHeight, 1080);
       const ctx = canvas.getContext("2d");
+      const sprite = getAdminSmokeSprite();
 
       const particles = [];
       const centerX = canvas.width / 2;
@@ -679,32 +735,30 @@
       const boltYPositions = [0.22, 0.40, 0.60, 0.78];
       boltYPositions.forEach(ratio => {
         const y = canvas.height * ratio;
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 4; i++) {
           particles.push({
             x: centerX,
-            y: y + (Math.random() - 0.5) * 16,
-            vx: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 18 + 8),
-            vy: (Math.random() - 0.5) * 5,
-            size: Math.random() * 25 + 15,
-            growth: Math.random() * 2.4 + 1.6,
-            alpha: Math.random() * 0.7 + 0.3,
-            decay: Math.random() * 0.014 + 0.008,
-            color: Math.random() > 0.3 ? "255, 255, 255" : "180, 245, 255"
+            y: y + (Math.random() - 0.5) * 10,
+            vx: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 14 + 10),
+            vy: (Math.random() - 0.5) * 3,
+            size: Math.random() * 20 + 20,
+            growth: Math.random() * 2.0 + 1.2,
+            alpha: Math.random() * 0.5 + 0.4,
+            decay: Math.random() * 0.016 + 0.012
           });
         }
       });
 
-      for (let i = 0; i < 85; i++) {
+      for (let i = 0; i < 18; i++) {
         particles.push({
-          x: centerX + (Math.random() - 0.5) * 24,
-          y: centerY + (Math.random() - 0.5) * (canvas.height * 0.9),
-          vx: (Math.random() - 0.5) * 16,
-          vy: (Math.random() - 0.5) * 8 - 2.8,
-          size: Math.random() * 45 + 30,
-          growth: Math.random() * 2.2 + 1.5,
-          alpha: Math.random() * 0.65 + 0.35,
-          decay: Math.random() * 0.011 + 0.006,
-          color: Math.random() > 0.4 ? "255, 255, 255" : "190, 240, 255"
+          x: centerX + (Math.random() - 0.5) * 16,
+          y: centerY + (Math.random() - 0.5) * (canvas.height * 0.8),
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 0.5) * 6 - 2.5,
+          size: Math.random() * 50 + 35,
+          growth: Math.random() * 2.5 + 1.8,
+          alpha: Math.random() * 0.55 + 0.35,
+          decay: Math.random() * 0.012 + 0.008
         });
       }
 
@@ -712,32 +766,27 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         let active = 0;
 
-        particles.forEach(p => {
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
           if (p.alpha > 0.01) {
             active++;
             p.x += p.vx;
             p.y += p.vy;
-            p.vx *= 0.95;
-            p.vy *= 0.95;
+            p.vx *= 0.94;
+            p.vy *= 0.94;
             p.size += p.growth;
             p.alpha -= p.decay;
 
-            const g = ctx.createRadialGradient(p.x, p.y, p.size * 0.1, p.x, p.y, p.size);
-            g.addColorStop(0, "rgba(" + p.color + ", " + p.alpha + ")");
-            g.addColorStop(0.5, "rgba(" + p.color + ", " + (p.alpha * 0.4) + ")");
-            g.addColorStop(1, "rgba(" + p.color + ", 0)");
-
-            ctx.fillStyle = g;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.globalAlpha = Math.max(0, p.alpha);
+            ctx.drawImage(sprite, p.x - p.size, p.y - p.size, p.size * 2, p.size * 2);
           }
-        });
+        }
 
         if (active > 0) {
           requestAnimationFrame(render);
         } else {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.globalAlpha = 1.0;
         }
       }
       render();
@@ -771,7 +820,6 @@
         const isMatched = data && data.keyId === "BR34-USB-KEY-2026-X99" && (data.signature === expectedSig || (data.rawToken && data.rawToken.includes("BR34_HARDWARE_TOKEN_SECURE_VAULT")));
 
         if (isMatched) {
-          // == BƯỚC 1: CẬP NHẬT HUD XÁC THỰC ==
           const title = $("adminStatusTitle");
           const desc = $("adminStatusDesc");
           const btn = $("adminActionBtn");
@@ -787,7 +835,7 @@
           if (btn) {
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i><span>ĐANG MỞ KHÓA CỬA HẦM...</span>';
-            btn.className = "w-full py-4 px-6 rounded-2xl bg-emerald-500 text-neutral-950 font-black text-sm tracking-wide shadow-2xl shadow-emerald-500/50 flex items-center justify-center gap-3";
+            btn.className = "w-full py-3.5 px-6 rounded-2xl bg-emerald-500 text-neutral-950 font-black text-sm tracking-wide shadow-xl shadow-emerald-500/40 flex items-center justify-center gap-3";
           }
           if (badge) {
             badge.className = "inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[10px] font-mono font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
@@ -800,30 +848,24 @@
             topStatus.className = "text-emerald-400 font-bold";
           }
 
-          // Vô lăng quay 360 độ
           if (wheel) wheel.style.transform = "rotate(360deg)";
-
-          // Kim đồng hồ áp suất tụt về 0 PSI
           if (needle) needle.style.transform = "rotate(-85deg)";
           if (psiText) {
-            setTimeout(() => { psiText.textContent = "0"; }, 300);
+            setTimeout(() => { psiText.textContent = "0"; }, 250);
           }
 
-          // 4 Chốt thép rút thụt lùi vào trong lòng cửa bên trái!
           setTimeout(() => {
             ['adminDeadbolt1', 'adminDeadbolt2', 'adminDeadbolt3', 'adminDeadbolt4'].forEach(id => {
               const el = $(id);
               if (el) el.style.transform = "translateX(-52px)";
             });
 
-            // Socket LEDs chuyển sang xanh lục bảo
             ['adminSocketLed1', 'adminSocketLed2', 'adminSocketLed3', 'adminSocketLed4'].forEach(id => {
               const el = $(id);
-              if (el) el.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_12px_#34d399] animate-ping";
+              if (el) el.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]";
             });
-          }, 180);
+          }, 120);
 
-          // == BƯỚC 2: PHÁT ÂM THANH XẢ KHÍ & BẮN KHÓI HƠI NƯỚC ==
           playVaultUnlockAndSteamSound();
           startSteamSmokeEffectAdmin();
 
@@ -838,7 +880,6 @@
           localStorage.setItem("br34_admin_logged", JSON.stringify(userObj));
           currentAdmin = userObj;
 
-          // == BƯỚC 3: CỬA THÉP KHỔNG LỒ TỪ TỪ TRƯỢT SANG 2 BÊN ==
           setTimeout(() => {
             const left = $("adminDoorLeft");
             const right = $("adminDoorRight");
@@ -850,22 +891,20 @@
             if (seam) seam.style.opacity = "0";
             if (core) {
               core.style.opacity = "0";
-              core.style.transform = "translate(-50%, -50%) scale(0.85)";
+              core.style.transform = "translate(-50%, -50%) scale(0.9)";
             }
 
-            // Hiện dashboard bên dưới cánh cửa đang mở
             const dash = $("adminDashboard");
             if (dash) dash.classList.remove("hidden");
             const emailEl = $("adminEmailText");
             if (emailEl) emailEl.innerHTML = '<i class="fa-solid fa-key text-cyan-400 mr-1"></i> ' + (currentAdmin.email || "Admin") + ' (USB)';
             initAdminView();
-          }, 650);
+          }, 450);
 
-          // == BƯỚC 4: ẨN HOÀN TOÀN CỔNG KHI CỬA ĐÃ MỞ HẾT ==
           setTimeout(() => {
             const gate = $("authGate");
             if (gate) gate.classList.add("hidden");
-          }, 1650);
+          }, 1200);
 
           return;
         }
