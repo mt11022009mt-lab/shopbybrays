@@ -129,6 +129,49 @@
 
     .scrollbar-none::-webkit-scrollbar { display: none; }
     .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+  
+    /* ========================================================
+       HEAVY BLAST VAULT DOOR STYLES (CỬA HẦM BỌC THÉP 3D)
+       ======================================================== */
+    .vault-hazard-tape {
+      background: repeating-linear-gradient(-45deg, #f59e0b 0, #f59e0b 14px, #18181b 14px, #18181b 28px);
+    }
+    .vault-steel-slab {
+      background: linear-gradient(135deg, #222634 0%, #12141c 45%, #191d28 100%);
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.15), inset 0 -4px 10px rgba(0,0,0,0.9), 0 10px 30px rgba(0,0,0,0.8);
+    }
+    .vault-panel-inset {
+      background: radial-gradient(circle at 50% 50%, #1a1e28 0%, #0d0f15 100%);
+      border: 2px solid #2d3446;
+      box-shadow: inset 0 4px 14px rgba(0,0,0,0.95), 0 2px 4px rgba(255,255,255,0.06);
+    }
+    .vault-rivet {
+      width: 9px;
+      height: 9px;
+      border-radius: 9999px;
+      background: radial-gradient(circle at 35% 35%, #cbd5e1 0%, #64748b 45%, #0f172a 100%);
+      box-shadow: 1px 1px 2px rgba(0,0,0,0.9), inset 1px 1px 1px rgba(255,255,255,0.8);
+    }
+    .vault-deadbolt {
+      background: linear-gradient(180deg, #94a3b8 0%, #ffffff 28%, #64748b 55%, #1e293b 100%);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.85), inset 0 2px 4px rgba(255,255,255,0.9);
+      transition: transform 0.45s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+    .vault-deadbolt-socket {
+      background: radial-gradient(circle at 40% 40%, #07080c 0%, #020204 100%);
+      box-shadow: inset 0 3px 8px rgba(0,0,0,1), 0 1px 2px rgba(255,255,255,0.1);
+      border: 2px solid #334155;
+    }
+    .vault-girder {
+      background: linear-gradient(180deg, #333a4d 0%, #1a1e28 50%, #0f1219 100%);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.2);
+      border: 1px solid #3e475e;
+    }
+    .vault-spoke {
+      background: linear-gradient(90deg, #475569 0%, #f1f5f9 45%, #94a3b8 70%, #1e293b 100%);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+    }
+
   </style>
   <script src="products-data.js"></script>
 </head>
@@ -1092,61 +1135,75 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
        CINEMATIC VAULT DOOR CONTROLLER & SMOKE FX
        ======================================================== -->
   <script>
-    // 1. Âm thanh Cửa Thép Sập Xuống (Heavy Metal Slam)
+    // 1. Âm thanh Cửa Thép Sập Xuống (Heavy Blast Door Impact & Sub Bass Drop)
     function playDoorSlamSound() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const now = ctx.currentTime;
         
-        // Tiếng va đập kim loại trầm (Heavy Impact Sub)
+        // Sub bass impact rumble
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.exponentialRampToValueAtTime(32, now + 0.45);
+        gain.gain.setValueAtTime(0.7, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
         osc.connect(gain);
         gain.connect(ctx.destination);
-        osc.frequency.setValueAtTime(140, now);
-        osc.frequency.exponentialRampToValueAtTime(35, now + 0.4);
-        gain.gain.setValueAtTime(0.7, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
         osc.start(now);
-        osc.stop(now + 0.5);
+        osc.stop(now + 0.45);
 
-        // Tiếng cộng hưởng sắt gờ kim loại
+        // Heavy metallic clank
         const osc2 = ctx.createOscillator();
         const gain2 = ctx.createGain();
-        osc2.type = "sawtooth";
-        osc2.frequency.setValueAtTime(320, now);
-        osc2.frequency.exponentialRampToValueAtTime(70, now + 0.35);
-        gain2.gain.setValueAtTime(0.35, now);
-        gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+        osc2.type = "triangle";
+        osc2.frequency.setValueAtTime(460, now);
+        osc2.frequency.exponentialRampToValueAtTime(80, now + 0.38);
+        gain2.gain.setValueAtTime(0.5, now);
+        gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.38);
         osc2.connect(gain2);
         gain2.connect(ctx.destination);
         osc2.start(now);
-        osc2.stop(now + 0.35);
+        osc2.stop(now + 0.38);
       } catch(e) {}
     }
 
-    // 2. Âm thanh Mở Khóa Răng Cưa + Xả Khí Áp Suất (Clank & Pneumatic Steam)
+    // 2. Âm thanh Rút 4 Chốt Khóa + Xả Khí Nén Áp Suất Cao
     function playVaultUnlockAndSteamSound() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const now = ctx.currentTime;
 
-        // Tiếng răng cưa cơ khí quay tạch tạch (Ratchets)
-        [0, 0.12, 0.24].forEach((delay, idx) => {
+        // 4 cú giật chốt khóa cơ khí (Sequential Deadbolt Thuds)
+        [0, 0.08, 0.16, 0.24].forEach((delay, idx) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = "sawtooth";
-          osc.frequency.setValueAtTime(280 + idx * 160, now + delay);
-          gain.gain.setValueAtTime(0.4, now + delay);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + delay + 0.08);
+          osc.frequency.setValueAtTime(320 + idx * 120, now + delay);
+          gain.gain.setValueAtTime(0.45, now + delay);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + delay + 0.07);
           osc.connect(gain);
           gain.connect(ctx.destination);
           osc.start(now + delay);
-          osc.stop(now + delay + 0.08);
+          osc.stop(now + delay + 0.07);
         });
 
-        // Tiếng xả khói hơi nước áp lực cao (PSSSSSHHHHHHHHH)
-        const bufferSize = Math.floor(ctx.sampleRate * 2.2);
+        // Cú đóng ngắt chốt cuối cùng (Heavy Master Lock Clank)
+        const masterOsc = ctx.createOscillator();
+        const masterGain = ctx.createGain();
+        masterOsc.type = "triangle";
+        masterOsc.frequency.setValueAtTime(140, now + 0.28);
+        masterOsc.frequency.exponentialRampToValueAtTime(45, now + 0.6);
+        masterGain.gain.setValueAtTime(0.6, now + 0.28);
+        masterGain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+        masterOsc.connect(masterGain);
+        masterGain.connect(ctx.destination);
+        masterOsc.start(now + 0.28);
+        masterOsc.stop(now + 0.6);
+
+        // Tiếng xả khói hơi nước áp lực cao
+        const bufferSize = Math.floor(ctx.sampleRate * 2.4);
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) {
@@ -1157,28 +1214,28 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
 
         const filter = ctx.createBiquadFilter();
         filter.type = "bandpass";
-        filter.frequency.setValueAtTime(3200, now + 0.3);
-        filter.frequency.exponentialRampToValueAtTime(700, now + 2.0);
-        filter.Q.value = 1.6;
+        filter.frequency.setValueAtTime(3800, now + 0.3);
+        filter.frequency.exponentialRampToValueAtTime(650, now + 2.2);
+        filter.Q.value = 1.8;
 
         const noiseGain = ctx.createGain();
         noiseGain.gain.setValueAtTime(0.01, now);
-        noiseGain.gain.linearRampToValueAtTime(0.55, now + 0.35);
-        noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 2.1);
+        noiseGain.gain.linearRampToValueAtTime(0.65, now + 0.35);
+        noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 2.3);
 
         noise.connect(filter);
         filter.connect(noiseGain);
         noiseGain.connect(ctx.destination);
         noise.start(now + 0.3);
-        noise.stop(now + 2.1);
+        noise.stop(now + 2.3);
 
-        // Tiếng mô tơ kéo cửa trượt (Low Servo Hum)
+        // Tiếng mô tơ thủy lực trượt cửa
         const servo = ctx.createOscillator();
         const servoGain = ctx.createGain();
         servo.type = "triangle";
-        servo.frequency.setValueAtTime(80, now + 0.6);
-        servo.frequency.linearRampToValueAtTime(160, now + 1.8);
-        servoGain.gain.setValueAtTime(0.25, now + 0.6);
+        servo.frequency.setValueAtTime(75, now + 0.6);
+        servo.frequency.linearRampToValueAtTime(155, now + 1.8);
+        servoGain.gain.setValueAtTime(0.3, now + 0.6);
         servoGain.gain.exponentialRampToValueAtTime(0.01, now + 1.9);
         servo.connect(servoGain);
         servoGain.connect(ctx.destination);
@@ -1187,7 +1244,7 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
       } catch(e) {}
     }
 
-    // 3. Hiệu ứng Khói Hơi Nước Bốc Lên Từ Khe Cửa (Canvas Smoke / Steam Simulation)
+    // 3. Hiệu ứng Khói Hơi Nước Bốc Lên Từ Khe Cửa & Lỗ Chốt Khóa (Multi-Point Steam Jets)
     function startSteamSmokeEffect() {
       const canvas = document.getElementById("vaultSteamCanvas");
       if (!canvas) return;
@@ -1199,18 +1256,37 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
 
-      // Sinh 80 hạt khói phun ra từ khe hở trung tâm
-      for (let i = 0; i < 90; i++) {
+      // 1. Phun luồng khói ngang từ 4 vị trí chốt khóa
+      const boltYPositions = [0.22, 0.40, 0.60, 0.78];
+      boltYPositions.forEach(ratio => {
+        const y = canvas.height * ratio;
+        for (let i = 0; i < 12; i++) {
+          particles.push({
+            x: centerX,
+            y: y + (Math.random() - 0.5) * 16,
+            vx: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 18 + 8),
+            vy: (Math.random() - 0.5) * 5,
+            size: Math.random() * 25 + 15,
+            growth: Math.random() * 2.4 + 1.6,
+            alpha: Math.random() * 0.7 + 0.3,
+            decay: Math.random() * 0.014 + 0.008,
+            color: Math.random() > 0.3 ? "255, 255, 255" : "180, 245, 255"
+          });
+        }
+      });
+
+      // 2. Khói bốc từ khe cửa trung tâm
+      for (let i = 0; i < 85; i++) {
         particles.push({
-          x: centerX + (Math.random() - 0.5) * 20,
+          x: centerX + (Math.random() - 0.5) * 24,
           y: centerY + (Math.random() - 0.5) * (canvas.height * 0.9),
           vx: (Math.random() - 0.5) * 16,
-          vy: (Math.random() - 0.5) * 8 - 2.5,
+          vy: (Math.random() - 0.5) * 8 - 2.8,
           size: Math.random() * 45 + 30,
           growth: Math.random() * 2.2 + 1.5,
-          alpha: Math.random() * 0.6 + 0.4,
-          decay: Math.random() * 0.012 + 0.007,
-          color: Math.random() > 0.4 ? "255, 255, 255" : "180, 245, 255"
+          alpha: Math.random() * 0.65 + 0.35,
+          decay: Math.random() * 0.011 + 0.006,
+          color: Math.random() > 0.4 ? "255, 255, 255" : "190, 240, 255"
         });
       }
 
@@ -1223,8 +1299,8 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
             active++;
             p.x += p.vx;
             p.y += p.vy;
-            p.vx *= 0.96;
-            p.vy *= 0.96;
+            p.vx *= 0.95;
+            p.vy *= 0.95;
             p.size += p.growth;
             p.alpha -= p.decay;
 
@@ -1256,16 +1332,41 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
       const right = document.getElementById("vaultDoorRight");
       const core = document.getElementById("vaultCenterCore");
       const seam = document.getElementById("vaultLightSeam");
+      const wheel = document.getElementById("vaultMainWheel");
+      const needle = document.getElementById("vaultGaugeNeedle");
+      const psiText = document.getElementById("vaultPsiText");
+      const topStatus = document.getElementById("vaultTopStatus");
 
       if (!overlay) return;
       overlay.classList.remove("hidden");
 
       // Reset transforms
-      left.style.transform = "translateX(0)";
-      right.style.transform = "translateX(0)";
-      core.style.opacity = "1";
-      core.style.transform = "translate(-50%, -50%) scale(1)";
+      if (left) left.style.transform = "translateX(0)";
+      if (right) right.style.transform = "translateX(0)";
+      if (core) {
+        core.style.opacity = "1";
+        core.style.transform = "translate(-50%, -50%) scale(1)";
+      }
       if (seam) seam.style.opacity = "1";
+      if (wheel) wheel.style.transform = "rotate(0deg)";
+      if (needle) needle.style.transform = "rotate(85deg)";
+      if (psiText) psiText.textContent = "450";
+      if (topStatus) {
+        topStatus.textContent = "ARMED (LOCKED)";
+        topStatus.className = "text-rose-400 font-bold";
+      }
+
+      // Reset 4 deadbolts về vị trí gài chốt
+      ['vaultDeadbolt1', 'vaultDeadbolt2', 'vaultDeadbolt3', 'vaultDeadbolt4'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.transform = "translateX(0)";
+      });
+
+      // Reset Socket LEDs về màu đỏ
+      ['vaultSocketLed1', 'vaultSocketLed2', 'vaultSocketLed3', 'vaultSocketLed4'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.className = "w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse";
+      });
 
       // Âm thanh cửa sắt đập sầm xuống
       playDoorSlamSound();
@@ -1309,12 +1410,14 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
             const desc = document.getElementById("vaultStatusDesc");
             const btn = document.getElementById("vaultActionBtn");
             const badge = document.getElementById("vaultBadge");
-            const innerCog = document.getElementById("vaultInnerCog");
-            const coreIcon = document.getElementById("vaultCoreIcon");
-            const iconInner = document.getElementById("vaultIconInner");
+            const badgeText = document.getElementById("vaultBadgeText");
+            const wheel = document.getElementById("vaultMainWheel");
+            const needle = document.getElementById("vaultGaugeNeedle");
+            const psiText = document.getElementById("vaultPsiText");
+            const topStatus = document.getElementById("vaultTopStatus");
 
-            if (title) title.textContent = "KHÓA ĐÃ KHỚP // ĐANG XẢ ÁP SUẤT";
-            if (desc) desc.textContent = "Chữ ký số hợp lệ — Khí nén đang xả, cửa hầm chuẩn bị mở...";
+            if (title) title.textContent = "CHỐT KHÓA ĐANG RÚT // XẢ KHÍ 450 PSI";
+            if (desc) desc.textContent = "Chữ ký số hợp lệ — 4 Chốt thép đang thụt lùi, áp suất xả về 0...";
             if (btn) {
               btn.disabled = true;
               btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i><span>ĐANG MỞ KHÓA CỬA HẦM...</span>';
@@ -1322,15 +1425,37 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
             }
             if (badge) {
               badge.className = "inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[10px] font-mono font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
-              badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span><span>XÁC THỰC THÀNH CÔNG (ACCESS GRANTED)</span>';
+            }
+            if (badgeText) {
+              badgeText.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span><span>XÁC THỰC THÀNH CÔNG (ACCESS GRANTED)</span>';
+            }
+            if (topStatus) {
+              topStatus.textContent = "DISENGAGED (UNLOCKED)";
+              topStatus.className = "text-emerald-400 font-bold";
             }
 
-            // Chìa khóa quay 360 độ và chuyển sang màu xanh lá
-            if (innerCog) innerCog.style.transform = "rotate(360deg) scale(1.15)";
-            if (coreIcon) {
-              coreIcon.className = "w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-500/30 border border-emerald-400 grid place-items-center text-3xl sm:text-4xl text-emerald-300 shadow-xl shadow-emerald-500/50";
+            // Vô lăng quay 360 độ
+            if (wheel) wheel.style.transform = "rotate(360deg)";
+
+            // Kim đồng hồ áp suất tụt về 0 PSI
+            if (needle) needle.style.transform = "rotate(-85deg)";
+            if (psiText) {
+              setTimeout(() => { psiText.textContent = "0"; }, 300);
             }
-            if (iconInner) iconInner.className = "fa-solid fa-lock-open text-emerald-300";
+
+            // 4 Chốt thép rút thụt lùi vào trong lòng cửa bên trái!
+            setTimeout(() => {
+              ['vaultDeadbolt1', 'vaultDeadbolt2', 'vaultDeadbolt3', 'vaultDeadbolt4'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.transform = "translateX(-52px)";
+              });
+
+              // Socket LEDs chuyển sang xanh lục bảo
+              ['vaultSocketLed1', 'vaultSocketLed2', 'vaultSocketLed3', 'vaultSocketLed4'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_12px_#34d399] animate-ping";
+              });
+            }, 180);
 
             // == BƯỚC 2: PHÁT ÂM THANH XẢ KHÍ & BẮN KHÓI HƠI NƯỚC ==
             playVaultUnlockAndSteamSound();
@@ -1361,12 +1486,12 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
                 core.style.opacity = "0";
                 core.style.transform = "translate(-50%, -50%) scale(0.85)";
               }
-            }, 600);
+            }, 650);
 
             // == BƯỚC 4: VÀO THẲNG BẢNG QUẢN TRỊ ==
             setTimeout(() => {
               window.location.href = "admin.html";
-            }, 1800);
+            }, 1850);
 
             return;
           }
@@ -1380,94 +1505,287 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
     }
   </script>
 
-
-
   <!-- ========================================================
        CINEMATIC VAULT DOOR OVERLAY (CỬA HẦM BỌC THÉP & XẢ KHÓI)
+       ======================================================== -->
+  
+  <!-- ========================================================
+       CINEMATIC VAULT DOOR (CỬA HẦM BỌC THÉP 3D & 4 CHỐT KHÓA KHỔNG LỒ)
        ======================================================== -->
   <div id="vaultOverlay" class="fixed inset-0 z-[100] hidden overflow-hidden select-none font-sans">
     
     <!-- Dark Backdrop for depth -->
-    <div class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
+    <div class="absolute inset-0 bg-black/95 backdrop-blur-md"></div>
 
-    <!-- Left Blast Door Panel -->
-    <div id="vaultDoorLeft" class="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-[#07080b] via-[#10121a] to-[#181a24] border-r-2 border-cyan-500/50 shadow-[25px_0_50px_rgba(0,0,0,0.9)] transition-transform duration-1000 ease-[cubic-bezier(0.77,0,0.175,1)] flex flex-col justify-between p-6 sm:p-12 z-10">
-      <div class="flex items-center gap-3 opacity-30">
-        <div class="w-3 h-3 rounded-full bg-cyan-400 animate-ping"></div>
-        <div class="font-mono text-xs text-cyan-300 tracking-widest font-bold">ARMOR CLASS: TITANIUM-X // ZONE 01</div>
+    <!-- Outer Heavy Concrete & Steel Bunker Frame (Top Bulkhead) -->
+    <div class="absolute inset-x-0 top-0 h-9 bg-neutral-950 border-b-2 border-neutral-700 flex flex-col justify-between z-30 shadow-2xl">
+      <div class="h-2.5 w-full vault-hazard-tape"></div>
+      <div class="px-4 pb-0.5 flex items-center justify-between text-[10px] font-mono font-black text-amber-400 tracking-wider">
+        <span>⚡ SECTOR 01: HEAVY BLAST BULKHEAD // CLASSIFIED ⚡</span>
+        <span class="hidden sm:inline">DUAL HYDRAULIC COMPRESSION // 5000 PSI MAX</span>
+        <span class="text-slate-400">STATUS: <span id="vaultTopStatus" class="text-rose-400 font-bold">ARMED (LOCKED)</span></span>
       </div>
-      <!-- Center Industrial Artwork -->
-      <div class="space-y-4 my-auto opacity-20">
-        <div class="h-2 w-48 bg-gradient-to-r from-cyan-500 to-transparent rounded-full"></div>
-        <div class="h-1 w-32 bg-slate-400 rounded-full"></div>
-        <div class="h-1 w-20 bg-slate-600 rounded-full"></div>
-      </div>
-      <div class="font-mono text-[10px] text-slate-500 tracking-widest">BR-34 HEAVY BIOMETRIC BLAST PORTAL</div>
     </div>
 
-    <!-- Right Blast Door Panel -->
-    <div id="vaultDoorRight" class="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-[#07080b] via-[#10121a] to-[#181a24] border-l-2 border-cyan-500/50 shadow-[-25px_0_50px_rgba(0,0,0,0.9)] transition-transform duration-1000 ease-[cubic-bezier(0.77,0,0.175,1)] flex flex-col justify-between p-6 sm:p-12 z-10 text-right">
-      <div class="flex justify-end">
-        <button type="button" onclick="closeVaultDoor()" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-rose-500/20 border border-white/10 hover:border-rose-500/40 text-slate-300 hover:text-rose-400 text-xs font-bold transition-all flex items-center gap-2">
-          <i class="fa-solid fa-xmark"></i>
-          <span>Hủy & Thoát</span>
-        </button>
+    <!-- Outer Heavy Concrete & Steel Bunker Frame (Bottom Bulkhead) -->
+    <div class="absolute inset-x-0 bottom-0 h-9 bg-neutral-950 border-t-2 border-neutral-700 flex flex-col justify-between z-30 shadow-2xl">
+      <div class="px-4 pt-0.5 flex items-center justify-between text-[10px] font-mono font-black text-amber-400 tracking-wider">
+        <span>▲ DANGER: HIGH PRESSURE PNEUMATICS // AUTOMATIC SEAL ▲</span>
+        <span class="hidden sm:inline">BLAST MITIGATION BARRIER // MIL-SPEC</span>
+        <span>BR-34 HARDWARE VAULT</span>
       </div>
-      <!-- Center Industrial Artwork -->
-      <div class="space-y-4 my-auto flex flex-col items-end opacity-20">
-        <div class="h-2 w-48 bg-gradient-to-l from-cyan-500 to-transparent rounded-full"></div>
-        <div class="h-1 w-32 bg-slate-400 rounded-full"></div>
-        <div class="h-1 w-20 bg-slate-600 rounded-full"></div>
-      </div>
-      <div class="font-mono text-[10px] text-slate-500 tracking-widest">PNEUMATIC SEAL PRESSURE: 450 PSI</div>
+      <div class="h-2.5 w-full vault-hazard-tape"></div>
     </div>
 
-    <!-- Vertical Neon Seam -->
-    <div id="vaultLightSeam" class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-1.5 bg-cyan-400 shadow-[0_0_35px_#22d3ee] z-20 transition-opacity duration-300"></div>
-
-    <!-- Canvas for Billowing Smoke & Steam -->
-    <canvas id="vaultSteamCanvas" class="absolute inset-0 pointer-events-none z-30"></canvas>
-
-    <!-- Center Vault Mechanism & Terminal -->
-    <div id="vaultCenterCore" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-center p-6 text-center max-w-sm sm:max-w-md w-full transition-all duration-700">
+    <!-- LEFT BLAST DOOR PANEL (Cánh Trái bọc thép dày 180mm) -->
+    <div id="vaultDoorLeft" class="absolute inset-y-9 left-0 w-1/2 vault-steel-slab border-r-4 border-slate-700 shadow-[35px_0_60px_rgba(0,0,0,0.95)] transition-transform duration-1000 ease-[cubic-bezier(0.77,0,0.175,1)] flex flex-col justify-between p-3 sm:p-6 z-10 overflow-hidden">
       
-      <!-- Big Sci-Fi Wheel / Cog -->
-      <div class="relative w-36 h-36 sm:w-44 sm:h-44 grid place-items-center mb-6">
-        <!-- Outer Rotating Rings -->
-        <div id="vaultOuterRing" class="absolute inset-0 rounded-full border-2 border-dashed border-cyan-500/40 animate-[spin_15s_linear_infinite]"></div>
-        <div class="absolute inset-2 rounded-full border border-cyan-400/20 animate-[spin_10s_linear_infinite_reverse]"></div>
+      <!-- Top Armor Section -->
+      <div class="vault-panel-inset rounded-xl p-3 sm:p-4 relative">
+        <div class="absolute top-2 left-2 vault-rivet"></div>
+        <div class="absolute top-2 right-2 vault-rivet"></div>
+        <div class="absolute bottom-2 left-2 vault-rivet"></div>
+        <div class="absolute bottom-2 right-2 vault-rivet"></div>
         
-        <!-- Central Heavy Wheel -->
-        <div id="vaultInnerCog" class="absolute inset-4 rounded-full border-2 border-cyan-400/70 bg-neutral-950/95 backdrop-blur-2xl shadow-[0_0_40px_rgba(6,182,212,0.4)] grid place-items-center transition-transform duration-700">
-          <div id="vaultCoreIcon" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-cyan-500/20 border border-cyan-400/50 grid place-items-center text-3xl sm:text-4xl text-cyan-400 shadow-inner transition-colors duration-500">
-            <i id="vaultIconInner" class="fa-solid fa-key"></i>
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></div>
+          <span class="font-mono text-[10px] sm:text-xs text-cyan-300 font-black tracking-widest">ARMOR CLASS: TITANIUM-X // ZONE 01A</span>
+        </div>
+        <div class="space-y-1 opacity-40">
+          <div class="h-1.5 w-3/4 bg-slate-500 rounded-full"></div>
+          <div class="h-1 w-1/2 bg-slate-600 rounded-full"></div>
+        </div>
+      </div>
+
+      <!-- Center Heavy Cross-Girder & Hydraulic Piston Graphics -->
+      <div class="my-auto py-2 relative flex items-center justify-around opacity-75">
+        <div class="w-1.5 h-36 bg-gradient-to-b from-slate-300 via-slate-600 to-slate-900 rounded-full shadow-lg border border-slate-500"></div>
+        <div class="flex-1 px-4 space-y-2">
+          <div class="h-4 vault-girder rounded flex items-center justify-around px-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+          </div>
+          <div class="font-mono text-[9px] text-slate-400 tracking-widest text-center">PRIMARY LOCK MECHANISM // HYDRAULIC DRIVE</div>
+          <div class="h-4 vault-girder rounded flex items-center justify-around px-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+          </div>
+        </div>
+        <div class="w-1.5 h-36 bg-gradient-to-b from-slate-300 via-slate-600 to-slate-900 rounded-full shadow-lg border border-slate-500"></div>
+      </div>
+
+      <!-- Bottom Armor Section -->
+      <div class="vault-panel-inset rounded-xl p-3 relative flex items-center justify-between">
+        <div class="absolute top-1.5 left-1.5 vault-rivet"></div>
+        <div class="absolute top-1.5 right-1.5 vault-rivet"></div>
+        <div class="absolute bottom-1.5 left-1.5 vault-rivet"></div>
+        <div class="absolute bottom-1.5 right-1.5 vault-rivet"></div>
+        <div class="font-mono text-[9px] text-slate-400 pl-4">SERIAL: BR34-V9-HEAVY</div>
+        <div class="text-[9px] font-mono font-bold text-amber-400/80 pr-4">PNEUMATIC SEAL // 450 PSI</div>
+      </div>
+
+      <!-- 4 MASSIVE CYLINDRICAL CHROME DEADBOLTS (EXTENDING ACROSS CENTER SEAM) -->
+      <div class="absolute right-0 top-0 bottom-0 w-28 pointer-events-none flex flex-col justify-around py-12 z-20">
+        <!-- Bolt 1 -->
+        <div class="relative flex items-center justify-end">
+          <div class="w-10 h-7 bg-neutral-900 border border-slate-500 rounded-l-md shadow-inner flex items-center justify-center">
+            <div class="w-1.5 h-4 bg-slate-600 rounded-full"></div>
+          </div>
+          <div id="vaultDeadbolt1" class="vault-deadbolt w-16 h-6 rounded-r-md translate-x-8 flex items-center justify-end pr-1 border border-slate-300">
+            <div class="w-1 h-3.5 bg-slate-400/60 rounded-full"></div>
+          </div>
+        </div>
+        <!-- Bolt 2 -->
+        <div class="relative flex items-center justify-end">
+          <div class="w-10 h-7 bg-neutral-900 border border-slate-500 rounded-l-md shadow-inner flex items-center justify-center">
+            <div class="w-1.5 h-4 bg-slate-600 rounded-full"></div>
+          </div>
+          <div id="vaultDeadbolt2" class="vault-deadbolt w-16 h-6 rounded-r-md translate-x-8 flex items-center justify-end pr-1 border border-slate-300">
+            <div class="w-1 h-3.5 bg-slate-400/60 rounded-full"></div>
+          </div>
+        </div>
+        <!-- Bolt 3 -->
+        <div class="relative flex items-center justify-end">
+          <div class="w-10 h-7 bg-neutral-900 border border-slate-500 rounded-l-md shadow-inner flex items-center justify-center">
+            <div class="w-1.5 h-4 bg-slate-600 rounded-full"></div>
+          </div>
+          <div id="vaultDeadbolt3" class="vault-deadbolt w-16 h-6 rounded-r-md translate-x-8 flex items-center justify-end pr-1 border border-slate-300">
+            <div class="w-1 h-3.5 bg-slate-400/60 rounded-full"></div>
+          </div>
+        </div>
+        <!-- Bolt 4 -->
+        <div class="relative flex items-center justify-end">
+          <div class="w-10 h-7 bg-neutral-900 border border-slate-500 rounded-l-md shadow-inner flex items-center justify-center">
+            <div class="w-1.5 h-4 bg-slate-600 rounded-full"></div>
+          </div>
+          <div id="vaultDeadbolt4" class="vault-deadbolt w-16 h-6 rounded-r-md translate-x-8 flex items-center justify-end pr-1 border border-slate-300">
+            <div class="w-1 h-3.5 bg-slate-400/60 rounded-full"></div>
           </div>
         </div>
       </div>
 
-      <!-- Terminal Text -->
-      <div class="space-y-1.5 mb-6">
-        <div id="vaultBadge" class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[10px] font-mono font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm">
-          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-          <span>CỬA HẦM BẢO MẬT BR-34 // SECTOR ZERO</span>
-        </div>
-        <h2 id="vaultStatusTitle" class="text-xl sm:text-2xl font-black text-white tracking-wider">CỬA HẦM ĐANG KHÓA CHẶT</h2>
-        <p id="vaultStatusDesc" class="text-xs text-slate-400 max-w-xs mx-auto">Vui lòng tra Chìa Khóa USB để xả áp suất khí và mở cửa hầm</p>
+    </div>
+
+    <!-- RIGHT BLAST DOOR PANEL (Cánh Phải bọc thép dày 180mm) -->
+    <div id="vaultDoorRight" class="absolute inset-y-9 right-0 w-1/2 vault-steel-slab border-l-4 border-slate-700 shadow-[-35px_0_60px_rgba(0,0,0,0.95)] transition-transform duration-1000 ease-[cubic-bezier(0.77,0,0.175,1)] flex flex-col justify-between p-3 sm:p-6 z-10 overflow-hidden text-right">
+      
+      <!-- Top Armor Section with Exit Button -->
+      <div class="vault-panel-inset rounded-xl p-3 sm:p-4 relative flex items-center justify-between">
+        <div class="absolute top-2 left-2 vault-rivet"></div>
+        <div class="absolute top-2 right-2 vault-rivet"></div>
+        <div class="absolute bottom-2 left-2 vault-rivet"></div>
+        <div class="absolute bottom-2 right-2 vault-rivet"></div>
+        
+        <div class="font-mono text-[10px] sm:text-xs text-slate-400 font-bold pl-4">SECTOR 01B // RIGHT WING</div>
+        <button type="button" onclick="closeVaultDoor()" class="px-3 py-1.5 rounded-lg bg-neutral-900/90 hover:bg-rose-950/80 border border-amber-500/40 hover:border-rose-500 text-amber-300 hover:text-rose-400 text-xs font-bold transition flex items-center gap-1.5 shadow-md">
+          <i class="fa-solid fa-xmark"></i>
+          <span>Thoát</span>
+        </button>
       </div>
 
-      <!-- Action Key Button -->
-      <button id="vaultActionBtn" type="button" onclick="triggerVaultKeyDialog()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-neutral-950 font-black text-sm tracking-wide transition-all shadow-2xl shadow-cyan-500/40 active:scale-95 flex items-center justify-center gap-3 group">
-        <i class="fa-solid fa-key group-hover:rotate-12 transition"></i>
+      <!-- Center Heavy Cross-Girder & Hydraulic Piston Graphics -->
+      <div class="my-auto py-2 relative flex items-center justify-around opacity-75">
+        <div class="w-1.5 h-36 bg-gradient-to-b from-slate-300 via-slate-600 to-slate-900 rounded-full shadow-lg border border-slate-500"></div>
+        <div class="flex-1 px-4 space-y-2">
+          <div class="h-4 vault-girder rounded flex items-center justify-around px-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+          </div>
+          <div class="font-mono text-[9px] text-slate-400 tracking-widest text-center">EMERGENCY EXHAUST // VENTURI DUCT</div>
+          <div class="h-4 vault-girder rounded flex items-center justify-around px-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div>
+          </div>
+        </div>
+        <div class="w-1.5 h-36 bg-gradient-to-b from-slate-300 via-slate-600 to-slate-900 rounded-full shadow-lg border border-slate-500"></div>
+      </div>
+
+      <!-- Bottom Armor Section -->
+      <div class="vault-panel-inset rounded-xl p-3 relative flex items-center justify-between">
+        <div class="absolute top-1.5 left-1.5 vault-rivet"></div>
+        <div class="absolute top-1.5 right-1.5 vault-rivet"></div>
+        <div class="absolute bottom-1.5 left-1.5 vault-rivet"></div>
+        <div class="absolute bottom-1.5 right-1.5 vault-rivet"></div>
+        <div class="text-[9px] font-mono font-bold text-amber-400/80 pl-4">LOCK BEARING: CHROME TITANIUM</div>
+        <div class="font-mono text-[9px] text-slate-400 pr-4">FAILSAFE: ENGAGED</div>
+      </div>
+
+      <!-- 4 DEADBOLT RECEPTOR SOCKETS WITH STATUS LEDS -->
+      <div class="absolute left-0 top-0 bottom-0 w-28 pointer-events-none flex flex-col justify-around py-12 z-20">
+        <!-- Socket 1 -->
+        <div class="flex items-center gap-2 pl-2">
+          <div class="vault-deadbolt-socket w-11 h-8 rounded-r-lg flex items-center justify-center">
+            <div class="w-4 h-5 rounded-sm bg-black/90 border border-slate-700"></div>
+          </div>
+          <div id="vaultSocketLed1" class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse"></div>
+        </div>
+        <!-- Socket 2 -->
+        <div class="flex items-center gap-2 pl-2">
+          <div class="vault-deadbolt-socket w-11 h-8 rounded-r-lg flex items-center justify-center">
+            <div class="w-4 h-5 rounded-sm bg-black/90 border border-slate-700"></div>
+          </div>
+          <div id="vaultSocketLed2" class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse"></div>
+        </div>
+        <!-- Socket 3 -->
+        <div class="flex items-center gap-2 pl-2">
+          <div class="vault-deadbolt-socket w-11 h-8 rounded-r-lg flex items-center justify-center">
+            <div class="w-4 h-5 rounded-sm bg-black/90 border border-slate-700"></div>
+          </div>
+          <div id="vaultSocketLed3" class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse"></div>
+        </div>
+        <!-- Socket 4 -->
+        <div class="flex items-center gap-2 pl-2">
+          <div class="vault-deadbolt-socket w-11 h-8 rounded-r-lg flex items-center justify-center">
+            <div class="w-4 h-5 rounded-sm bg-black/90 border border-slate-700"></div>
+          </div>
+          <div id="vaultSocketLed4" class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] animate-pulse"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Vertical Neon Seam -->
+    <div id="vaultLightSeam" class="absolute top-9 bottom-9 left-1/2 -translate-x-1/2 w-1.5 bg-cyan-400 shadow-[0_0_35px_#22d3ee] z-20 transition-opacity duration-300"></div>
+
+    <!-- Canvas for Billowing Smoke & Steam -->
+    <canvas id="vaultSteamCanvas" class="absolute inset-0 pointer-events-none z-30"></canvas>
+
+    <!-- CENTER VAULT WHEEL & TERMINAL MECHANISM -->
+    <div id="vaultCenterCore" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-center p-4 text-center max-w-sm sm:max-w-md w-full transition-all duration-700">
+      
+      <!-- 4-Spoke Heavy Vault Handwheel -->
+      <div class="relative w-44 h-44 sm:w-52 sm:h-52 grid place-items-center mb-5">
+        
+        <!-- Outer Gear Ring -->
+        <div class="absolute inset-0 rounded-full border-4 border-dashed border-slate-600/60 shadow-[0_0_30px_rgba(0,0,0,0.8)]"></div>
+        <div class="absolute -inset-2 rounded-full border border-cyan-500/30 animate-[spin_20s_linear_infinite]"></div>
+
+        <!-- The 4-Spoke Turning Wheel (rotates on unlock) -->
+        <div id="vaultMainWheel" class="absolute inset-2 rounded-full bg-neutral-950/95 border-4 border-slate-500 shadow-[0_0_40px_rgba(0,0,0,0.9),inset_0_2px_6px_rgba(255,255,255,0.4)] transition-transform duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex items-center justify-center">
+          
+          <!-- Spoke 1 (Vertical) -->
+          <div class="absolute inset-y-0 w-3 vault-spoke rounded-full"></div>
+          <!-- Spoke 2 (Horizontal) -->
+          <div class="absolute inset-x-0 h-3 vault-spoke rounded-full"></div>
+          
+          <!-- 4 Turning Grip Knobs on Perimeter -->
+          <div class="absolute top-1 w-4 h-4 rounded-full bg-gradient-to-br from-slate-200 to-slate-700 shadow-md border border-slate-400"></div>
+          <div class="absolute bottom-1 w-4 h-4 rounded-full bg-gradient-to-br from-slate-200 to-slate-700 shadow-md border border-slate-400"></div>
+          <div class="absolute left-1 w-4 h-4 rounded-full bg-gradient-to-br from-slate-200 to-slate-700 shadow-md border border-slate-400"></div>
+          <div class="absolute right-1 w-4 h-4 rounded-full bg-gradient-to-br from-slate-200 to-slate-700 shadow-md border border-slate-400"></div>
+
+          <!-- Central Hub: Analog Pressure Gauge -->
+          <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-b from-neutral-800 to-neutral-950 border-2 border-slate-400 shadow-[inset_0_4px_10px_rgba(0,0,0,0.9)] flex flex-col items-center justify-center p-1.5 z-10">
+            <!-- Gauge Dial Face -->
+            <div class="relative w-full h-full rounded-full bg-[#0a0d14] border border-slate-700/80 flex flex-col items-center justify-between py-1 overflow-hidden">
+              <div class="text-[8px] font-mono text-cyan-400 font-black tracking-tighter">PNEUMATIC</div>
+              
+              <!-- Dial Tick Marks & Red Zone -->
+              <div class="absolute inset-1 rounded-full border border-dashed border-slate-600/40 pointer-events-none"></div>
+              
+              <!-- Rotating Gauge Needle -->
+              <div id="vaultGaugeNeedle" class="absolute w-1 h-9 bg-rose-500 rounded-t-full origin-bottom top-1 left-1/2 -translate-x-1/2 transition-transform duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] shadow-[0_0_6px_#f43f5e]" style="transform: rotate(85deg);"></div>
+              
+              <!-- Needle Pivot Cap -->
+              <div class="absolute w-3 h-3 rounded-full bg-slate-300 border border-slate-700 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-md"></div>
+              
+              <div class="text-[9px] font-mono text-slate-400 font-bold z-10">
+                <span id="vaultPsiText" class="text-rose-400 font-black">450</span> <span class="text-[7px]">PSI</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Terminal Badges & Texts -->
+      <div class="space-y-1.5 mb-5 w-full">
+        <div id="vaultBadge" class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[10px] font-mono font-black bg-rose-950/60 text-rose-300 border border-rose-500/50 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+          <span id="vaultBadgeText">KHÓA AN TOÀN ĐANG ĐÓNG CHẶT // ARMED</span>
+        </div>
+        <h2 id="vaultStatusTitle" class="text-lg sm:text-2xl font-black text-white tracking-wider">CỬA HẦM BẢO MẬT BR-34</h2>
+        <p id="vaultStatusDesc" class="text-xs text-slate-400 max-w-xs mx-auto">Vui lòng tra Chìa Khóa USB Dongle để xả 450 PSI khí nén và rút 4 chốt khóa</p>
+      </div>
+
+      <!-- Action Button -->
+      <button id="vaultActionBtn" type="button" onclick="triggerVaultKeyDialog()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-neutral-950 font-black text-sm tracking-wide transition-all shadow-2xl shadow-amber-500/30 active:scale-95 flex items-center justify-center gap-3 group border border-amber-300/40">
+        <i class="fa-solid fa-key group-hover:rotate-12 transition text-base"></i>
         <span>TRA CHÌA KHÓA USB ĐỂ MỞ CỬA</span>
       </button>
 
       <input type="file" id="vaultFileInput" accept=".br34,.key,.bin,*" class="hidden" onchange="handleVaultKeySelected(event)">
 
-      <div class="text-[11px] text-slate-500 font-mono mt-3">YÊU CẦU FILE: BR34_SECURITY_KEY.br34</div>
-
+      <div class="text-[10px] text-slate-500 font-mono mt-2.5">XÁC THỰC PHẦN CỨNG: BR34_SECURITY_KEY.br34</div>
+      <p id="vaultLoginError" class="hidden text-xs text-rose-400 font-semibold p-3 rounded-xl bg-rose-950/60 border border-rose-900/60 mt-3"></p>
     </div>
 
   </div>
-
+  
 </body>
 </html>
