@@ -108,7 +108,7 @@
             <span class="text-sm">QUÉT USB CHÌA KHÓA</span>
           </button>
           
-          <input type="file" id="usbFileInput" accept=".br34,.key,.bin" class="hidden" onchange="handleUsbFileSelected(event)">
+          <input type="file" id="usbFileInput" accept=".br34,.key,.bin,*" class="hidden" onchange="handleUsbFileSelected(event)">
 
           <div class="text-[11px] text-cyan-300/80 font-medium flex items-center justify-center gap-1.5 pt-1">
             <i class="fa-solid fa-circle-check text-xs text-emerald-400"></i>
@@ -326,28 +326,9 @@
       } catch(e) {}
     }
 
-    async function triggerUsbAuth() {
+    function triggerUsbAuth() {
       const errEl = $("gateLoginError");
       if (errEl) errEl.classList.add("hidden");
-
-      try {
-        if (window.showOpenFilePicker) {
-          const [fileHandle] = await window.showOpenFilePicker({
-            types: [{
-              description: 'BR-34 Hardware Security Key (*.br34)',
-              accept: { 'application/octet-stream': ['.br34', '.key'] }
-            }],
-            multiple: false
-          });
-          const file = await fileHandle.getFile();
-          const text = await file.text();
-          processUsbKeyData(text);
-          return;
-        }
-      } catch (pickerErr) {
-        if (pickerErr.name === 'AbortError') return;
-      }
-
       const input = $("usbFileInput");
       if (input) {
         input.value = "";

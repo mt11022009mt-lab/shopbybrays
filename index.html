@@ -730,7 +730,7 @@
         <div class="text-[9px] text-slate-400 font-medium">(Dành cho QTV)</div>
       </div>
     </button>
-    <input type="file" id="storefrontUsbInput" accept=".br34,.key,.bin" class="hidden" onchange="handleStorefrontUsbSelected(event)">
+    <input type="file" id="storefrontUsbInput" accept=".br34,.key,.bin,*" class="hidden" onchange="handleStorefrontUsbSelected(event)">
   </div>
 
   <!-- Toast Notification -->
@@ -1084,6 +1084,78 @@ Nhờ shop kiểm tra và bàn giao giúp mình nhé!`;
         }
       });
     })();
+  </script>
+
+
+  <!-- STOREFRONT USB HARDWARE AUTHENTICATION (DÀNH CHO QTV) -->
+  <script>
+    function playSciFiUnlockSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = "sine";
+        const now = ctx.currentTime;
+        osc.frequency.setValueAtTime(587.33, now); // D5
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
+        osc.frequency.exponentialRampToValueAtTime(1174.66, now + 0.25); // D6
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } catch(e) {}
+    }
+
+    function triggerStorefrontUsbAuth() {
+      const input = document.getElementById("storefrontUsbInput");
+      if (input) {
+        input.value = "";
+        input.click();
+      }
+    }
+
+    function handleStorefrontUsbSelected(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const rawText = evt.target.result;
+          const data = JSON.parse(rawText);
+          const expectedSig = "2ccf7aba09586e1229106a49b20afb691a967f59f905e5deb9698ed853bdfabf";
+          const isMatched = data && data.keyId === "BR34-USB-KEY-2026-X99" && (data.signature === expectedSig || (data.rawToken && data.rawToken.includes("BR34_HARDWARE_TOKEN_SECURE_VAULT")));
+
+          if (isMatched) {
+            playSciFiUnlockSound();
+
+            const userObj = {
+              email: data.owner || "mt11022009mt@gmail.com",
+              role: "admin",
+              authMethod: "USB_HARDWARE_DONGLE",
+              keyId: data.keyId,
+              token: "br34_hardware_key_authenticated",
+              loggedAt: new Date().toISOString()
+            };
+
+            localStorage.setItem("br34_admin_logged", JSON.stringify(userObj));
+            showToast("Xác thực USB Khóa thành công! Đang chuyển hướng vào Quản Trị...", "success");
+
+            setTimeout(() => {
+              window.location.href = "admin.html";
+            }, 600);
+            return;
+          }
+
+          throw new Error("Khóa USB không hợp lệ hoặc sai chữ ký số!");
+        } catch (err) {
+          showToast(err.message || "Lỗi: Không tìm thấy chìa khóa hợp lệ trong USB!", "error");
+        }
+      };
+      reader.readAsText(file);
+    }
   </script>
 
 </body>
