@@ -38,7 +38,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
   <script src="products-data.js"></script>
 
   <style>
@@ -85,13 +85,39 @@
       <div id="gateLoginRequired" class="py-4 space-y-4 text-left">
         <div class="text-center space-y-1">
           <div class="w-12 h-12 rounded-2xl bg-brand-500/20 text-brand-400 grid place-items-center text-xl mx-auto mb-2">
-            <i class="fa-solid fa-lock"></i>
+            <i class="fa-solid fa-shield-halved"></i>
           </div>
           <h3 class="text-base font-black text-white">Đăng Nhập Quản Trị Viên</h3>
-          <p class="text-xs text-slate-400">Vui lòng nhập tài khoản Admin của bạn</p>
+          <p class="text-xs text-slate-400">Quét USB Khóa Vật Lý hoặc Mật khẩu</p>
         </div>
 
-        <form onsubmit="handleGateLogin(event)" class="space-y-3 pt-2">
+        <!-- VIP HARDWARE KEY USB DONGLE -->
+        <div class="p-3.5 rounded-2xl bg-gradient-to-br from-cyan-950/60 via-slate-900 to-indigo-950/60 border border-cyan-500/50 text-center space-y-2.5 shadow-xl relative overflow-hidden">
+          <div class="flex items-center justify-between text-[11px] font-black text-cyan-400">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-microchip text-xs animate-pulse"></i>
+              KHÓA VẬT LÝ USB
+            </span>
+            <span class="px-2 py-0.5 rounded-full text-[9px] bg-cyan-500/20 text-cyan-300 font-mono font-bold border border-cyan-500/40">VIP DONGLE</span>
+          </div>
+          <button type="button" onclick="triggerUsbAuth()" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-neutral-950 font-black text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/25 active:scale-95">
+            <i class="fa-solid fa-key"></i>
+            <span>CHẠM QUÉT USB CHÌA KHÓA</span>
+          </button>
+          <input type="file" id="usbFileInput" accept=".br34,.key,.bin" class="hidden" onchange="handleUsbFileSelected(event)">
+          <div class="text-[10px] text-cyan-300/80 font-medium flex items-center justify-center gap-1">
+            <i class="fa-solid fa-circle-check text-[9px] text-emerald-400"></i>
+            <span>Cắm USB và bấm quét file 'BR34_SECURITY_KEY.br34'</span>
+          </div>
+        </div>
+
+        <div class="relative flex py-1 items-center">
+          <div class="flex-grow border-t border-white/10"></div>
+          <span class="flex-shrink mx-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">HOẶC DÙNG MẬT KHẨU</span>
+          <div class="flex-grow border-t border-white/10"></div>
+        </div>
+
+        <form onsubmit="handleGateLogin(event)" class="space-y-3 pt-1">
           <div>
             <label class="text-[11px] font-bold text-slate-400 block mb-1">Email Quản Trị</label>
             <input id="gateEmail" type="email" required autocomplete="username" placeholder="Nhập email admin..." class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-900 border border-white/10 text-xs text-white focus:outline-none focus:border-brand-500">
@@ -400,9 +426,11 @@
           if (parsed && (parsed.email || parsed.token)) {
             currentAdmin = parsed;
             const emailEl = $("adminEmailText");
-            if (emailEl) emailEl.textContent = currentAdmin.email || "Admin";
-            const gate = $("authGate");
-            if (gate) gate.classList.add("hidden");
+            if (emailEl) {
+              emailEl.innerHTML = currentAdmin.authMethod === 'USB_HARDWARE_DONGLE'
+                ? '<i class="fa-solid fa-key text-cyan-400 mr-1"></i> ' + (currentAdmin.email || "Admin") + ' (USB)'
+                : '<i class="fa-solid fa-user-shield text-brand-400 mr-1"></i> ' + (currentAdmin.email || "Admin");
+            }
             initAdminView();
             return;
           }
@@ -411,7 +439,9 @@
         console.warn("checkAuth error:", err);
       }
 
-      // Chưa đăng nhập -> Ẩn dashboard, hiện cổng đăng nhập
+      // Chưa đăng nhập -> Hiện cổng đăng nhập AuthGate, ẩn dashboard
+      const gate = $("authGate");
+      if (gate) gate.classList.remove("hidden");
       const dash = $("adminDashboard");
       if (dash) dash.classList.add("hidden");
       const loadingEl = $("gateLoading");
@@ -490,6 +520,11 @@
     }
 
     function initAdminView() {
+      const gate = $("authGate");
+      if (gate) gate.classList.add("hidden");
+      const dash = $("adminDashboard");
+      if (dash) dash.classList.remove("hidden");
+
       if (typeof BR34_PRODUCT_SERVICE === 'undefined') return;
 
       const settings = BR34_PRODUCT_SERVICE.getSettings();
