@@ -113,7 +113,7 @@
   <!-- ========================================================
        CHÍNH: BẢNG ĐIỀU KHIỂN BẢNG GIÁ & KHO HÀNG
        ======================================================== -->
-  <div class="min-h-screen flex flex-col max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+  <div id="adminDashboard" class="hidden min-h-screen flex flex-col max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
     
     <!-- Top Nav Header -->
     <header class="glass-card rounded-2xl px-5 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -260,6 +260,14 @@
 
     function $(id) { return document.getElementById(id); }
 
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+
     function showToast(msg, type = "success") {
       const t = $("toast");
       const icon = $("toastIcon");
@@ -297,7 +305,9 @@
         console.warn("checkAuth error:", err);
       }
 
-      // Chưa đăng nhập -> Hiện ngay form đăng nhập
+      // Chưa đăng nhập -> Ẩn dashboard, hiện cổng đăng nhập
+      const dash = $("adminDashboard");
+      if (dash) dash.classList.add("hidden");
       const loadingEl = $("gateLoading");
       if (loadingEl) loadingEl.classList.add("hidden");
       const loginEl = $("gateLoginRequired");
@@ -315,22 +325,7 @@
       btn.textContent = "Đang xác thực...";
       errEl.classList.add("hidden");
 
-      // 1. Kiểm tra đăng nhập nhanh trực tiếp (0ms) cho tài khoản chủ shop
-      const isOwnerEmail = (email === "mt11022009mt@gmail.com" || email === "admin@shopbybrays.com" || email.includes("mt11022009mt"));
-      const isMasterPass = (password === "0976976627" || password === "mt11022009mt" || password === "br34@admin2026" || password === "admin123456");
-
-      if (isOwnerEmail && isMasterPass) {
-        const userObj = { email: email, role: "admin", token: "br34_authenticated", loggedAt: new Date().toISOString() };
-        localStorage.setItem("br34_admin_logged", JSON.stringify(userObj));
-        currentAdmin = userObj;
-        $("adminEmailText").textContent = currentAdmin.email;
-        $("authGate").classList.add("hidden");
-        initAdminView();
-        showToast("Đăng nhập Quản Trị Viên thành công!", "success");
-        return;
-      }
-
-      // 2. Thử xác thực với serverless API /api/admin-auth
+      // 1. Xác thực bảo mật qua Vercel Serverless API (Mật khẩu được kiểm tra trên Server)
       try {
         const res = await fetch("/api/admin-auth", {
           method: "POST",
@@ -346,11 +341,35 @@
           $("adminEmailText").textContent = currentAdmin.email;
           $("authGate").classList.add("hidden");
           initAdminView();
-          showToast("Đăng nhập thành công!", "success");
+          showToast("Đăng nhập Quản Trị Viên thành công!", "success");
+          return;
+        }
+      } catch (networkErr) {
+        console.warn("Serverless auth check offline, trying cryptographic hash verification");
+      }
+
+      // 2. Dự phòng: Xác thực bằng mã băm mật mã Cryptographic SHA-256 (KHÔNG CHỨA MẬT KHẨU GỐC)
+      try {
+        const passHash = await sha256(password);
+        const VALID_HASHES = [
+          "59f9acc712f52616b073fae41cbc9db98e3cea519ce89181f2ba2b299471ae2b", // master 1
+          "099d00bb3997fa1327ead63f0c1360843fa183e969a14d47a2e22857a99ec77e", // master 2
+          "08c6a6669fcf32d2f7a0dc0258cb0d7ff3f06b12a865f12eefc4c23dbfa51c88"  // master 3
+        ];
+        const isOwnerEmail = (email === "mt11022009mt@gmail.com" || email === "admin@shopbybrays.com" || email.includes("mt11022009mt"));
+
+        if (isOwnerEmail && VALID_HASHES.includes(passHash)) {
+          const userObj = { email: email, role: "admin", token: "br34_sha256_verified", loggedAt: new Date().toISOString() };
+          localStorage.setItem("br34_admin_logged", JSON.stringify(userObj));
+          currentAdmin = userObj;
+          $("adminEmailText").textContent = currentAdmin.email;
+          $("authGate").classList.add("hidden");
+          initAdminView();
+          showToast("Đăng nhập Quản Trị Viên thành công!", "success");
           return;
         }
 
-        throw new Error(json.error || "Email hoặc Mật khẩu Quản trị không chính xác!");
+        throw new Error("Email hoặc Mật khẩu Quản trị không chính xác!");
       } catch (err) {
         errEl.textContent = err.message || "Email hoặc Mật khẩu Quản trị không chính xác!";
         errEl.classList.remove("hidden");
@@ -518,6 +537,25 @@
     document.addEventListener("DOMContentLoaded", () => {
       checkAuth();
     });
+  </script>
+
+  <!-- Anti-Inspect Shield for Admin -->
+  <script>
+    (function antiInspectShield() {
+      document.addEventListener('contextmenu', e => e.preventDefault());
+      document.addEventListener('keydown', e => {
+        if (
+          e.key === 'F12' ||
+          (e.ctrlKey && (e.key === 'u' || e.key === 'U')) ||
+          (e.ctrlKey && (e.key === 's' || e.key === 'S')) ||
+          (e.ctrlKey && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c'].includes(e.key))
+        ) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      });
+    })();
   </script>
 </body>
 </html>
