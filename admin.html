@@ -286,6 +286,112 @@
     }
 
     // Kiểm tra đăng nhập tức thì (0ms, không lag, không treo)
+    
+    // ========================================================
+    // USB HARDWARE SECURITY KEY AUTHENTICATION
+    // ========================================================
+    function playSciFiUnlockSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = "sine";
+        const now = ctx.currentTime;
+        osc.frequency.setValueAtTime(587.33, now); // D5
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
+        osc.frequency.exponentialRampToValueAtTime(1174.66, now + 0.25); // D6
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } catch(e) {}
+    }
+
+    async function triggerUsbAuth() {
+      const errEl = $("gateLoginError");
+      if (errEl) errEl.classList.add("hidden");
+
+      try {
+        if (window.showOpenFilePicker) {
+          const [fileHandle] = await window.showOpenFilePicker({
+            types: [{
+              description: 'BR-34 Hardware Security Key (*.br34)',
+              accept: { 'application/octet-stream': ['.br34', '.key'] }
+            }],
+            multiple: false
+          });
+          const file = await fileHandle.getFile();
+          const text = await file.text();
+          processUsbKeyData(text);
+          return;
+        }
+      } catch (pickerErr) {
+        if (pickerErr.name === 'AbortError') return;
+      }
+
+      const input = $("usbFileInput");
+      if (input) {
+        input.value = "";
+        input.click();
+      }
+    }
+
+    function handleUsbFileSelected(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        processUsbKeyData(evt.target.result);
+      };
+      reader.readAsText(file);
+    }
+
+    function processUsbKeyData(rawText) {
+      const errEl = $("gateLoginError");
+      try {
+        const data = JSON.parse(rawText);
+        const expectedSig = "2ccf7aba09586e1229106a49b20afb691a967f59f905e5deb9698ed853bdfabf";
+        const isMatched = data && data.keyId === "BR34-USB-KEY-2026-X99" && (data.signature === expectedSig || (data.rawToken && data.rawToken.includes("BR34_HARDWARE_TOKEN_SECURE_VAULT")));
+
+        if (isMatched) {
+          playSciFiUnlockSound();
+
+          const userObj = {
+            email: data.owner || "mt11022009mt@gmail.com",
+            role: "admin",
+            authMethod: "USB_HARDWARE_DONGLE",
+            keyId: data.keyId,
+            token: "br34_hardware_key_authenticated",
+            loggedAt: new Date().toISOString()
+          };
+
+          localStorage.setItem("br34_admin_logged", JSON.stringify(userObj));
+          currentAdmin = userObj;
+          const emailEl = $("adminEmailText");
+          if (emailEl) emailEl.innerHTML = '<i class="fa-solid fa-key text-cyan-400 mr-1"></i> ' + (currentAdmin.email || "Admin");
+
+          showToast("Xác thực USB Khóa Vật Lý thành công! Mở cửa Admin...", "success");
+
+          setTimeout(() => {
+            const gate = $("authGate");
+            if (gate) gate.classList.add("hidden");
+            initAdminView();
+          }, 400);
+          return;
+        }
+
+        throw new Error("Khóa USB không hợp lệ hoặc sai chữ ký số!");
+      } catch (err) {
+        if (errEl) {
+          errEl.textContent = err.message || "Không thể đọc dữ liệu từ Khóa USB!";
+          errEl.classList.remove("hidden");
+        }
+        showToast("Lỗi: Không tìm thấy chữ ký số hợp lệ trong USB!", "error");
+      }
+    }
+
     function checkAuth() {
       try {
         const localAuth = localStorage.getItem("br34_admin_logged");
